@@ -15,7 +15,7 @@
     "commands": [
       {
         "command": "console-warrior.testConsole",
-        "title": "Console Warrior: Run Console in Port"
+        "title": "Running Console Warrior in port 5500"
       }
     ]
   },

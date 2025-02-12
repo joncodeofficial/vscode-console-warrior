@@ -1,9 +1,7 @@
-export const injectionCode = `
-(function() {
+export const injectionCode = ` (function() {
   var originalConsoleLog = console.log;
   var messageQueue = [];
   var ws = null;
-  var isReloaded = localStorage.getItem('reloaded') === 'true';
 
   function getStackInfo() {
     try {
@@ -22,7 +20,7 @@ export const injectionCode = `
       const match = relevantLine.match(/\\((.+?\\.js):(\\d+):(\\d+)\\)/);
       if (match) {
         return {
-          file: match[1],
+          file: match[1].split('/').pop(), // Extraer solo el nombre del archivo
           line: parseInt(match[2], 10),
           column: parseInt(match[3], 10)
         };
@@ -32,7 +30,7 @@ export const injectionCode = `
       const altMatch = relevantLine.match(/at\\s+(.+?\\.js):(\\d+):(\\d+)/);
       if (altMatch) {
         return {
-          file: altMatch[1],
+          file: altMatch[1].split('/').pop(), // Extraer solo el nombre del archivo
           line: parseInt(altMatch[2], 10),
           column: parseInt(altMatch[3], 10)
         };
@@ -112,5 +110,4 @@ export const injectionCode = `
   };
 
   connectWebSocket();
-})();
-`;
+})(); `;
