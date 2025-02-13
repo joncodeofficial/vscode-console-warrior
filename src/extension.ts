@@ -47,7 +47,7 @@ export function activate(context: vscode.ExtensionContext) {
   // Configurar el proxy HTTP
   const proxy = httpProxy.createProxyServer({});
 
-  var testing: string[] = [];
+  var consoleData: string[] = [];
 
   // Crear servidor proxy que inyecta el código en respuestas HTML
   const server = http.createServer((req, res: any) => {
@@ -91,16 +91,14 @@ export function activate(context: vscode.ExtensionContext) {
   wss.on("connection", (ws) => {
     console.log("Cliente conectado al WebSocket");
 
-    testing.length = 0;
+    consoleData.length = 0;
 
     ws.on("message", (message) => {
       try {
         const data = JSON.parse(message as any);
         // Aquí puedes manejar otros tipos de mensajes
-        // if (data.type === "LOG") {
-        console.log("[Browser Log]", data.message, data.location);
-        testing.push(JSON.stringify(data));
-        // }
+        // console.log("[Browser Log]", data.message, data.location);
+        consoleData.push(JSON.stringify(data));
       } catch (e) {
         console.warn("Error parsing WebSocket message", e);
       }
@@ -113,9 +111,6 @@ export function activate(context: vscode.ExtensionContext) {
     console.log(`Proxy running on http://localhost:${PROXY_PORT}`);
     console.log(`WebSocket server running on port 9000`);
   });
-
-  // Prueba inmediata
-  console.log("Prueba de activación"); // Debería mostrar: "Prueba de activación hello"
 
   // Registra el comando de prueba
   let disposable = vscode.commands.registerCommand(
@@ -153,7 +148,7 @@ export function activate(context: vscode.ExtensionContext) {
         return;
       }
 
-      updateDecorations(editor, testing);
+      updateDecorations(editor, consoleData);
     }
   );
 
@@ -163,7 +158,7 @@ export function activate(context: vscode.ExtensionContext) {
       if (editor && editor.document === document) {
         await page.reload({ waitUntil: "load" });
 
-        updateDecorations(editor, testing);
+        updateDecorations(editor, consoleData);
       }
     }
   );
@@ -177,54 +172,98 @@ export function deactivate() {
   }
 }
 
-async function updateDecorations(editor: vscode.TextEditor, testing: string[]) {
+async function updateDecorations(
+  editor: vscode.TextEditor,
+  consoleData: string[]
+) {
   const document = editor.document;
   const decorations: vscode.DecorationOptions[] = [];
 
   // Get the current file path from the editor
   const currentFilePath = document.uri.fsPath;
 
-  for (let i = 0; i < testing.length; i++) {
-    const data = JSON.parse(testing[i]);
+  console.log(consoleData);
+
+  // Map para agrupar por `file`
+  const grouped = new Map<string, Map<string, Set<string>>>();
+
+  consoleData.forEach((jsonStr) => {
+    const { message, location } = JSON.parse(jsonStr);
+    const { file, line, column } = location;
+    const key = `${line}:${column}`; // Clave para `line:column`
+
+    if (!grouped.has(file)) {
+      grouped.set(file, new Map());
+    }
+
+    const fileMap = grouped.get(file)!;
+
+    if (!fileMap.has(key)) {
+      fileMap.set(key, new Set());
+    }
+
+    fileMap.get(key)!.add(message);
+  });
+
+  // Convertimos el `Map` a un objeto estructurado para facilitar su uso
+  const mappedConsoleData = Array.from(grouped.entries()).map(
+    ([file, locations]) => ({
+      file,
+      locations: Array.from(locations.entries()).map(([key, messages]) => ({
+        line: parseInt(key.split(":")[0], 10),
+        column: parseInt(key.split(":")[1], 10),
+        messages: Array.from(messages),
+      })),
+    })
+  );
+
+  console.log(mappedConsoleData);
+
+  for (const row of mappedConsoleData) {
+    // const data = JSON.parse(consoleData[i]);
+    const file = row.file;
 
     // Skip if the file path doesn't match the current editor
-    if (data.location.file && !currentFilePath.endsWith(data.location.file)) {
+    if (file && !currentFilePath.endsWith(file)) {
       continue;
     }
 
-    const startLine = data.location.line - 1;
-    let currentLine = startLine;
-    let foundClosing = false;
+    for (const col of row.locations) {
+      const startLine = col.line - 1;
+      let currentLine = startLine;
+      let foundClosing = false;
 
-    while (currentLine < document.lineCount && !foundClosing) {
-      const lineText = document.lineAt(currentLine).text;
+      while (currentLine < document.lineCount && !foundClosing) {
+        const lineText = document.lineAt(currentLine).text;
 
-      if (lineText.includes(");")) {
-        foundClosing = true;
-        const closingIndex = lineText.lastIndexOf(");") + 2;
+        if (lineText.includes(");")) {
+          foundClosing = true;
+          const closingIndex = lineText.lastIndexOf(");") + 2;
 
-        const decoration: vscode.DecorationOptions = {
-          range: new vscode.Range(
-            new vscode.Position(currentLine, closingIndex),
-            new vscode.Position(currentLine, closingIndex)
-          ),
-          renderOptions: {
-            after: {
-              contentText: " → " + formattedMessage(data.message),
-              color: "#73daca",
-              fontStyle: "normal",
-              textDecoration: "none; white-space: pre;",
+          const decoration: vscode.DecorationOptions = {
+            range: new vscode.Range(
+              new vscode.Position(currentLine, closingIndex),
+              new vscode.Position(currentLine, closingIndex)
+            ),
+            renderOptions: {
+              after: {
+                contentText: " → " + formattedMessage(col.messages.join(" → ")),
+                color: "#73daca",
+                textDecoration: "none; white-space: pre;",
+              },
             },
-          },
-        };
+          };
 
-        decorations.push(decoration);
+          decorations.push(decoration);
+        }
+        currentLine++;
       }
-      currentLine++;
     }
   }
 
   editor.setDecorations(decorationType, []);
+
+  // Al final, mostrar todos los decoradores
   editor.setDecorations(decorationType, decorations);
 }
 
