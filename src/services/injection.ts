@@ -42,6 +42,19 @@ export const injectionCode = ` (function() {
     }
   }
 
+  function processArguments(args) {
+    return args.map(arg => {
+      if (typeof arg === 'object' && arg !== null) {
+        try {
+          return JSON.stringify(arg);
+        } catch (e) {
+          return '[Circular Object]';
+        }
+      }
+      return arg;
+    });
+  }
+
   function flushQueue() {
     if (ws && ws.readyState === WebSocket.OPEN) {
       while (messageQueue.length > 0) {
@@ -57,9 +70,10 @@ export const injectionCode = ` (function() {
       originalConsoleLog('WebSocket connection established');
       console.log = function() {
         var args = Array.prototype.slice.call(arguments);
+        var processedArgs = processArguments(args);
         var location = getStackInfo();
         var logData = {
-          message: args.join(' '),
+          message: processedArgs.join(' '),
           location: location
         };
         originalConsoleLog(JSON.stringify(logData));
@@ -70,22 +84,6 @@ export const injectionCode = ` (function() {
         }
       };
       flushQueue();
-    };
-
-    ws.onmessage = function(event) {
-      try {
-        var data = JSON.parse(event.data);
-
-        if (data.type === "INJECT") {
-          eval(data.code);
-        }
-
-        if (data.type === "RELOAD_PAGE") {
-          eval(data.code);
-        }
-      } catch (e) {
-        originalConsoleLog('Error parsing message:', e);
-      }
     };
 
     ws.onerror = function(error) {
@@ -100,9 +98,10 @@ export const injectionCode = ` (function() {
 
   console.log = function() {
     var args = Array.prototype.slice.call(arguments);
+    var processedArgs = processArguments(args);
     var location = getStackInfo();
     var logData = {
-      message: args.join(' '),
+      message: processedArgs.join(' '),
       location: location
     };
     originalConsoleLog(JSON.stringify(logData));
