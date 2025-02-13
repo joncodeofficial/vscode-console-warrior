@@ -6,6 +6,7 @@ import httpProxy from "http-proxy";
 import { chromium } from "playwright";
 import { formattedMessage } from "./utils/formattedMessage";
 import { detectPortAndGreet } from "./utils/detectPortAndGreet";
+import { truncateStr } from "./utils/truncateStr";
 
 let decorationType: vscode.TextEditorDecorationType;
 
@@ -148,7 +149,7 @@ export function activate(context: vscode.ExtensionContext) {
         return;
       }
 
-      updateDecorations(editor, consoleData);
+      // updateDecorations(editor, consoleData);
     }
   );
 
@@ -247,11 +248,14 @@ async function updateDecorations(
             ),
             renderOptions: {
               after: {
-                contentText: " → " + formattedMessage(col.messages.join(" → ")),
+                contentText:
+                  " → " +
+                  truncateStr(formattedMessage(col.messages.join(" → "))),
                 color: "#73daca",
-                textDecoration: "none; white-space: pre;",
+                textDecoration: "none; white-space: pre; pointer-events: none;",
               },
             },
+            hoverMessage: new vscode.MarkdownString(col.messages.join(" → ")),
           };
 
           decorations.push(decoration);
@@ -261,25 +265,8 @@ async function updateDecorations(
     }
   }
 
+  // remove decorations
   editor.setDecorations(decorationType, []);
-
   // Al final, mostrar todos los decoradores
   editor.setDecorations(decorationType, decorations);
 }
-
-// const writeToTerminal = (
-//   colorCode = 32,
-//   message = "Console Warrior is loading..."
-// ) => {
-//   let terminal = vscode.window.terminals.find(
-//     (t) => t.name === "Console Warrior"
-//   );
-//   if (!terminal) {
-//     terminal = vscode.window.createTerminal("Console Warrior");
-//   }
-//   terminal.show();
-
-//   terminal.sendText(
-//     `echo -e "\\e[${colorCode}m${message}\\e[0m" && echo -e "\\e[1A\\e[1A\\e[2K\\e[1S"`
-//   );
-// };
