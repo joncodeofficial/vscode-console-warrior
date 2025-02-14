@@ -5,8 +5,9 @@ import WebSocket from "ws";
 import httpProxy from "http-proxy";
 import { chromium } from "playwright";
 import { formattedMessage } from "./utils/formattedMessage";
-import { detectPortAndGreet } from "./utils/detectPortAndGreet";
+import { detectPort } from "./utils/detectPort";
 import { truncateStr } from "./utils/truncateStr";
+import { isValidPort } from "./utils/isValidPort";
 
 let decorationType: vscode.TextEditorDecorationType;
 
@@ -20,7 +21,7 @@ declare global {
 global.browser = global.browser || undefined;
 global.page = global.page || undefined;
 
-(async () => {
+const launchBrowser = async (global: any) => {
   global.browser = await chromium.launch({
     headless: true, // Mantener en background
     args: [
@@ -42,7 +43,7 @@ global.page = global.page || undefined;
 
   // Mantener el proceso abierto
   process.stdin.resume();
-})();
+};
 
 export function activate(context: vscode.ExtensionContext) {
   // Configurar el proxy HTTP
@@ -114,12 +115,50 @@ export function activate(context: vscode.ExtensionContext) {
   });
 
   // Registra el comando de prueba
-  let disposable = vscode.commands.registerCommand(
-    "console-warrior.testConsole",
-    () => {
-      detectPortAndGreet(5500);
+  // let disposable = vscode.commands.registerCommand(
+  //   "console-warrior.runPort",
+  //   async () => {
+  //     const isPort = await detectPort(5500);
 
-      // writeToTerminal();
+  //     console.log(isPort);
+
+  //     launchBrowser(global);
+
+  //     vscode.window.showInformationMessage(
+  //       "Console Warrior is running in port 5500"
+  //     );
+  //   }
+  // );
+
+  // context.subscriptions.push(disposable);
+  let disposable = vscode.commands.registerCommand(
+    "console-warrior.runPort",
+    async () => {
+      const input = await vscode.window.showInputBox({
+        prompt: "Enter a port number to launch Console Warrior",
+        placeHolder: "Port number (e.g., 5500)", // Default suggestion
+        ignoreFocusOut: true, // Keep dialog open when focus is lost
+        validateInput: async (value) => {
+          if (value === "") {
+            return "Please enter a valid port number";
+          } else if (isNaN(Number(value)) || !isValidPort(value)) {
+            return "Must be a valid port number range between (0-65535)";
+          } else {
+            const isPort = await detectPort(Number(value));
+            if (!isPort) {
+              return `Port ${value} is unavailable. Please try another port.`;
+            } else {
+              return null;
+            }
+          }
+        },
+      });
+
+      const isPort = await detectPort(5500);
+
+      console.log(isPort);
+
+      launchBrowser(global);
 
       vscode.window.showInformationMessage(
         "Console Warrior is running in port 5500"
@@ -137,17 +176,17 @@ export function activate(context: vscode.ExtensionContext) {
   });
 
   // Evento para detectar cambios en el documento
-  disposable = vscode.workspace.onDidChangeTextDocument(
+  const changeTextDocument = vscode.workspace.onDidChangeTextDocument(
     async (event: vscode.TextDocumentChangeEvent) => {
       const editor = vscode.window.activeTextEditor;
       if (!editor) {
         return;
       }
 
-      const document = event.document;
-      if (document.languageId !== "javascript") {
-        return;
-      }
+      // const document = event.document;
+      // if (document.languageId !== "javascript") {
+      //   return;
+      // }
 
       // updateDecorations(editor, consoleData);
     }
@@ -164,7 +203,7 @@ export function activate(context: vscode.ExtensionContext) {
     }
   );
 
-  context.subscriptions.push(disposable);
+  context.subscriptions.push(changeTextDocument);
 }
 
 export function deactivate() {
@@ -221,10 +260,8 @@ async function updateDecorations(
   console.log(mappedConsoleData);
 
   for (const row of mappedConsoleData) {
-    // const data = JSON.parse(consoleData[i]);
     const file = row.file;
 
-    // Skip if the file path doesn't match the current editor
     if (file && !currentFilePath.endsWith(file)) {
       continue;
     }
@@ -237,9 +274,14 @@ async function updateDecorations(
       while (currentLine < document.lineCount && !foundClosing) {
         const lineText = document.lineAt(currentLine).text;
 
-        if (lineText.includes(");")) {
+        // Check for both ); and ) endings
+        if (lineText.includes(");") || lineText.includes(")")) {
           foundClosing = true;
-          const closingIndex = lineText.lastIndexOf(");") + 2;
+          // Find the last occurrence of either ); or )
+          const closingIndex = Math.max(
+            lineText.lastIndexOf(");") + 2,
+            lineText.lastIndexOf(")") + 1
+          );
 
           const decoration: vscode.DecorationOptions = {
             range: new vscode.Range(

@@ -14,8 +14,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "console-warrior.testConsole",
-        "title": "Running Console Warrior in port 5500"
+        "command": "console-warrior.runPort",
+        "title": "Enter a port number to launch Console Warrior"
       }
     ]
   },
