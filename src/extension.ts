@@ -8,6 +8,8 @@ import { formattedMessage } from "./utils/formattedMessage";
 import { detectPort } from "./utils/detectPort";
 import { truncateStr } from "./utils/truncateStr";
 import { isValidPort } from "./utils/isValidPort";
+import { monitorChanges } from "./services/changeMonitoring";
+import { UPDATE_RATE } from "./constants";
 
 let decorationType: vscode.TextEditorDecorationType;
 
@@ -40,6 +42,8 @@ const launchBrowser = async (global: any) => {
 
   global.page = await global.browser.newPage();
   await page.goto("http://localhost:3000/");
+
+  // Set para almacenar logs previos y evitar duplicados
 
   // Mantener el proceso abierto
   process.stdin.resume();
@@ -85,7 +89,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     // Redirigir peticiones al Live Server que corre en el puerto 5500
     proxy.web(req, res, {
-      target: "http://localhost:5500",
+      target: "http://localhost:5173",
     });
   });
 
@@ -101,6 +105,7 @@ export function activate(context: vscode.ExtensionContext) {
         // Aquí puedes manejar otros tipos de mensajes
         // console.log("[Browser Log]", data.message, data.location);
         consoleData.push(JSON.stringify(data));
+        // updateDecorations(vscode.window.activeTextEditor!, consoleData);
       } catch (e) {
         console.warn("Error parsing WebSocket message", e);
       }
@@ -113,22 +118,6 @@ export function activate(context: vscode.ExtensionContext) {
     console.log(`Proxy running on http://localhost:${PROXY_PORT}`);
     console.log(`WebSocket server running on port 9000`);
   });
-
-  // Registra el comando de prueba
-  // let disposable = vscode.commands.registerCommand(
-  //   "console-warrior.runPort",
-  //   async () => {
-  //     const isPort = await detectPort(5500);
-
-  //     console.log(isPort);
-
-  //     launchBrowser(global);
-
-  //     vscode.window.showInformationMessage(
-  //       "Console Warrior is running in port 5500"
-  //     );
-  //   }
-  // );
 
   // context.subscriptions.push(disposable);
   let disposable = vscode.commands.registerCommand(
@@ -160,6 +149,14 @@ export function activate(context: vscode.ExtensionContext) {
 
       launchBrowser(global);
 
+      const stopMonitoring = monitorChanges(
+        consoleData,
+        () => {
+          updateDecorations(vscode.window.activeTextEditor!, consoleData);
+        },
+        UPDATE_RATE
+      );
+
       vscode.window.showInformationMessage(
         "Console Warrior is running in port 5500"
       );
@@ -182,13 +179,6 @@ export function activate(context: vscode.ExtensionContext) {
       if (!editor) {
         return;
       }
-
-      // const document = event.document;
-      // if (document.languageId !== "javascript") {
-      //   return;
-      // }
-
-      // updateDecorations(editor, consoleData);
     }
   );
 
@@ -196,9 +186,7 @@ export function activate(context: vscode.ExtensionContext) {
     async (document: vscode.TextDocument) => {
       const editor = vscode.window.activeTextEditor;
       if (editor && editor.document === document) {
-        await page.reload({ waitUntil: "load" });
-
-        updateDecorations(editor, consoleData);
+        await global.page.reload({ waitUntil: "load" });
       }
     }
   );
@@ -222,7 +210,7 @@ async function updateDecorations(
   // Get the current file path from the editor
   const currentFilePath = document.uri.fsPath;
 
-  console.log(consoleData);
+  // console.log(consoleData);
 
   // Map para agrupar por `file`
   const grouped = new Map<string, Map<string, Set<string>>>();
@@ -250,14 +238,14 @@ async function updateDecorations(
     ([file, locations]) => ({
       file,
       locations: Array.from(locations.entries()).map(([key, messages]) => ({
-        line: parseInt(key.split(":")[0], 10),
-        column: parseInt(key.split(":")[1], 10),
+        line: parseInt(key.split(":")[0]),
+        column: parseInt(key.split(":")[1]),
         messages: Array.from(messages),
       })),
     })
   );
 
-  console.log(mappedConsoleData);
+  // console.log(mappedConsoleData);
 
   for (const row of mappedConsoleData) {
     const file = row.file;
@@ -292,7 +280,9 @@ async function updateDecorations(
               after: {
                 contentText:
                   " → " +
-                  truncateStr(formattedMessage(col.messages.join(" → "))),
+                  truncateStr(
+                    formattedMessage(col.messages.reverse().join(" → "))
+                  ),
                 color: "#73daca",
                 textDecoration: "none; white-space: pre; pointer-events: none;",
               },
@@ -307,8 +297,5 @@ async function updateDecorations(
     }
   }
 
-  // remove decorations
-  editor.setDecorations(decorationType, []);
-  // Al final, mostrar todos los decoradores
   editor.setDecorations(decorationType, decorations);
 }
