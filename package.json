@@ -45,6 +45,7 @@
     "http-proxy": "^1.18.1",
     "playwright": "^1.50.1",
     "portscanner": "^2.2.0",
+    "source-map": "^0.7.4",
     "ws": "^8.18.0"
   }
 }
