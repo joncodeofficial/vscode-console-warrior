@@ -25,7 +25,7 @@ export const injectionCode = `
         const fileName = fullPath.split('/').pop().split('?')[0];
         
         return {
-          file: fileName,
+          file: fullPath,
           line: parseInt(match[3]),
           column: parseInt(match[4]) // Añadimos la columna
         };
@@ -38,7 +38,7 @@ export const injectionCode = `
         const fileName = fullPath.split('/').pop().split('?')[0];
         
         return {
-          file: fileName,
+          file: fullPath,
           line: parseInt(match[3]),
           column: parseInt(match[4]) // Añadimos la columna
         };

@@ -1,19 +1,23 @@
 import * as vscode from "vscode";
 import { injectionCode } from "./services/injection";
-import http from "http";
+import http, { get } from "http";
 import WebSocket from "ws";
 import httpProxy from "http-proxy";
-import { chromium } from "playwright";
 import { formattedMessage } from "./utils/formattedMessage";
-import { detectPort } from "./utils/detectPort";
 import { truncateStr } from "./utils/truncateStr";
-import { isValidPort } from "./utils/isValidPort";
-import { monitorChanges } from "./services/changeMonitoring";
+import { monitorChanges } from "./services/monitoring";
 import { UPDATE_RATE } from "./constants";
+import { launchBrowser } from "./browser";
+import { getFilename } from "./utils/getFilenameFromUrl";
+const { SourceMapConsumer } = require("source-map");
 
 let decorationType: vscode.TextEditorDecorationType;
 
 const wss = new WebSocket.Server({ port: 9000 });
+
+const consoleData: string[] = [];
+
+const sourceMapCache = new Map();
 
 declare global {
   var browser: import("playwright").Browser;
@@ -23,37 +27,9 @@ declare global {
 global.browser = global.browser || undefined;
 global.page = global.page || undefined;
 
-const launchBrowser = async (global: any) => {
-  global.browser = await chromium.launch({
-    headless: true, // Mantener en background
-    args: [
-      "--no-sandbox", // 🔹 Evita restricciones de sandboxing
-      "--disable-setuid-sandbox", // 🔹 Necesario en algunos entornos Linux
-      "--disable-gpu", // 🔹 Desactiva la GPU para menos consumo
-      "--disable-dev-shm-usage", // 🔹 Usa la memoria RAM en lugar de /dev/shm
-      "--disable-software-rasterizer", // 🔹 Mejora el rendimiento en headless
-      "--disable-extensions", // 🔹 No carga extensiones innecesarias
-      "--disable-background-timer-throttling", // 🔹 Evita que Playwright limite procesos en segundo plano
-      "--disable-renderer-backgrounding", // 🔹 Evita pausas en la renderización
-      "--disable-backgrounding-occluded-windows", // 🔹 Evita pausas si la ventana no está visible
-      "--blink-settings=imagesEnabled=false", // 🔹 No carga imágenes (si no las necesitas)
-    ],
-  });
-
-  global.page = await global.browser.newPage();
-  await page.goto("http://localhost:3000/");
-
-  // Set para almacenar logs previos y evitar duplicados
-
-  // Mantener el proceso abierto
-  process.stdin.resume();
-};
-
 export function activate(context: vscode.ExtensionContext) {
   // Configurar el proxy HTTP
   const proxy = httpProxy.createProxyServer({});
-
-  var consoleData: string[] = [];
 
   // Crear servidor proxy que inyecta el código en respuestas HTML
   const server = http.createServer((req, res: any) => {
@@ -105,6 +81,7 @@ export function activate(context: vscode.ExtensionContext) {
         // Aquí puedes manejar otros tipos de mensajes
         // console.log("[Browser Log]", data.message, data.location);
         consoleData.push(JSON.stringify(data));
+        console.log(JSON.stringify(data));
         // updateDecorations(vscode.window.activeTextEditor!, consoleData);
       } catch (e) {
         console.warn("Error parsing WebSocket message", e);
@@ -119,37 +96,12 @@ export function activate(context: vscode.ExtensionContext) {
     console.log(`WebSocket server running on port 9000`);
   });
 
-  // context.subscriptions.push(disposable);
   let disposable = vscode.commands.registerCommand(
     "console-warrior.runPort",
     async () => {
-      const input = await vscode.window.showInputBox({
-        prompt: "Enter a port number to launch Console Warrior",
-        placeHolder: "Port number (e.g., 5500)", // Default suggestion
-        ignoreFocusOut: true, // Keep dialog open when focus is lost
-        validateInput: async (value) => {
-          if (value === "") {
-            return "Please enter a valid port number";
-          } else if (isNaN(Number(value)) || !isValidPort(value)) {
-            return "Must be a valid port number range between (0-65535)";
-          } else {
-            const isPort = await detectPort(Number(value));
-            if (!isPort) {
-              return `Port ${value} is unavailable. Please try another port.`;
-            } else {
-              return null;
-            }
-          }
-        },
-      });
+      await launchBrowser(global);
 
-      const isPort = await detectPort(5500);
-
-      console.log(isPort);
-
-      launchBrowser(global);
-
-      const stopMonitoring = monitorChanges(
+      monitorChanges(
         consoleData,
         () => {
           updateDecorations(vscode.window.activeTextEditor!, consoleData);
@@ -158,7 +110,7 @@ export function activate(context: vscode.ExtensionContext) {
       );
 
       vscode.window.showInformationMessage(
-        "Console Warrior is running in port 5500"
+        "Console Warrior is running in port 5173"
       );
     }
   );
@@ -176,9 +128,7 @@ export function activate(context: vscode.ExtensionContext) {
   const changeTextDocument = vscode.workspace.onDidChangeTextDocument(
     async (event: vscode.TextDocumentChangeEvent) => {
       const editor = vscode.window.activeTextEditor;
-      if (!editor) {
-        return;
-      }
+      if (!editor) return;
     }
   );
 
@@ -209,8 +159,6 @@ async function updateDecorations(
 
   // Get the current file path from the editor
   const currentFilePath = document.uri.fsPath;
-
-  // console.log(consoleData);
 
   // Map para agrupar por `file`
   const grouped = new Map<string, Map<string, Set<string>>>();
