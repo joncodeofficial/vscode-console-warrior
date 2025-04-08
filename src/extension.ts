@@ -1,110 +1,109 @@
 import * as vscode from "vscode";
-import { injectionCode } from "./services/injection";
-import http, { get } from "http";
 import WebSocket from "ws";
-import httpProxy from "http-proxy";
-import { formattedMessage } from "./utils/formattedMessage";
-import { truncateStr } from "./utils/truncateStr";
+import { formatString } from "./utils/formatString";
+import { truncateString } from "./utils/truncateString";
 import { monitorChanges } from "./services/monitoring";
 import { UPDATE_RATE } from "./constants";
-import { launchBrowser } from "./browser";
-import { getFilename } from "./utils/getFilenameFromUrl";
-const { SourceMapConsumer } = require("source-map");
+import { IConsoleData } from "./types/consoleData.interface";
+import { sourceMap } from "./sourceMap";
+import { CreateProxy } from "./proxy";
+import { updateDecorations } from "./updateDecorations";
+import { exec } from "child_process";
+import { injectionCode } from "./services/injection";
 
 let decorationType: vscode.TextEditorDecorationType;
 
 const wss = new WebSocket.Server({ port: 9000 });
 
-const consoleData: string[] = [];
+const consoleData: IConsoleData[] = [];
+
+const newConsoleData: IConsoleData[] = [];
 
 const sourceMapCache = new Map();
 
-declare global {
-  var browser: import("playwright").Browser;
-  var page: import("playwright").Page;
+function broadcastToClients(wss: WebSocket.Server, message: any) {
+  wss.clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify(message));
+    }
+  });
 }
-
-global.browser = global.browser || undefined;
-global.page = global.page || undefined;
 
 export function activate(context: vscode.ExtensionContext) {
   // Configurar el proxy HTTP
-  const proxy = httpProxy.createProxyServer({});
-
-  // Crear servidor proxy que inyecta el código en respuestas HTML
-  const server = http.createServer((req, res: any) => {
-    const _write = res.write;
-    const _end = res.end;
-    const chunks: any = [];
-
-    res.write = function (chunk: any) {
-      chunks.push(chunk);
-      return true;
-    };
-
-    res.end = function (chunk: any) {
-      if (chunk) {
-        chunks.push(chunk);
-      }
-
-      const contentType = res.getHeader("content-type") || "";
-      if (contentType.includes("text/html")) {
-        const body = Buffer.concat(chunks).toString("utf8");
-        const injectedBody = body.replace(
-          "</head>",
-          `<script>${injectionCode}</script></head>`
-        );
-        res.removeHeader("content-length");
-        _write.call(res, injectedBody);
-      } else {
-        chunks.forEach((chunk: any) => _write.call(res, chunk));
-      }
-
-      _end.call(res);
-    };
-
-    // Redirigir peticiones al Live Server que corre en el puerto 5500
-    proxy.web(req, res, {
-      target: "http://localhost:5173",
-    });
-  });
+  // CreateProxy();
 
   // Enviar mensaje a todos los clientes conectados
   wss.on("connection", (ws) => {
     console.log("Cliente conectado al WebSocket");
 
     consoleData.length = 0;
+    newConsoleData.length = 0;
+    sourceMapCache.clear();
 
     ws.on("message", (message) => {
       try {
         const data = JSON.parse(message as any);
+        console.log(data);
         // Aquí puedes manejar otros tipos de mensajes
-        // console.log("[Browser Log]", data.message, data.location);
-        consoleData.push(JSON.stringify(data));
-        console.log(JSON.stringify(data));
-        // updateDecorations(vscode.window.activeTextEditor!, consoleData);
+        newConsoleData.push(data);
       } catch (e) {
         console.warn("Error parsing WebSocket message", e);
       }
     });
   });
 
-  // Iniciar el servidor proxy en el puerto 3000
-  const PROXY_PORT = 3000;
-  server.listen(PROXY_PORT, () => {
-    console.log(`Proxy running on http://localhost:${PROXY_PORT}`);
-    console.log(`WebSocket server running on port 9000`);
-  });
+  let runCommand = vscode.commands.registerCommand(
+    "extension.runScript",
+    function () {
+      // Crea una nueva terminal integrada de VSCode
+      let terminal = vscode.window.terminals.find(
+        (t) => t.name === "Console Warrior"
+      );
+      if (!terminal) {
+        terminal = vscode.window.createTerminal("Console Warrior");
+      }
+      // const injectedScript = `<script>console.log("Script jonathan");</script>`;
+
+      const nodeCommand = `node -e 'import("vite").then(async ({ createServer }) => { 
+        const injectedScript = ${JSON.stringify(injectionCode)};
+        const server = await createServer({
+          logLevel: "info",
+          plugins: [{
+            name: "console-warrior-plugin",
+            transformIndexHtml(html) {
+              return html.replace("</head>", injectedScript + "</head>");
+            },
+          }],
+        });
+        await server.listen();
+        server.printUrls();
+      })'`;
+
+      terminal.sendText(nodeCommand);
+      // Muestra la terminal
+      terminal.show();
+    }
+  );
+
+  context.subscriptions.push(runCommand);
 
   let disposable = vscode.commands.registerCommand(
     "console-warrior.runPort",
     async () => {
-      await launchBrowser(global);
-
       monitorChanges(
-        consoleData,
-        () => {
-          updateDecorations(vscode.window.activeTextEditor!, consoleData);
+        newConsoleData,
+        async () => {
+          const temp = await sourceMap(newConsoleData, sourceMapCache);
+          if (temp && temp.length > 0) {
+            consoleData.push(...temp);
+            updateDecorations(
+              vscode.window.activeTextEditor!,
+              consoleData,
+              decorationType
+            );
+            newConsoleData.length = 0;
+          }
         },
         UPDATE_RATE
       );
@@ -136,7 +135,10 @@ export function activate(context: vscode.ExtensionContext) {
     async (document: vscode.TextDocument) => {
       const editor = vscode.window.activeTextEditor;
       if (editor && editor.document === document) {
-        await global.page.reload({ waitUntil: "load" });
+        // Primero habilitamos el auto-reload
+        broadcastToClients(wss, { type: "enableAutoReload" });
+        // Luego enviamos el comando de recarga
+        broadcastToClients(wss, { type: "reload" });
       }
     }
   );
@@ -148,102 +150,4 @@ export function deactivate() {
   if (decorationType) {
     decorationType.dispose();
   }
-}
-
-async function updateDecorations(
-  editor: vscode.TextEditor,
-  consoleData: string[]
-) {
-  const document = editor.document;
-  const decorations: vscode.DecorationOptions[] = [];
-
-  // Get the current file path from the editor
-  const currentFilePath = document.uri.fsPath;
-
-  // Map para agrupar por `file`
-  const grouped = new Map<string, Map<string, Set<string>>>();
-
-  consoleData.forEach((jsonStr) => {
-    const { message, location } = JSON.parse(jsonStr);
-    const { file, line, column } = location;
-    const key = `${line}:${column}`; // Clave para `line:column`
-
-    if (!grouped.has(file)) {
-      grouped.set(file, new Map());
-    }
-
-    const fileMap = grouped.get(file)!;
-
-    if (!fileMap.has(key)) {
-      fileMap.set(key, new Set());
-    }
-
-    fileMap.get(key)!.add(message);
-  });
-
-  // Convertimos el `Map` a un objeto estructurado para facilitar su uso
-  const mappedConsoleData = Array.from(grouped.entries()).map(
-    ([file, locations]) => ({
-      file,
-      locations: Array.from(locations.entries()).map(([key, messages]) => ({
-        line: parseInt(key.split(":")[0]),
-        column: parseInt(key.split(":")[1]),
-        messages: Array.from(messages),
-      })),
-    })
-  );
-
-  // console.log(mappedConsoleData);
-
-  for (const row of mappedConsoleData) {
-    const file = row.file;
-
-    if (file && !currentFilePath.endsWith(file)) {
-      continue;
-    }
-
-    for (const col of row.locations) {
-      const startLine = col.line - 1;
-      let currentLine = startLine;
-      let foundClosing = false;
-
-      while (currentLine < document.lineCount && !foundClosing) {
-        const lineText = document.lineAt(currentLine).text;
-
-        // Check for both ); and ) endings
-        if (lineText.includes(");") || lineText.includes(")")) {
-          foundClosing = true;
-          // Find the last occurrence of either ); or )
-          const closingIndex = Math.max(
-            lineText.lastIndexOf(");") + 2,
-            lineText.lastIndexOf(")") + 1
-          );
-
-          const decoration: vscode.DecorationOptions = {
-            range: new vscode.Range(
-              new vscode.Position(currentLine, closingIndex),
-              new vscode.Position(currentLine, closingIndex)
-            ),
-            renderOptions: {
-              after: {
-                contentText:
-                  " → " +
-                  truncateStr(
-                    formattedMessage(col.messages.reverse().join(" → "))
-                  ),
-                color: "#73daca",
-                textDecoration: "none; white-space: pre; pointer-events: none;",
-              },
-            },
-            hoverMessage: new vscode.MarkdownString(col.messages.join(" → ")),
-          };
-
-          decorations.push(decoration);
-        }
-        currentLine++;
-      }
-    }
-  }
-
-  editor.setDecorations(decorationType, decorations);
 }
