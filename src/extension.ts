@@ -63,7 +63,6 @@ export function activate(context: vscode.ExtensionContext) {
       if (!terminal) {
         terminal = vscode.window.createTerminal("Console Warrior");
       }
-      // const injectedScript = `<script>console.log("Script jonathan");</script>`;
 
       const nodeCommand = `node -e 'import("vite").then(async ({ createServer }) => { 
         const injectedScript = ${JSON.stringify(injectionCode)};
