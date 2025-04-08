@@ -1,0 +1,127 @@
+import { IConsoleData } from "./types/consoleData.interface";
+import { SourceMapConsumer } from "source-map";
+
+export const sourceMap = async (
+  consoleData: IConsoleData[],
+  sourceMapCache: Map<any, any>
+) => {
+  const temp: IConsoleData[] = [];
+
+  for (const row of consoleData) {
+    const location = row.location;
+
+    if (!location.url.includes("@vite/client")) {
+      const sourceUrl = location.url.split("?")[0];
+      const timeParam = location.url.split("t=")[1];
+      const cacheKey = `${sourceUrl}-${timeParam}`;
+
+      if (!sourceMapCache.has(cacheKey)) {
+        try {
+          const sourceMapUrl = `${sourceUrl}.map`;
+
+          const response = await fetch(sourceMapUrl);
+
+          if (!response.ok) {
+            console.log("Ha fallado el sourcemap");
+            return;
+          }
+
+          const sourceMapData = (await response.json()) as any;
+
+          await SourceMapConsumer.with(sourceMapData, null, (consumer) => {
+            // const sourceContent = sourceMapData.sourcesContent[0];
+            // const lines = sourceContent.split("\n");
+
+            // // Find the original position from the generated position
+            // const originalPosition = consumer.originalPositionFor({
+            //   line: location.line,
+            //   column: location.column - 1,
+            // });
+
+            // // If we found a valid original position
+            // if (originalPosition.source && originalPosition.line) {
+            //   const originalLine = lines[originalPosition.line - 1] || "";
+
+            //   // Check if this line contains a console.log statement
+            //   if (
+            //     originalLine.includes("console.log") &&
+            //     !originalLine.trim().startsWith("//")
+            //   ) {
+            //     console.log(`\nMensaje: ${row.message}`);
+            //     // console.log(`Archivo Original: ${originalPosition.source}`);
+            //     console.log(`Línea Original: ${originalPosition.line}`);
+            //   }
+            // }
+
+            sourceMapCache.set(cacheKey, { consumer, data: sourceMapData });
+          });
+
+          // console.log(sourceMapCache.get(cacheKey));
+          const { consumer } = sourceMapCache.get(cacheKey);
+
+          const sourceContent = sourceMapData.sourcesContent[0];
+          const lines = sourceContent.split("\n");
+
+          // Find the original position from the generated position
+          const originalPosition = consumer.originalPositionFor({
+            line: location.line,
+            column: location.column - 1,
+          });
+
+          // If we found a valid original position
+          if (originalPosition.source && originalPosition.line) {
+            const originalLine = lines[originalPosition.line - 1] || "";
+
+            // Check if this line contains a console.log statement
+            if (
+              originalLine.includes("console.log") &&
+              !originalLine.trim().startsWith("//")
+            ) {
+              console.log(`\nMensaje: ${row.message}`);
+              // console.log(`Archivo Original: ${originalPosition.source}`);
+              console.log(`Línea Original: ${originalPosition.line}`);
+
+              temp.push({
+                message: row.message,
+                location: {
+                  url: originalPosition.source,
+                  line: originalPosition.line,
+                  column: originalPosition.column,
+                },
+              });
+            }
+          }
+        } catch (err) {
+          console.log("No existe el sourcemap");
+          console.log(`Mensaje: ${row.message}`);
+          console.log(`Archivo: ${location.url}`);
+          console.log(`Línea: ${location.line + 1}`);
+        }
+      } else {
+        console.log("Cached source map data to enhance performance.");
+
+        const { consumer } = sourceMapCache.get(cacheKey);
+
+        const originalPosition = consumer.originalPositionFor({
+          line: location.line,
+          column: location.column - 1,
+        });
+
+        if (originalPosition.source) {
+          console.log(`Mensaje: ${row.message}`);
+          console.log(`Línea Original: ${originalPosition.line}`);
+
+          temp.push({
+            message: row.message,
+            location: {
+              url: originalPosition.source,
+              line: originalPosition.line,
+              column: originalPosition.column,
+            },
+          });
+        }
+      }
+    }
+  }
+  return temp;
+};
