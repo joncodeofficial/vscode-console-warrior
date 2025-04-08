@@ -1,14 +1,11 @@
 import * as vscode from "vscode";
 import WebSocket from "ws";
-import { formatString } from "./utils/formatString";
-import { truncateString } from "./utils/truncateString";
 import { monitorChanges } from "./services/monitoring";
 import { UPDATE_RATE } from "./constants";
 import { IConsoleData } from "./types/consoleData.interface";
 import { sourceMap } from "./sourceMap";
 import { CreateProxy } from "./proxy";
 import { updateDecorations } from "./updateDecorations";
-import { exec } from "child_process";
 import { injectionCode } from "./services/injection";
 
 let decorationType: vscode.TextEditorDecorationType;
@@ -31,7 +28,7 @@ function broadcastToClients(wss: WebSocket.Server, message: any) {
 
 export function activate(context: vscode.ExtensionContext) {
   // Configurar el proxy HTTP
-  // CreateProxy();
+  CreateProxy();
 
   // Enviar mensaje a todos los clientes conectados
   wss.on("connection", (ws) => {
@@ -63,11 +60,12 @@ export function activate(context: vscode.ExtensionContext) {
       if (!terminal) {
         terminal = vscode.window.createTerminal("Console Warrior");
       }
-
-      const nodeCommand = `node -e 'import("vite").then(async ({ createServer }) => { 
+      const nodeCommand = `node -e 'process.stdout.write("\\u001B[2J\\u001B[0f");
+      import("vite").then(async ({ createServer }) => {
         const injectedScript = ${JSON.stringify(injectionCode)};
         const server = await createServer({
           logLevel: "info",
+          configFile: false,
           plugins: [{
             name: "console-warrior-plugin",
             transformIndexHtml(html) {
@@ -76,11 +74,15 @@ export function activate(context: vscode.ExtensionContext) {
           }],
         });
         await server.listen();
+        // Agregar espacio y formatear mejor la salida
+        process.stdout.write("\\n"); // Línea vacía para separar
+        console.log("\\n  \\x1b[32m➜  Console warrior ⚔️  support \\x1b[38;5;163mVITE\\x1b[0m");
+        console.log("  \\x1b[32m➜  ===============================\\x1b[0m");
         server.printUrls();
-      })'`;
-
+      });
+    '`;
       terminal.sendText(nodeCommand);
-      // Muestra la terminal
+
       terminal.show();
     }
   );
