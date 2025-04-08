@@ -13,27 +13,25 @@ export const injectionCode = `
         let relevantLine = "";
                 
         for(let line of stackLines) {
-          if(line.includes(".ts")) {
+          if(line.includes(".jsx")) {
             relevantLine = line;
             break;
           }
         }
                 
-        let match = relevantLine.match(/\\((.+?\\.ts(\\?[^:)]+)?):(\\d+):(\\d+)\\)/);
+        let match = relevantLine.match(/\\((.+?\\.jsx(\\?[^:)]+)?):(\\d+):(\\d+)\\)/);
         if (match) {
-          const fullPath = match[1];
           return {
-            url: fullPath,
+            url: match[1],
             line: parseInt(match[3]),
             column: parseInt(match[4])
           };
         }
                 
-        match = relevantLine.match(/at\\s+(.+?\\.ts(\\?[^:)]+)?):(\\d+):(\\d+)/);
+        match = relevantLine.match(/at\\s+(.+?\\.jsx(\\?[^:)]+)?):(\\d+):(\\d+)/);
         if (match) {
-          const fullPath = match[1];
           return {
-            url: fullPath,
+            url: match[1],
             line: parseInt(match[3]),
             column: parseInt(match[4])
           };
