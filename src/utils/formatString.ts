@@ -1,4 +1,4 @@
-export const formattedMessage = (message: string) => {
+export const formatString = (message: string) => {
   return message
     .replace(/\n/g, "") // Eliminar saltos de línea literales
     .replace(/\\n/g, "") // Eliminar \n como texto
