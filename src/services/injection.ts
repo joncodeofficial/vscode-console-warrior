@@ -21,7 +21,7 @@ export const injectionCode = `
                 
         let match = relevantLine.match(/\\((.+?\\.jsx(\\?[^:)]+)?):(\\d+):(\\d+)\\)/);
         if (match) {
-          return {
+          return {  
             url: match[1],
             line: parseInt(match[3]),
             column: parseInt(match[4])
@@ -114,7 +114,7 @@ export const injectionCode = `
       };
       
       ws.onerror = function(error) {
-        originalConsoleLog("WebSocket error:", error);
+        // originalConsoleLog("WebSocket error:", error);
         // Restaurar console.log en caso de error
         console.log = originalConsoleLog;
       };
@@ -122,7 +122,7 @@ export const injectionCode = `
       ws.onclose = function() {
         originalConsoleLog("WebSocket closed, reconnecting in 3s...");
         // Restaurar console.log cuando se cierra la conexión
-        console.log = originalConsoleLog;
+        // console.log = originalConsoleLog;
         setTimeout(connectWebSocket, 3000);
       };
     }

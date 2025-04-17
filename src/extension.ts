@@ -62,10 +62,14 @@ export function activate(context: vscode.ExtensionContext) {
       }
       const nodeCommand = `node -e 'process.stdout.write("\\u001B[2J\\u001B[0f");
       import("vite").then(async ({ createServer }) => {
+        const { fileURLToPath } = await import("url");
+        const { dirname, resolve } = await import("path");
+        const currentDir = process.cwd();
         const injectedScript = ${JSON.stringify(injectionCode)};
         const server = await createServer({
           logLevel: "info",
-          configFile: false,
+          root: currentDir,
+          configFile: resolve(currentDir, "vite.config.js"),  
           plugins: [{
             name: "console-warrior-plugin",
             transformIndexHtml(html) {
