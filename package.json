@@ -7,6 +7,8 @@
     "vscode": "^1.97.0"
   },
   "categories": [
+    "Programming Languages",
+    "Linters",
     "Other"
   ],
   "activationEvents": [],
@@ -20,6 +22,10 @@
       {
         "command": "extension.runScript",
         "title": "Testing command to run a script"
+      },
+      {
+        "command": "extension.injectConsoleWarriorPlugin",
+        "title": "Inyectar Console Warrior Plugin en Vite"
       }
     ]
   },
