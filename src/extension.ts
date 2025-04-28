@@ -7,6 +7,9 @@ import { sourceMap } from "./sourceMap";
 import { CreateProxy } from "./proxy";
 import { updateDecorations } from "./updateDecorations";
 import { injectionCode } from "./services/injection";
+import path from "path";
+import fs from "fs";
+import { addConsoleWarriorPlugin } from "./commands/addConsoleWarriorPlugin";
 
 let decorationType: vscode.TextEditorDecorationType;
 
@@ -149,6 +152,9 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(changeTextDocument);
+
+  let injectJavascript = addConsoleWarriorPlugin(vscode);
+  context.subscriptions.push(injectJavascript);
 }
 
 export function deactivate() {

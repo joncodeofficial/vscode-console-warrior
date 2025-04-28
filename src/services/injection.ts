@@ -13,13 +13,13 @@ export const injectionCode = `
         let relevantLine = "";
                 
         for(let line of stackLines) {
-          if(line.includes(".jsx")) {
+          if(line.includes(".ts")) {
             relevantLine = line;
             break;
           }
         }
                 
-        let match = relevantLine.match(/\\((.+?\\.jsx(\\?[^:)]+)?):(\\d+):(\\d+)\\)/);
+        let match = relevantLine.match(/\\((.+?\\.ts(\\?[^:)]+)?):(\\d+):(\\d+)\\)/);
         if (match) {
           return {  
             url: match[1],
@@ -28,7 +28,7 @@ export const injectionCode = `
           };
         }
                 
-        match = relevantLine.match(/at\\s+(.+?\\.jsx(\\?[^:)]+)?):(\\d+):(\\d+)/);
+        match = relevantLine.match(/at\\s+(.+?\\.ts(\\?[^:)]+)?):(\\d+):(\\d+)/);
         if (match) {
           return {
             url: match[1],
