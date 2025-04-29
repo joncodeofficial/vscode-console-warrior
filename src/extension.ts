@@ -6,19 +6,12 @@ import { IConsoleData } from "./types/consoleData.interface";
 import { sourceMap } from "./sourceMap";
 import { CreateProxy } from "./proxy";
 import { updateDecorations } from "./updateDecorations";
-import { injectionCode } from "./services/injection";
-import path from "path";
-import fs from "fs";
 import { addConsoleWarriorPlugin } from "./commands/addConsoleWarriorPlugin";
 
 let decorationType: vscode.TextEditorDecorationType;
-
 const wss = new WebSocket.Server({ port: 9000 });
-
 const consoleData: IConsoleData[] = [];
-
 const newConsoleData: IConsoleData[] = [];
-
 const sourceMapCache = new Map();
 
 function broadcastToClients(wss: WebSocket.Server, message: any) {
@@ -53,50 +46,7 @@ export function activate(context: vscode.ExtensionContext) {
     });
   });
 
-  let runCommand = vscode.commands.registerCommand(
-    "extension.runScript",
-    function () {
-      // Crea una nueva terminal integrada de VSCode
-      let terminal = vscode.window.terminals.find(
-        (t) => t.name === "Console Warrior"
-      );
-      if (!terminal) {
-        terminal = vscode.window.createTerminal("Console Warrior");
-      }
-      const nodeCommand = `node -e 'process.stdout.write("\\u001B[2J\\u001B[0f");
-      import("vite").then(async ({ createServer }) => {
-        const { fileURLToPath } = await import("url");
-        const { dirname, resolve } = await import("path");
-        const currentDir = process.cwd();
-        const injectedScript = ${JSON.stringify(injectionCode)};
-        const server = await createServer({
-          logLevel: "info",
-          root: currentDir,
-          configFile: resolve(currentDir, "vite.config.js"),  
-          plugins: [{
-            name: "console-warrior-plugin",
-            transformIndexHtml(html) {
-              return html.replace("</head>", injectedScript + "</head>");
-            },
-          }],
-        });
-        await server.listen();
-        // Agregar espacio y formatear mejor la salida
-        process.stdout.write("\\n"); // Línea vacía para separar
-        console.log("\\n  \\x1b[32m➜  Console warrior ⚔️  support \\x1b[38;5;163mVITE\\x1b[0m");
-        console.log("  \\x1b[32m➜  ===============================\\x1b[0m");
-        server.printUrls();
-      });
-    '`;
-      terminal.sendText(nodeCommand);
-
-      terminal.show();
-    }
-  );
-
-  context.subscriptions.push(runCommand);
-
-  let disposable = vscode.commands.registerCommand(
+  const runPort = vscode.commands.registerCommand(
     "console-warrior.runPort",
     async () => {
       monitorChanges(
@@ -122,7 +72,7 @@ export function activate(context: vscode.ExtensionContext) {
     }
   );
 
-  context.subscriptions.push(disposable);
+  context.subscriptions.push(runPort);
 
   // Crear el tipo de decoración
   decorationType = vscode.window.createTextEditorDecorationType({
@@ -153,7 +103,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(changeTextDocument);
 
-  let injectJavascript = addConsoleWarriorPlugin(vscode);
+  const injectJavascript = addConsoleWarriorPlugin(vscode);
   context.subscriptions.push(injectJavascript);
 }
 
