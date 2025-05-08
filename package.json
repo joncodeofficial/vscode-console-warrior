@@ -11,18 +11,12 @@
     "Linters",
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "workspaceContains:package.json"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
-      {
-        "command": "console-warrior.runPort",
-        "title": "Enter a port number to launch Console Warrior"
-      },
-      {
-        "command": "extension.runScript",
-        "title": "Testing command to run a script"
-      },
       {
         "command": "extension.injectConsoleWarriorPlugin",
         "title": "Inyectar Console Warrior Plugin en Vite"
@@ -56,5 +50,6 @@
     "portscanner": "^2.2.0",
     "source-map": "^0.7.4",
     "ws": "^8.18.0"
-  }
+  },
+  "packageManager": "pnpm@10.8.1+sha512.c50088ba998c67b8ca8c99df8a5e02fd2ae2e2b29aaf238feaa9e124248d3f48f9fb6db2424949ff901cffbb5e0f0cc1ad6aedb602cd29450751d11c35023677"
 }
