@@ -15,15 +15,15 @@ const consoleData: IConsoleData[] = [];
 const sourceMapCache = new Map();
 const consoleDataMap = new Map<string, Map<string, Set<string>>>();
 
-// Crear el tipo de decoración
+// Create the decoration type
 decorationType = vscode.window.createTextEditorDecorationType({
-  color: "#00FF00", // Color verde
-  textDecoration: "none; pointer-events: none;", // No seleccionable
+  color: "#00FF00", // Color green
+  textDecoration: "none; pointer-events: none;", // Not selectable
   rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
 });
 
 export function activate(context: vscode.ExtensionContext) {
-  // Configurar el proxy HTTP
+  // Configure the HTTP proxy
   CreateProxy();
 
   monitorChanges(
@@ -42,7 +42,7 @@ export function activate(context: vscode.ExtensionContext) {
     UPDATE_RATE
   );
 
-  // Enviar mensaje a todos los clientes conectados
+  // Send message to all connected clients
   wss.on("connection", (ws) => {
     console.log("Cliente conectado al WebSocket");
 
@@ -64,9 +64,9 @@ export function activate(context: vscode.ExtensionContext) {
     async (document: vscode.TextDocument) => {
       const editor = vscode.window.activeTextEditor;
       if (editor && editor.document === document) {
-        // Primero habilitamos el auto-reload
+        // First enable auto-reload
         broadcastToClients(wss, { type: "enableAutoReload" });
-        // Luego enviamos el comando de recarga
+        // Then send reload command
         broadcastToClients(wss, { type: "reload" });
       }
     }
