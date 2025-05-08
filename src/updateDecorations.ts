@@ -2,13 +2,16 @@ import * as vscode from "vscode";
 import { IConsoleData } from "./types/consoleData.interface";
 import { truncateString } from "./utils/truncateString";
 import { formatString } from "./utils/formatString";
+import { performance } from "perf_hooks";
 
 export const updateDecorations = (
   editor: vscode.TextEditor | undefined,
   consoleData: IConsoleData[],
-  decorationType: vscode.TextEditorDecorationType
+  decorationType: vscode.TextEditorDecorationType,
+  consoleDataMap: Map<string, Map<string, Set<string>>>
 ) => {
   if (!editor) return;
+  // console.log(consoleData);
 
   const document = editor.document;
   const decorations: vscode.DecorationOptions[] = [];
@@ -17,46 +20,36 @@ export const updateDecorations = (
   const currentFilePath = document.uri.fsPath;
 
   // Map para agrupar por `file`
-  const grouped = new Map<string, Map<string, Set<string>>>();
+  // console.log(consoleDataMap);
+  // const consoleDataMap = new Map<string, Map<string, Set<string>>>();
+  const start = performance.now();
 
   consoleData.forEach(({ message, location }) => {
-    const { url: file, line, column } = location;
+    const { url, line, column } = location;
     const key = `${line}:${column}`; // Clave para `line:column`
 
-    if (!grouped.has(file)) grouped.set(file, new Map());
+    if (!consoleDataMap.has(url)) consoleDataMap.set(url, new Map());
 
-    const fileMap = grouped.get(file)!;
+    const fileMap = consoleDataMap.get(url)!;
 
     if (!fileMap.has(key)) fileMap.set(key, new Set());
 
     fileMap.get(key)!.add(message);
   });
 
-  // Convertimos el `Map` a un objeto estructurado para facilitar su uso
-  const mappedConsoleData = Array.from(grouped.entries()).map(
-    ([file, locations]) => ({
-      file,
-      locations: Array.from(locations.entries()).map(([key, messages]) => ({
-        line: parseInt(key.split(":")[0]),
-        column: parseInt(key.split(":")[1]),
-        messages: Array.from(messages),
-      })),
-    })
-  );
+  for (const [file, innerMap] of consoleDataMap) {
+    for (const [position, set] of innerMap) {
+      const line = parseInt(position.split(":")[0]);
 
-  // console.log(mappedConsoleData);
+      const message = Array.from(set).reverse().join(" → ");
 
-  for (const row of mappedConsoleData) {
-    const file = row.file;
+      if (file && !currentFilePath.endsWith(file)) continue;
 
-    if (file && !currentFilePath.endsWith(file)) {
-      continue;
-    }
-
-    for (const col of row.locations) {
-      const startLine = col.line - 1;
+      const startLine = line - 1;
       let currentLine = startLine;
       let foundClosing = false;
+
+      // console.log(file, position, value);
 
       while (currentLine < document.lineCount && !foundClosing) {
         const lineText = document.lineAt(currentLine).text;
@@ -77,16 +70,12 @@ export const updateDecorations = (
             ),
             renderOptions: {
               after: {
-                contentText:
-                  " → " +
-                  truncateString(
-                    formatString(col.messages.reverse().join(" → "))
-                  ),
+                contentText: " → " + truncateString(formatString(message)),
                 color: "#73daca",
                 textDecoration: "none; white-space: pre; pointer-events: none;",
               },
             },
-            hoverMessage: new vscode.MarkdownString(col.messages.join(" → ")),
+            // hoverMessage: new vscode.MarkdownString(col.messages.join(" → ")),
           };
 
           decorations.push(decoration);
@@ -95,6 +84,9 @@ export const updateDecorations = (
       }
     }
   }
+  const end = performance.now();
+  console.log(`Duración: ${end - start} ms`);
+
   editor.setDecorations(decorationType, decorations);
   return decorations;
 };
