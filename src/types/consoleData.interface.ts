@@ -1,4 +1,5 @@
 export interface IConsoleData {
+  type?: string;
   message: string;
   location: {
     url: string;
