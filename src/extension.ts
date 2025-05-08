@@ -13,7 +13,7 @@ let decorationType: vscode.TextEditorDecorationType;
 const wss = new WebSocket.Server({ port: 9000 });
 const consoleData: IConsoleData[] = [];
 const sourceMapCache = new Map();
-const consoleDataMap = new Map<string, Map<string, Set<string>>>();
+const consoleDataMap = new Map<string, Map<string, string[]>>();
 
 // Create the decoration type
 decorationType = vscode.window.createTextEditorDecorationType({
