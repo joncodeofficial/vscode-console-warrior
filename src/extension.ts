@@ -3,7 +3,7 @@ import WebSocket from "ws";
 import { monitorChanges } from "./services/monitoring";
 import { UPDATE_RATE } from "./constants";
 import { IConsoleData } from "./types/consoleData.interface";
-import { sourceMap } from "./sourceMap";
+import { sourceMapping } from "./sourceMapping";
 import { CreateProxy } from "./proxy";
 import { updateDecorations } from "./updateDecorations";
 import { watcherNodeModules } from "./utils/watcherNodeModules";
@@ -12,8 +12,8 @@ import { broadcastToClients } from "./utils/broadcastToClients";
 let decorationType: vscode.TextEditorDecorationType;
 const wss = new WebSocket.Server({ port: 9000 });
 const consoleData: IConsoleData[] = [];
-const newConsoleData: IConsoleData[] = [];
 const sourceMapCache = new Map();
+const consoleDataMap = new Map<string, Map<string, Set<string>>>();
 
 // Crear el tipo de decoración
 decorationType = vscode.window.createTextEditorDecorationType({
@@ -27,18 +27,17 @@ export function activate(context: vscode.ExtensionContext) {
   CreateProxy();
 
   monitorChanges(
-    newConsoleData,
+    consoleData,
     async () => {
-      const temp = await sourceMap(newConsoleData, sourceMapCache);
-      if (temp && temp.length > 0) {
-        consoleData.push(...temp);
-        updateDecorations(
-          vscode.window.activeTextEditor!,
-          consoleData,
-          decorationType
-        );
-        newConsoleData.length = 0;
-      }
+      const newConsoleData = await sourceMapping(consoleData, sourceMapCache);
+      if (!newConsoleData || newConsoleData.length === 0) return;
+      updateDecorations(
+        vscode.window.activeTextEditor!,
+        newConsoleData,
+        decorationType,
+        consoleDataMap
+      );
+      consoleData.length = 0;
     },
     UPDATE_RATE
   );
@@ -48,29 +47,18 @@ export function activate(context: vscode.ExtensionContext) {
     console.log("Cliente conectado al WebSocket");
 
     consoleData.length = 0;
-    newConsoleData.length = 0;
     sourceMapCache.clear();
+    consoleDataMap.clear();
 
     ws.on("message", (message) => {
       try {
-        // console.log(message);
-        const data = JSON.parse(message as any);
-        // console.log(data);
-        // Aquí puedes manejar otros tipos de mensajes
-        newConsoleData.push(data);
+        const data: IConsoleData = JSON.parse(message.toString());
+        consoleData.push(data);
       } catch (e) {
         console.warn("Error parsing WebSocket message", e);
       }
     });
   });
-
-  // // Evento para detectar cambios en el documento
-  // const changeTextDocument = vscode.workspace.onDidChangeTextDocument(
-  //   async (event: vscode.TextDocumentChangeEvent) => {
-  //     const editor = vscode.window.activeTextEditor;
-  //     if (!editor) return;
-  //   }
-  // );
 
   vscode.workspace.onDidSaveTextDocument(
     async (document: vscode.TextDocument) => {
@@ -84,7 +72,6 @@ export function activate(context: vscode.ExtensionContext) {
     }
   );
 
-  // context.subscriptions.push(changeTextDocument);
   context.subscriptions.push(watcherNodeModules(vscode)!);
 }
 
