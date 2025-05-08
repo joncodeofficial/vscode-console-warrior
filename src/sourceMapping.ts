@@ -1,7 +1,7 @@
 import { IConsoleData } from "./types/consoleData.interface";
 import { SourceMapConsumer } from "source-map";
 
-export const sourceMap = async (
+export const sourceMapping = async (
   consoleData: IConsoleData[],
   sourceMapCache: Map<any, any>
 ) => {
@@ -77,9 +77,9 @@ export const sourceMap = async (
               originalLine.includes("console.log") &&
               !originalLine.trim().startsWith("//")
             ) {
-              console.log(`\nMensaje: ${row.message}`);
+              // console.log(`\nMensaje: ${row.message}`);
               // console.log(`Archivo Original: ${originalPosition.source}`);
-              console.log(`Línea Original: ${originalPosition.line}`);
+              // console.log(`Línea Original: ${originalPosition.line}`);
 
               temp.push({
                 message: row.message,
@@ -92,13 +92,13 @@ export const sourceMap = async (
             }
           }
         } catch (err) {
-          console.log("No existe el sourcemap");
-          console.log(`Mensaje: ${row.message}`);
-          console.log(`Archivo: ${location.url}`);
-          console.log(`Línea: ${location.line + 1}`);
+          // console.log("No existe el sourcemap");
+          // console.log(`Mensaje: ${row.message}`);
+          // console.log(`Archivo: ${location.url}`);
+          // console.log(`Línea: ${location.line + 1}`);
         }
       } else {
-        console.log("Cached source map data to enhance performance.");
+        console.log("Cached sourcemap to enhance performance.");
 
         const { consumer } = sourceMapCache.get(cacheKey);
 
@@ -108,8 +108,8 @@ export const sourceMap = async (
         });
 
         if (originalPosition.source) {
-          console.log(`Mensaje: ${row.message}`);
-          console.log(`Línea Original: ${originalPosition.line}`);
+          // console.log(`Mensaje: ${row.message}`);
+          // console.log(`Línea Original: ${originalPosition.line}`);
 
           temp.push({
             message: row.message,
