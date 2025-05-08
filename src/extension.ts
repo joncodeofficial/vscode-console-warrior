@@ -7,6 +7,8 @@ import { sourceMap } from "./sourceMap";
 import { CreateProxy } from "./proxy";
 import { updateDecorations } from "./updateDecorations";
 import { addConsoleWarriorPlugin } from "./commands/addConsoleWarriorPlugin";
+import path from "path";
+import fs from "fs";
 
 let decorationType: vscode.TextEditorDecorationType;
 const wss = new WebSocket.Server({ port: 9000 });
@@ -25,6 +27,23 @@ function broadcastToClients(wss: WebSocket.Server, message: any) {
 export function activate(context: vscode.ExtensionContext) {
   // Configurar el proxy HTTP
   CreateProxy();
+
+  monitorChanges(
+    newConsoleData,
+    async () => {
+      const temp = await sourceMap(newConsoleData, sourceMapCache);
+      if (temp && temp.length > 0) {
+        consoleData.push(...temp);
+        updateDecorations(
+          vscode.window.activeTextEditor!,
+          consoleData,
+          decorationType
+        );
+        newConsoleData.length = 0;
+      }
+    },
+    UPDATE_RATE
+  );
 
   // Enviar mensaje a todos los clientes conectados
   wss.on("connection", (ws) => {
@@ -45,34 +64,6 @@ export function activate(context: vscode.ExtensionContext) {
       }
     });
   });
-
-  const runPort = vscode.commands.registerCommand(
-    "console-warrior.runPort",
-    async () => {
-      monitorChanges(
-        newConsoleData,
-        async () => {
-          const temp = await sourceMap(newConsoleData, sourceMapCache);
-          if (temp && temp.length > 0) {
-            consoleData.push(...temp);
-            updateDecorations(
-              vscode.window.activeTextEditor!,
-              consoleData,
-              decorationType
-            );
-            newConsoleData.length = 0;
-          }
-        },
-        UPDATE_RATE
-      );
-
-      vscode.window.showInformationMessage(
-        "Console Warrior is running in port 5173"
-      );
-    }
-  );
-
-  context.subscriptions.push(runPort);
 
   // Crear el tipo de decoración
   decorationType = vscode.window.createTextEditorDecorationType({
@@ -103,12 +94,70 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(changeTextDocument);
 
-  const injectJavascript = addConsoleWarriorPlugin(vscode);
-  context.subscriptions.push(injectJavascript);
+  const workspacePath = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+  if (!workspacePath) return;
+
+  const nodeModulesPath = path.join(workspacePath, "node_modules");
+
+  // If already exists, check if it's ready
+  if (fs.existsSync(nodeModulesPath)) {
+    checkIfNodeModulesReady(nodeModulesPath).then((ready) => {
+      if (ready) {
+        onNodeModulesReady(nodeModulesPath);
+        addConsoleWarriorPlugin(vscode);
+        vscode.window.showInformationMessage(
+          "Este se ejecuta cuando reload o se inicia el workspace"
+        );
+      }
+    });
+    return;
+  }
+
+  // Watch for folder creation
+  const watcher = vscode.workspace.createFileSystemWatcher(
+    new vscode.RelativePattern(workspacePath, "node_modules"),
+    false,
+    true,
+    true
+  );
+
+  watcher.onDidCreate(async () => {
+    const ready = await checkIfNodeModulesReady(nodeModulesPath);
+    if (ready) {
+      addConsoleWarriorPlugin(vscode);
+      vscode.window.showInformationMessage(
+        "Este se ejecuta cuando se crea el node_modules"
+      );
+      onNodeModulesReady(nodeModulesPath);
+    }
+    watcher.dispose();
+  });
+
+  context.subscriptions.push(watcher);
 }
 
 export function deactivate() {
   if (decorationType) {
     decorationType.dispose();
   }
+}
+
+async function checkIfNodeModulesReady(
+  dir: string,
+  maxTries = 20,
+  delay = 500
+): Promise<boolean> {
+  for (let i = 0; i < maxTries; i++) {
+    try {
+      const items = fs.readdirSync(dir).filter((name) => !name.startsWith("."));
+      if (items.length > 0) return true;
+    } catch {}
+    await new Promise((r) => setTimeout(r, delay));
+  }
+  return false;
+}
+
+function onNodeModulesReady(dir: string) {
+  vscode.window.showInformationMessage(`node_modules is ready at: ${dir}`);
+  // your logic here
 }
