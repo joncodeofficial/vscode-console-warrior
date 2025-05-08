@@ -16,12 +16,7 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
-    "commands": [
-      {
-        "command": "extension.injectConsoleWarriorPlugin",
-        "title": "Inyectar Console Warrior Plugin en Vite"
-      }
-    ]
+    "commands": []
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
