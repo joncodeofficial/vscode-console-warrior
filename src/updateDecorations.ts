@@ -8,7 +8,7 @@ export const updateDecorations = (
   editor: vscode.TextEditor | undefined,
   consoleData: IConsoleData[],
   decorationType: vscode.TextEditorDecorationType,
-  consoleDataMap: Map<string, Map<string, Set<string>>>
+  consoleDataMap: Map<string, Map<string, string[]>>
 ) => {
   if (!editor) return;
   // console.log(consoleData);
@@ -19,9 +19,6 @@ export const updateDecorations = (
   // Get the current file path from the editor
   const currentFilePath = document.uri.fsPath;
 
-  // Map para agrupar por `file`
-  // console.log(consoleDataMap);
-  // const consoleDataMap = new Map<string, Map<string, Set<string>>>();
   const start = performance.now();
 
   consoleData.forEach(({ message, location }) => {
@@ -32,9 +29,9 @@ export const updateDecorations = (
 
     const fileMap = consoleDataMap.get(url)!;
 
-    if (!fileMap.has(key)) fileMap.set(key, new Set());
+    if (!fileMap.has(key)) fileMap.set(key, []);
 
-    fileMap.get(key)!.add(message);
+    fileMap.get(key)!.push(message);
   });
 
   for (const [file, innerMap] of consoleDataMap) {
