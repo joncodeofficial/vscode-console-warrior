@@ -3,7 +3,7 @@ import path from "path";
 
 type VSCODE = typeof import("vscode");
 
-export const addConsoleWarriorPlugin = (vscode: VSCODE) => {
+export const consoleWarriorPlugin = (vscode: VSCODE) => {
   return (() => {
     try {
       // Obtener el workspace actual
