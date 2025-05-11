@@ -1,9 +1,14 @@
 import { IConsoleData } from "./types/consoleData.interface";
-import { SourceMapConsumer } from "source-map";
+import { RawSourceMap, SourceMapConsumer } from "source-map";
+
+type SourceMapCacheValue = {
+  consumer: SourceMapConsumer;
+  data: RawSourceMap;
+};
 
 export const sourceMapping = async (
   consoleData: IConsoleData[],
-  sourceMapCache: Map<any, any>
+  sourceMapCache: Map<string, SourceMapCacheValue>
 ) => {
   const temp: IConsoleData[] = [];
 
@@ -25,42 +30,16 @@ export const sourceMapping = async (
             console.log("Ha fallado el sourcemap");
             return;
           }
-
-          const sourceMapData = (await response.json()) as any;
+          const sourceMapData = (await response.json()) as RawSourceMap;
 
           await SourceMapConsumer.with(sourceMapData, null, (consumer) => {
-            // const sourceContent = sourceMapData.sourcesContent[0];
-            // const lines = sourceContent.split("\n");
-
-            // // Find the original position from the generated position
-            // const originalPosition = consumer.originalPositionFor({
-            //   line: location.line,
-            //   column: location.column - 1,
-            // });
-
-            // // If we found a valid original position
-            // if (originalPosition.source && originalPosition.line) {
-            //   const originalLine = lines[originalPosition.line - 1] || "";
-
-            //   // Check if this line contains a console.log statement
-            //   if (
-            //     originalLine.includes("console.log") &&
-            //     !originalLine.trim().startsWith("//")
-            //   ) {
-            //     console.log(`\nMensaje: ${row.message}`);
-            //     // console.log(`Archivo Original: ${originalPosition.source}`);
-            //     console.log(`Línea Original: ${originalPosition.line}`);
-            //   }
-            // }
-
             sourceMapCache.set(cacheKey, { consumer, data: sourceMapData });
           });
 
-          // console.log(sourceMapCache.get(cacheKey));
-          const { consumer } = sourceMapCache.get(cacheKey);
+          const { consumer } = sourceMapCache.get(cacheKey)!;
 
-          const sourceContent = sourceMapData.sourcesContent[0];
-          const lines = sourceContent.split("\n");
+          const sourceContent = sourceMapData.sourcesContent?.[0];
+          const lines = sourceContent?.split("\n");
 
           // Find the original position from the generated position
           const originalPosition = consumer.originalPositionFor({
@@ -70,7 +49,7 @@ export const sourceMapping = async (
 
           // If we found a valid original position
           if (originalPosition.source && originalPosition.line) {
-            const originalLine = lines[originalPosition.line - 1] || "";
+            const originalLine = lines?.[originalPosition.line - 1] || "";
 
             // Check if this line contains a console.log statement
             if (
@@ -86,7 +65,7 @@ export const sourceMapping = async (
                 location: {
                   url: originalPosition.source,
                   line: originalPosition.line,
-                  column: originalPosition.column,
+                  column: originalPosition.column ?? 0,
                 },
               });
             }
@@ -100,7 +79,7 @@ export const sourceMapping = async (
       } else {
         console.log("Cached sourcemap to enhance performance.");
 
-        const { consumer } = sourceMapCache.get(cacheKey);
+        const { consumer } = sourceMapCache.get(cacheKey)!;
 
         const originalPosition = consumer.originalPositionFor({
           line: location.line,
@@ -115,8 +94,8 @@ export const sourceMapping = async (
             message: row.message,
             location: {
               url: originalPosition.source,
-              line: originalPosition.line,
-              column: originalPosition.column,
+              line: originalPosition.line ?? 0,
+              column: originalPosition.column ?? 0,
             },
           });
         }
