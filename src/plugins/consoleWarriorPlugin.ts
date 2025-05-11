@@ -3,7 +3,7 @@ import path from "path";
 
 type VSCODE = typeof import("vscode");
 
-export const consoleWarriorPlugin = (vscode: VSCODE) => {
+export const consoleWarriorPlugin = (vscode: VSCODE, relativePath: string) => {
   return (() => {
     try {
       // Obtener el workspace actual
@@ -13,13 +13,10 @@ export const consoleWarriorPlugin = (vscode: VSCODE) => {
         return;
       }
 
-      const workspacePath = workspaceFolders[0].uri.fsPath;
+      // const workspacePath = workspaceFolders[0].uri.fsPath;
 
       // Ruta específica al archivo cli.js en vite
-      const targetFile = path.join(
-        workspacePath,
-        "node_modules/vite/dist/node/cli.js"
-      );
+      const targetFile = path.join(relativePath, "/vite/dist/node/cli.js");
 
       // Verificar que el archivo existe
       if (!fs.existsSync(targetFile)) {
