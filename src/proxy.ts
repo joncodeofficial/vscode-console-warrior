@@ -1,49 +1,67 @@
 import httpProxy from "http-proxy";
 import http from "http";
-import { injectionCode } from "./services/injection";
+import { IncomingMessage, ServerResponse } from "http";
+import { injectionCode } from "./services/injectionCode";
 
-export const CreateProxy = () => {
+export const CreateProxy = (): void => {
   // Configurar el proxy HTTP
   const proxy = httpProxy.createProxyServer({});
 
   // Crear servidor proxy que inyecta el código en respuestas HTML
-  const server = http.createServer((req, res: any) => {
-    const _write = res.write;
-    const _end = res.end;
-    const chunks: any = [];
+  const server = http.createServer(
+    (req: IncomingMessage, res: ServerResponse) => {
+      const _write = res.write;
+      const _end = res.end;
+      const chunks: Buffer[] = [];
 
-    res.write = function (chunk: any) {
-      chunks.push(chunk);
-      return true;
-    };
+      // Override write method
+      res.write = function (chunk: Buffer | string): boolean {
+        if (chunk) {
+          chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+        }
+        return true;
+      };
 
-    res.end = function (chunk: any) {
-      if (chunk) {
-        chunks.push(chunk);
-      }
+      // Override end method
+      res.end = function (
+        chunk?: any,
+        encoding?: BufferEncoding | (() => void),
+        callback?: () => void
+      ): ServerResponse {
+        if (typeof encoding === "function") {
+          callback = encoding;
+          encoding = undefined;
+        }
 
-      const contentType = res.getHeader("content-type") || "";
-      if (contentType.includes("text/html")) {
-        const body = Buffer.concat(chunks).toString("utf8");
-        const injectedBody = body.replace(
-          "</head>",
-          `${injectionCode}
+        if (chunk) {
+          chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+        }
+
+        const contentType = (res.getHeader("content-type") || "").toString();
+        if (contentType.includes("text/html")) {
+          const body = Buffer.concat(chunks).toString("utf8");
+          const injectedBody = body.replace(
+            "</head>",
+            `${injectionCode}
             </head>`
-        );
-        res.removeHeader("content-length");
-        _write.call(res, injectedBody);
-      } else {
-        chunks.forEach((chunk: any) => _write.call(res, chunk));
-      }
+          );
+          res.removeHeader("content-length");
+          _write.call(res, injectedBody, "utf8", () => {});
+        } else {
+          chunks.forEach((chunk: Buffer) =>
+            _write.call(res, chunk, "utf8", () => {})
+          );
+        }
 
-      _end.call(res);
-    };
+        return _end.call(res, undefined, "utf8", callback);
+      };
 
-    // Redirigir peticiones al Live Server que corre en el puerto 5500
-    proxy.web(req, res, {
-      target: "http://localhost:5173",
-    });
-  });
+      // Redirigir peticiones al servidor que corre en el puerto 5173
+      proxy.web(req, res, {
+        target: "http://localhost:5173",
+      });
+    }
+  );
 
   // Iniciar el servidor proxy en el puerto 3000
   const PROXY_PORT = 3000;
