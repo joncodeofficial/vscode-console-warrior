@@ -18,7 +18,7 @@ const consoleDataMap = new Map<string, Map<string, string[]>>();
 // Create the decoration type
 decorationType = vscode.window.createTextEditorDecorationType({
   color: "#00FF00", // Color green
-  textDecoration: "none; pointer-events: none;", // Not selectable
+  textDecoration: "none; pointer-events: none;",
   rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
 });
 
@@ -54,8 +54,9 @@ export function activate(context: vscode.ExtensionContext) {
       try {
         const data: IConsoleData = JSON.parse(message.toString());
         consoleData.push(data);
+        console.log(data);
       } catch (e) {
-        console.warn("Error parsing WebSocket message", e);
+        console.warn("Error parsing WebSocket message");
       }
     });
   });
