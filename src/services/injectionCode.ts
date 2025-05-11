@@ -6,6 +6,8 @@ export const injectionCode = `
     var messageQueue = [];
     var ws = null;
     var autoReloadEnabled = false;
+    const ansiRegex = /\x1b\[[0-9;]*m/g;
+
     
     function getStackInfo() {
       try {
@@ -13,13 +15,13 @@ export const injectionCode = `
         let relevantLine = "";
                 
         for(let line of stackLines) {
-          if(line.includes(".ts")) {
+          if(line.includes(".tsx")) {
             relevantLine = line;
             break;
           }
         }
                 
-        let match = relevantLine.match(/\\((.+?\\.ts(\\?[^:)]+)?):(\\d+):(\\d+)\\)/);
+        let match = relevantLine.match(/\\((.+?\\.tsx(\\?[^:)]+)?):(\\d+):(\\d+)\\)/);
         if (match) {
           return {  
             url: match[1],
@@ -28,7 +30,7 @@ export const injectionCode = `
           };
         }
                 
-        match = relevantLine.match(/at\\s+(.+?\\.ts(\\?[^:)]+)?):(\\d+):(\\d+)/);
+        match = relevantLine.match(/at\\s+(.+?\\.tsx(\\?[^:)]+)?):(\\d+):(\\d+)/);
         if (match) {
           return {
             url: match[1],
@@ -88,7 +90,7 @@ export const injectionCode = `
           var location = getStackInfo();
           var logData = {
             type: "log",
-            message: args.join(" "),
+            message: args.filter(str => !ansiRegex.test(str)).join(" "),
             location: location
           };
           
@@ -116,7 +118,7 @@ export const injectionCode = `
       ws.onerror = function(error) {
         // originalConsoleLog("WebSocket error:", error);
         // Restaurar console.log en caso de error
-        console.log = originalConsoleLog;
+        // console.log = originalConsoleLog;
       };
       
       ws.onclose = function() {
@@ -136,7 +138,7 @@ export const injectionCode = `
       var args = Array.prototype.slice.call(arguments);
       var location = getStackInfo();
       var logData = {
-        message: args.join(" "),
+        message: args.filter(str => !ansiRegex.test(str)).join(" "),
         location: location
       };
       messageQueue.push(logData);
