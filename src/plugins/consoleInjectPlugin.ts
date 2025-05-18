@@ -3,7 +3,7 @@ import path from "path";
 
 type VSCODE = typeof import("vscode");
 
-export const consoleWarriorPlugin = (vscode: VSCODE, relativePath: string) => {
+export const consoleInjectPlugin = (vscode: VSCODE, relativePath: string) => {
   return (() => {
     try {
       // Obtener el workspace actual
@@ -12,8 +12,6 @@ export const consoleWarriorPlugin = (vscode: VSCODE, relativePath: string) => {
         vscode.window.showErrorMessage("No hay un workspace abierto.");
         return;
       }
-
-      // const workspacePath = workspaceFolders[0].uri.fsPath;
 
       // Ruta específica al archivo cli.js en vite
       const targetFile = path.join(relativePath, "/vite/dist/node/cli.js");
@@ -35,7 +33,7 @@ export const consoleWarriorPlugin = (vscode: VSCODE, relativePath: string) => {
       // El código que deseas insertar
       const pluginCode = `const server = await createServer({
       plugins: [{
-          name: "console-warrior-plugin",
+          name: "console-inject-plugin",
           transformIndexHtml(html) {
               return new Promise((resolve) => {
                   const vscodePath = path.resolve(process.env.HOME || '', '.vscode/extensions/probando.js');
@@ -47,9 +45,9 @@ export const consoleWarriorPlugin = (vscode: VSCODE, relativePath: string) => {
       }],`;
 
       // Comprobar si ya existe el plugin
-      if (fileContent.includes("console-warrior-plugin")) {
+      if (fileContent.includes("console-inject-plugin")) {
         vscode.window.showInformationMessage(
-          "El plugin console-warrior-plugin ya está presente en el archivo."
+          "El plugin console-inject-plugin ya está presente en el archivo."
         );
         return;
       }
@@ -61,7 +59,7 @@ export const consoleWarriorPlugin = (vscode: VSCODE, relativePath: string) => {
         const test = "server.printUrls();";
 
         const testCode = `
-          console.log(colors.green("  ➜  Console warrior ⚔️  supports"), colors.magenta(colors.bold("VITE")));
+          console.log(colors.green("  ➜  Console inject ⚔️  supports"), colors.magenta(colors.bold("VITE")));
           console.log(colors.green("  ➜  ================================"));
           server.printUrls();
           `;
@@ -71,7 +69,7 @@ export const consoleWarriorPlugin = (vscode: VSCODE, relativePath: string) => {
         // Escribir el archivo modificado
         fs.writeFileSync(targetFile, fileContent, "utf8");
         vscode.window.showInformationMessage(
-          "Plugin Console Warrior insertado correctamente en el archivo cli.js de Vite."
+          "Plugin Console inject insertado correctamente en el archivo cli.js de Vite."
         );
       } else {
         vscode.window.showErrorMessage(
