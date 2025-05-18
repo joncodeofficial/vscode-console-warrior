@@ -1,6 +1,6 @@
 {
-  "name": "console-warrior",
-  "displayName": "console warrior",
+  "name": "console-inject",
+  "displayName": "console inject",
   "description": "it is an free similar to console ninja open source",
   "version": "0.0.1",
   "engines": {
@@ -41,9 +41,9 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
+    "@jridgewell/trace-mapping": "^0.3.25",
     "http-proxy": "^1.18.1",
     "portscanner": "^2.2.0",
-    "source-map": "^0.7.4",
     "ws": "^8.18.0"
   },
   "packageManager": "pnpm@10.8.1+sha512.c50088ba998c67b8ca8c99df8a5e02fd2ae2e2b29aaf238feaa9e124248d3f48f9fb6db2424949ff901cffbb5e0f0cc1ad6aedb602cd29450751d11c35023677"
