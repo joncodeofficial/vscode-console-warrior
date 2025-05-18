@@ -11,7 +11,6 @@ export const updateDecorations = (
   consoleDataMap: Map<string, Map<string, string[]>>
 ) => {
   if (!editor) return;
-  // console.log(consoleData);
 
   const document = editor.document;
   const decorations: vscode.DecorationOptions[] = [];
@@ -46,8 +45,6 @@ export const updateDecorations = (
       let currentLine = startLine;
       let foundClosing = false;
 
-      // console.log(file, position, value);
-
       while (currentLine < document.lineCount && !foundClosing) {
         const lineText = document.lineAt(currentLine).text;
 
@@ -72,7 +69,6 @@ export const updateDecorations = (
                 textDecoration: "none; white-space: pre; pointer-events: none;",
               },
             },
-            // hoverMessage: new vscode.MarkdownString(col.messages.join(" → ")),
           };
 
           decorations.push(decoration);
