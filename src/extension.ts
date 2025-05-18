@@ -8,11 +8,12 @@ import { CreateProxy } from "./proxy";
 import { updateDecorations } from "./updateDecorations";
 import { watcherNodeModules } from "./utils/watcherNodeModules";
 import { broadcastToClients } from "./utils/broadcastToClients";
+import { TraceMap } from "@jridgewell/trace-mapping";
 
 let decorationType: vscode.TextEditorDecorationType;
 const wss = new WebSocket.Server({ port: 9000 });
 const consoleData: IConsoleData[] = [];
-const sourceMapCache = new Map();
+const sourceMapCache = new Map<string, TraceMap>();
 const consoleDataMap = new Map<string, Map<string, string[]>>();
 
 // Create the decoration type
@@ -25,6 +26,25 @@ decorationType = vscode.window.createTextEditorDecorationType({
 export function activate(context: vscode.ExtensionContext) {
   // Configure the HTTP proxy
   CreateProxy();
+
+  // Send message to all connected clients
+  wss.on("connection", (ws) => {
+    console.log("Cliente conectado al WebSocket");
+
+    consoleData.length = 0;
+    sourceMapCache.clear();
+    consoleDataMap.clear();
+
+    ws.on("message", (message) => {
+      try {
+        const data: IConsoleData = JSON.parse(message.toString());
+        console.log(data);
+        consoleData.push(data);
+      } catch (e) {
+        console.warn("Error parsing WebSocket message");
+      }
+    });
+  });
 
   monitorChanges(
     consoleData,
@@ -42,33 +62,18 @@ export function activate(context: vscode.ExtensionContext) {
     UPDATE_RATE
   );
 
-  // Send message to all connected clients
-  wss.on("connection", (ws) => {
-    console.log("Cliente conectado al WebSocket");
-
-    consoleData.length = 0;
-    sourceMapCache.clear();
-    consoleDataMap.clear();
-
-    ws.on("message", (message) => {
-      try {
-        const data: IConsoleData = JSON.parse(message.toString());
-        consoleData.push(data);
-        console.log(data);
-      } catch (e) {
-        console.warn("Error parsing WebSocket message");
-      }
-    });
-  });
-
   vscode.workspace.onDidSaveTextDocument(
     async (document: vscode.TextDocument) => {
       const editor = vscode.window.activeTextEditor;
       if (editor && editor.document === document) {
         // First enable auto-reload
-        broadcastToClients(wss, { type: "enableAutoReload" });
+        // broadcastToClients(wss, { type: "enableAutoReload" });
         // Then send reload command
-        broadcastToClients(wss, { type: "reload" });
+        // broadcastToClients(wss, { type: "reload" });
+        // consoleData.length = 0;
+        // sourceMapCache.clear();
+        // consoleDataMap.clear();
+        // vscode.window.activeTextEditor?.setDecorations(decorationType, []);
       }
     }
   );
