@@ -1,19 +1,20 @@
 import { IConsoleData } from "./types/consoleData.interface";
-import { RawSourceMap, SourceMapConsumer } from "source-map";
-
-type SourceMapCacheValue = {
-  consumer: SourceMapConsumer;
-  data: RawSourceMap;
-};
+import {
+  SourceMapInput,
+  TraceMap,
+  originalPositionFor,
+} from "@jridgewell/trace-mapping";
 
 export const sourceMapping = async (
   consoleData: IConsoleData[],
-  sourceMapCache: Map<string, SourceMapCacheValue>
+  sourceMapCache: Map<string, TraceMap>
 ) => {
   const temp: IConsoleData[] = [];
 
   for (const row of consoleData) {
     const location = row.location;
+
+    console.log(row);
 
     if (!location.url.includes("@vite/client")) {
       const sourceUrl = location.url.split("?")[0];
@@ -27,49 +28,30 @@ export const sourceMapping = async (
           const response = await fetch(sourceMapUrl);
 
           if (!response.ok) {
-            console.log("Ha fallado el sourcemap");
+            console.log("Had failed the sourcemap");
             return;
           }
-          const sourceMapData = (await response.json()) as RawSourceMap;
+          const sourceMapData = (await response.json()) as SourceMapInput;
 
-          await SourceMapConsumer.with(sourceMapData, null, (consumer) => {
-            sourceMapCache.set(cacheKey, { consumer, data: sourceMapData });
+          // Create the TraceMap object
+          const tracer = new TraceMap(sourceMapData);
+
+          // Find the original position
+          const original = originalPositionFor(tracer, {
+            line: location.line, // line in the generated file (bundle.js)
+            column: location.column, // column in the generated file (bundle.js)
           });
 
-          const { consumer } = sourceMapCache.get(cacheKey)!;
+          sourceMapCache.set(cacheKey, tracer);
 
-          const sourceContent = sourceMapData.sourcesContent?.[0];
-          const lines = sourceContent?.split("\n");
-
-          // Find the original position from the generated position
-          const originalPosition = consumer.originalPositionFor({
-            line: location.line,
-            column: location.column - 1,
+          temp.push({
+            message: row.message,
+            location: {
+              url: original.source ?? "",
+              line: original.line ?? 0,
+              column: original.column ?? 0,
+            },
           });
-
-          // If we found a valid original position
-          if (originalPosition.source && originalPosition.line) {
-            const originalLine = lines?.[originalPosition.line - 1] || "";
-
-            // Check if this line contains a console.log statement
-            if (
-              originalLine.includes("console.log") &&
-              !originalLine.trim().startsWith("//")
-            ) {
-              // console.log(`\nMensaje: ${row.message}`);
-              // console.log(`Archivo Original: ${originalPosition.source}`);
-              // console.log(`Línea Original: ${originalPosition.line}`);
-
-              temp.push({
-                message: row.message,
-                location: {
-                  url: originalPosition.source,
-                  line: originalPosition.line,
-                  column: originalPosition.column ?? 0,
-                },
-              });
-            }
-          }
         } catch (err) {
           // console.log("No existe el sourcemap");
           // console.log(`Mensaje: ${row.message}`);
@@ -79,26 +61,22 @@ export const sourceMapping = async (
       } else {
         console.log("Cached sourcemap to enhance performance.");
 
-        const { consumer } = sourceMapCache.get(cacheKey)!;
+        // const { sources } = sourceMapCache.get(cacheKey)!;
+        const tracer = sourceMapCache.get(cacheKey)!;
 
-        const originalPosition = consumer.originalPositionFor({
+        const originalPosition = originalPositionFor(tracer, {
           line: location.line,
-          column: location.column - 1,
+          column: location.column,
         });
 
-        if (originalPosition.source) {
-          // console.log(`Mensaje: ${row.message}`);
-          // console.log(`Línea Original: ${originalPosition.line}`);
-
-          temp.push({
-            message: row.message,
-            location: {
-              url: originalPosition.source,
-              line: originalPosition.line ?? 0,
-              column: originalPosition.column ?? 0,
-            },
-          });
-        }
+        temp.push({
+          message: row.message,
+          location: {
+            url: originalPosition.source ?? "",
+            line: originalPosition.line ?? 0,
+            column: originalPosition.column ?? 0,
+          },
+        });
       }
     }
   }
