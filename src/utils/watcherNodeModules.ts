@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { checkIfNodeModulesReady } from "./checkIfNodeModulesReady";
-import { consoleWarriorPlugin } from "../plugins/consoleWarriorPlugin";
+import { consoleInjectPlugin } from "../plugins/consoleInjectPlugin";
 import * as VSCODE from "vscode";
 
 export const watcherNodeModules = (vscode: typeof VSCODE) => {
@@ -15,7 +15,7 @@ export const watcherNodeModules = (vscode: typeof VSCODE) => {
   const activatePlugin = async (nodeModulesPath: string) => {
     const ready = await checkIfNodeModulesReady(nodeModulesPath);
     if (ready) {
-      consoleWarriorPlugin(vscode, nodeModulesPath);
+      consoleInjectPlugin(vscode, nodeModulesPath);
       vscode.window.showInformationMessage(`Activado en: ${nodeModulesPath}`);
       console.log(`Activado en: ${nodeModulesPath}`);
       activatedPaths.add(nodeModulesPath);
