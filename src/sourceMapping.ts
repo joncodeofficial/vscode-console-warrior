@@ -14,8 +14,6 @@ export const sourceMapping = async (
   for (const row of consoleData) {
     const location = row.location;
 
-    console.log(row);
-
     if (!location.url.includes("@vite/client")) {
       const sourceUrl = location.url.split("?")[0];
       const timeParam = location.url.split("t=")[1];
