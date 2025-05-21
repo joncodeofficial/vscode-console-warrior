@@ -16,6 +16,6 @@ export function monitorChanges<T>(
     }
   }, interval);
 
-  // Retorna función para detener el monitoreo
+  // Return a cleanup function to stop monitoring
   return () => clearInterval(intervalId);
 }
