@@ -1,4 +1,4 @@
-export interface IConsoleData {
+export type IConsoleData = {
   type?: string;
   message: string;
   location: {
@@ -6,4 +6,4 @@ export interface IConsoleData {
     line: number;
     column: number;
   };
-}
+};
