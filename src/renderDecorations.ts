@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
 import { truncateString } from "./utils/truncateString";
 import { formatString } from "./utils/formatString";
+import { isConsoleLogCorrect } from "./extension";
 
-// Function to render decorations in the editor
 export const renderDecorations = (
   editor: vscode.TextEditor | undefined,
   decorationType: vscode.TextEditorDecorationType,
@@ -10,53 +10,34 @@ export const renderDecorations = (
 ) => {
   if (!editor) return;
 
+  const document = editor.document;
+  const currentFilePath = document.uri.fsPath;
   const decorations: vscode.DecorationOptions[] = [];
 
-  // Check if the editor is valid
-  const document = editor.document;
-  // Get the current file path from the editor
-  const currentFilePath = document.uri.fsPath;
-
   for (const [file, innerMap] of consoleDataMap) {
+    if (!currentFilePath.endsWith(file)) continue;
+
     for (const [position, values] of innerMap) {
-      const line = parseInt(position);
+      const line = parseInt(position) - 1;
+      if (line < 0 || line >= document.lineCount) continue;
 
-      const message = Array.from(values).reverse().join(" → ");
+      const lineText = document.lineAt(line).text;
+      if (!lineText.includes("console.log(") || !isConsoleLogCorrect(lineText))
+        continue;
 
-      if (file && !currentFilePath.endsWith(file)) continue;
-
-      const startLine = line - 1;
-      let currentLine = startLine;
-      let foundClosing = false;
-
-      while (currentLine < document.lineCount && !foundClosing) {
-        const lineText = document.lineAt(currentLine).text;
-
-        // Check for both ); and ) endings
-        if (lineText.includes("console.log(")) {
-          foundClosing = true;
-
-          const closingIndex = lineText.length + 2;
-
-          const decoration: vscode.DecorationOptions = {
-            range: new vscode.Range(
-              new vscode.Position(currentLine, closingIndex),
-              new vscode.Position(currentLine, closingIndex)
-            ),
-            renderOptions: {
-              after: {
-                contentText: " → " + truncateString(formatString(message)),
-                color: "#73daca",
-                textDecoration: "none; white-space: pre; pointer-events: none;",
-              },
-            },
-          };
-
-          decorations.push(decoration);
-        }
-        currentLine++;
-      }
+      const closingIndex = lineText.length + 2;
+      decorations.push({
+        range: new vscode.Range(line, closingIndex, line, closingIndex),
+        renderOptions: {
+          after: {
+            contentText:
+              " ➜ " + truncateString(formatString(values.slice().join(" ➜ "))),
+            color: "#73daca",
+          },
+        },
+      });
     }
   }
+
   editor.setDecorations(decorationType, decorations);
 };
