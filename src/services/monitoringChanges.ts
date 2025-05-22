@@ -1,6 +1,6 @@
 type CallbackFunction<T> = (array: T[]) => void;
 
-export function monitorChanges<T>(
+export function monitoringChanges<T>(
   array: T[],
   callback: CallbackFunction<T>,
   interval: number = 500
