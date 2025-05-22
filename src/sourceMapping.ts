@@ -1,4 +1,5 @@
 import { IConsoleData } from "./types/consoleData.interface";
+import { ISourceMapCache } from "./types/sourceMapCache.interface";
 import {
   SourceMapInput,
   TraceMap,
@@ -7,13 +8,11 @@ import {
 
 export const sourceMapping = async (
   consoleData: IConsoleData[],
-  sourceMapCache: Map<string, TraceMap>
+  sourceMapCache: ISourceMapCache
 ) => {
-  const temp: IConsoleData[] = [];
+  const newConsoleData: IConsoleData[] = [];
 
-  for (const row of consoleData) {
-    const location = row.location;
-
+  for (const { location, message } of consoleData) {
     if (!location.url.includes("@vite/client")) {
       const sourceUrl = location.url.split("?")[0];
       const timeParam = location.url.split("t=")[1];
@@ -36,30 +35,30 @@ export const sourceMapping = async (
 
           // Find the original position
           const original = originalPositionFor(tracer, {
-            line: location.line, // line in the generated file (bundle.js)
-            column: location.column, // column in the generated file (bundle.js)
+            line: location.line,
+            column: location.column,
           });
 
+          // Add the TraceMap object to the cache
           sourceMapCache.set(cacheKey, tracer);
 
-          temp.push({
-            message: row.message,
+          newConsoleData.push({
+            message,
             location: {
               url: original.source ?? "",
               line: original.line ?? 0,
               column: original.column ?? 0,
             },
           });
-        } catch (err) {
-          // console.log("No existe el sourcemap");
-          // console.log(`Mensaje: ${row.message}`);
-          // console.log(`Archivo: ${location.url}`);
-          // console.log(`Línea: ${location.line + 1}`);
+        } catch (e) {
+          console.log("not exists sourcemap");
+          console.log(`Mensaje: ${message}`);
+          console.log(`Archivo: ${location.url}`);
+          console.log(`Línea: ${location.line + 1}`);
         }
       } else {
         console.log("Cached sourcemap to enhance performance.");
 
-        // const { sources } = sourceMapCache.get(cacheKey)!;
         const tracer = sourceMapCache.get(cacheKey)!;
 
         const originalPosition = originalPositionFor(tracer, {
@@ -67,8 +66,8 @@ export const sourceMapping = async (
           column: location.column,
         });
 
-        temp.push({
-          message: row.message,
+        newConsoleData.push({
+          message,
           location: {
             url: originalPosition.source ?? "",
             line: originalPosition.line ?? 0,
@@ -78,5 +77,5 @@ export const sourceMapping = async (
       }
     }
   }
-  return temp;
+  return newConsoleData;
 };
