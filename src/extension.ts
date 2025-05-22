@@ -60,11 +60,11 @@ export function activate(context: vscode.ExtensionContext) {
         consoleDataMap
       );
 
-      // renderDecorations(
-      //   vscode.window.activeTextEditor,
-      //   decorationType,
-      //   consoleDataMap
-      // );
+      renderDecorations(
+        vscode.window.activeTextEditor,
+        decorationType,
+        consoleDataMap
+      );
 
       consoleData.length = 0;
     },
