@@ -19,6 +19,6 @@ export const updateConsoleDataMap = (
 
     if (!fileMap.has(key)) fileMap.set(key, []);
 
-    fileMap.get(key)!.push(message);
+    fileMap.get(key)!.unshift(message);
   }
 };
