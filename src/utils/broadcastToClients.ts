@@ -4,9 +4,9 @@ export function broadcastToClients(
   wss: WebSocket.Server,
   message: { type: string }
 ) {
-  wss.clients.forEach((client) => {
+  for (const client of wss.clients) {
     if (client.readyState === WebSocket.OPEN) {
       client.send(JSON.stringify(message));
     }
-  });
+  }
 }

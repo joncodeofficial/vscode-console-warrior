@@ -48,9 +48,9 @@ export const CreateProxy = (): void => {
           res.removeHeader("content-length");
           _write.call(res, injectedBody, "utf8", () => {});
         } else {
-          chunks.forEach((chunk: Buffer) =>
-            _write.call(res, chunk, "utf8", () => {})
-          );
+          for (const chunk of chunks) {
+            _write.call(res, chunk, "utf8", () => {});
+          }
         }
 
         return _end.call(res, undefined, "utf8", callback);

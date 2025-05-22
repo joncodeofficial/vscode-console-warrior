@@ -10,9 +10,9 @@ export const updateConsoleDataMap = (
 ) => {
   if (!editor) return;
 
-  consoleData.forEach(({ message, location }) => {
+  for (const { message, location } of consoleData) {
     const { url, line } = location;
-    const key = `${line}`;
+    const key = line.toString();
     if (!consoleDataMap.has(url)) consoleDataMap.set(url, new Map());
 
     const fileMap = consoleDataMap.get(url)!;
@@ -20,5 +20,5 @@ export const updateConsoleDataMap = (
     if (!fileMap.has(key)) fileMap.set(key, []);
 
     fileMap.get(key)!.push(message);
-  });
+  }
 };
