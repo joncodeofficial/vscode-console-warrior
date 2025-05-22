@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { truncateString } from "./utils/truncateString";
 import { formatString } from "./utils/formatString";
-import { isConsoleLogCorrect } from "./extension";
+import { isConsoleLogCorrect } from "./utils/isConsoleLogCorrect";
 
 export const renderDecorations = (
   editor: vscode.TextEditor | undefined,
