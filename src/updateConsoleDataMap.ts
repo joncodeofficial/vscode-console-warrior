@@ -1,8 +1,9 @@
 import * as vscode from "vscode";
+import Denque from "denque";
 import { IConsoleData } from "./types/consoleData.interface";
 import { IConsoleDataMap } from "./types/consoleDataMap.interface";
+import { MAX_DECORATIONS } from "./constants";
 
-// Function to update the console data map
 export const updateConsoleDataMap = (
   editor: vscode.TextEditor | undefined,
   consoleData: IConsoleData[],
@@ -12,13 +13,24 @@ export const updateConsoleDataMap = (
 
   for (const { message, location } of consoleData) {
     const { url, line } = location;
-    const key = line.toString();
-    if (!consoleDataMap.has(url)) consoleDataMap.set(url, new Map());
+    const lineKey = line.toString();
 
+    // Ensure a map exists for the file URL
+    if (!consoleDataMap.has(url)) {
+      consoleDataMap.set(url, new Map());
+    }
     const fileMap = consoleDataMap.get(url)!;
 
-    if (!fileMap.has(key)) fileMap.set(key, []);
+    // Ensure a queue exists for the line number
+    if (!fileMap.has(lineKey)) {
+      fileMap.set(lineKey, new Denque<string>());
+    }
+    const messageQueue = fileMap.get(lineKey)!;
 
-    fileMap.get(key)!.unshift(message);
+    // Add the new message to the front of the queue
+    messageQueue.unshift(message);
+
+    // Limit the queue size to 1000 messages
+    if (messageQueue.size() > MAX_DECORATIONS) messageQueue.pop();
   }
 };
