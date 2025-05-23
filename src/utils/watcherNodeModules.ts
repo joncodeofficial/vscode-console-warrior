@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { checkIfNodeModulesReady } from "./checkIfNodeModulesReady";
-import { consoleInjectPlugin } from "../plugins/consoleInjectPlugin";
+import { vitePlugin } from "../plugins/vitePlugin";
 import * as VSCODE from "vscode";
 
 export const watcherNodeModules = (vscode: typeof VSCODE) => {
@@ -15,7 +15,7 @@ export const watcherNodeModules = (vscode: typeof VSCODE) => {
   const activatePlugin = async (nodeModulesPath: string) => {
     const ready = await checkIfNodeModulesReady(nodeModulesPath);
     if (ready) {
-      consoleInjectPlugin(vscode, nodeModulesPath);
+      vitePlugin(vscode, nodeModulesPath);
       vscode.window.showInformationMessage(`Activado en: ${nodeModulesPath}`);
       console.log(`Activado en: ${nodeModulesPath}`);
       activatedPaths.add(nodeModulesPath);
