@@ -1,1 +1,3 @@
-export type IConsoleDataMap = Map<string, Map<string, string[]>>;
+import Denque from "denque";
+
+export type IConsoleDataMap = Map<string, Map<string, Denque<string>>>;
