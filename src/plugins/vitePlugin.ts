@@ -1,19 +1,18 @@
 import fs from "fs";
 import path from "path";
-
 type VSCODE = typeof import("vscode");
 
-export const consoleInjectPlugin = (vscode: VSCODE, relativePath: string) => {
+export const vitePlugin = (vscode: VSCODE, relativePath: string) => {
   return (() => {
     try {
-      // Obtener el workspace actual
+      // Get the current workspace
       const workspaceFolders = vscode.workspace.workspaceFolders;
       if (!workspaceFolders) {
         vscode.window.showErrorMessage("No hay un workspace abierto.");
         return;
       }
 
-      // Ruta específica al archivo cli.js en vite
+      // Specific path to the file cli.js in vite
       const targetFile = path.join(relativePath, "/vite/dist/node/cli.js");
 
       // Verificar que el archivo existe
@@ -24,13 +23,13 @@ export const consoleInjectPlugin = (vscode: VSCODE, relativePath: string) => {
         return;
       }
 
-      // Leer el archivo
+      // Read the file content
       let fileContent = fs.readFileSync(targetFile, "utf8");
 
-      // El punto de inserción específico
+      // The specific insertion point
       const insertionPoint = "const server = await createServer({";
 
-      // El código que deseas insertar
+      // The code you want to insert
       const pluginCode = `const server = await createServer({
       plugins: [{
           name: "console-inject-plugin",
@@ -44,7 +43,7 @@ export const consoleInjectPlugin = (vscode: VSCODE, relativePath: string) => {
           },
       }],`;
 
-      // Comprobar si ya existe el plugin
+      // Check if the plugin already exists
       if (fileContent.includes("console-inject-plugin")) {
         vscode.window.showInformationMessage(
           "El plugin console-inject-plugin ya está presente en el archivo."
@@ -52,7 +51,7 @@ export const consoleInjectPlugin = (vscode: VSCODE, relativePath: string) => {
         return;
       }
 
-      // Reemplazar el punto de inserción con nuestro código
+      // Replace the insertion point with our plugin code
       if (fileContent.includes(insertionPoint)) {
         fileContent = fileContent.replace(insertionPoint, pluginCode);
 
@@ -66,7 +65,7 @@ export const consoleInjectPlugin = (vscode: VSCODE, relativePath: string) => {
 
         fileContent = fileContent.replace(test, testCode);
 
-        // Escribir el archivo modificado
+        // Write the modified file content back to the file
         fs.writeFileSync(targetFile, fileContent, "utf8");
         vscode.window.showInformationMessage(
           "Plugin Console inject insertado correctamente en el archivo cli.js de Vite."
