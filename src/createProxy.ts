@@ -67,6 +67,5 @@ export const createProxy = (): void => {
   const PROXY_PORT = 3000;
   server.listen(PROXY_PORT, () => {
     console.log(`Proxy running on http://localhost:${PROXY_PORT}`);
-    console.log(`WebSocket server running on port 9000`);
   });
 };
