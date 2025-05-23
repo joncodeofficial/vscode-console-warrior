@@ -3,7 +3,7 @@ import http from "http";
 import { IncomingMessage, ServerResponse } from "http";
 import { injectionCode } from "./services/injectionCode";
 
-export const CreateProxy = (): void => {
+export const createProxy = (): void => {
   // Configurar el proxy HTTP
   const proxy = httpProxy.createProxyServer({});
 
