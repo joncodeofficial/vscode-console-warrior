@@ -5,6 +5,7 @@ import {
   TraceMap,
   originalPositionFor,
 } from "@jridgewell/trace-mapping";
+import { getFilename } from "./utils/getFilenameFromUrl";
 
 export const sourceMapping = async (
   consoleData: IConsoleData[],
@@ -51,10 +52,15 @@ export const sourceMapping = async (
             },
           });
         } catch (e) {
-          console.log("not exists sourcemap");
-          console.log(`Mensaje: ${message}`);
-          console.log(`Archivo: ${location.url}`);
-          console.log(`Línea: ${location.line + 1}`);
+          console.log("Source map not found or failed to load.");
+          newConsoleData.push({
+            message,
+            location: {
+              url: getFilename(location.url),
+              line: location.line,
+              column: location.column,
+            },
+          });
         }
       } else {
         console.log("Cached sourcemap to enhance performance.");
