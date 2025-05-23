@@ -2,11 +2,12 @@ import * as vscode from "vscode";
 import { truncateString } from "./utils/truncateString";
 import { formatString } from "./utils/formatString";
 import { isConsoleLogCorrect } from "./utils/isConsoleLogCorrect";
+import { IConsoleDataMap } from "./types/consoleDataMap.interface";
 
 export const renderDecorations = (
   editor: vscode.TextEditor | undefined,
   decorationType: vscode.TextEditorDecorationType,
-  consoleDataMap: Map<string, Map<string, string[]>>
+  consoleDataMap: IConsoleDataMap
 ) => {
   if (!editor) return;
 
@@ -31,7 +32,8 @@ export const renderDecorations = (
         renderOptions: {
           after: {
             contentText:
-              " ➜ " + truncateString(formatString(values.slice().join(" ➜ "))),
+              " ➜ " +
+              truncateString(formatString(values.toArray().join(" ➜ "))),
             color: "#73daca",
           },
         },
