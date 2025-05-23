@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "@jridgewell/trace-mapping": "^0.3.25",
+    "denque": "^2.1.0",
     "http-proxy": "^1.18.1",
     "portscanner": "^2.2.0",
     "ws": "^8.18.0"
