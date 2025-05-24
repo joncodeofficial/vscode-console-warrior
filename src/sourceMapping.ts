@@ -5,7 +5,7 @@ import {
   TraceMap,
   originalPositionFor,
 } from "@jridgewell/trace-mapping";
-import { getFilename } from "./utils/getFilenameFromUrl";
+import { getFilename } from "./utils/getFilename";
 
 export const sourceMapping = async (
   consoleData: IConsoleData[],
