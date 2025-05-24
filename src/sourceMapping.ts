@@ -19,55 +19,24 @@ export const sourceMapping = async (
       const timeParam = location.url.split("t=")[1];
       const cacheKey = `${sourceUrl}-${timeParam}`;
 
-      if (!sourceMapCache.has(cacheKey)) {
-        try {
-          const sourceMapUrl = `${sourceUrl}.map`;
+      try {
+        let tracer: TraceMap;
 
+        if (!sourceMapCache.has(cacheKey)) {
+          const sourceMapUrl = `${sourceUrl}.map`;
           const response = await fetch(sourceMapUrl);
 
-          if (!response.ok) {
-            console.log("Had failed the sourcemap");
-            return;
-          }
+          if (!response.ok) throw new Error("Failed to fetch sourcemap");
+
           const sourceMapData = (await response.json()) as SourceMapInput;
-
-          // Create the TraceMap object
-          const tracer = new TraceMap(sourceMapData);
-
-          // Find the original position
-          const original = originalPositionFor(tracer, {
-            line: location.line,
-            column: location.column,
-          });
-
-          // Add the TraceMap object to the cache
+          tracer = new TraceMap(sourceMapData);
           sourceMapCache.set(cacheKey, tracer);
-
-          newConsoleData.push({
-            message,
-            location: {
-              url: original.source ?? "",
-              line: original.line ?? 0,
-              column: original.column ?? 0,
-            },
-          });
-        } catch (e) {
-          console.log("Source map not found or failed to load.");
-          newConsoleData.push({
-            message,
-            location: {
-              url: getFilename(location.url),
-              line: location.line,
-              column: location.column,
-            },
-          });
+        } else {
+          console.log("Cached sourcemap to enhance performance.");
+          tracer = sourceMapCache.get(cacheKey)!;
         }
-      } else {
-        console.log("Cached sourcemap to enhance performance.");
 
-        const tracer = sourceMapCache.get(cacheKey)!;
-
-        const originalPosition = originalPositionFor(tracer, {
+        const original = originalPositionFor(tracer, {
           line: location.line,
           column: location.column,
         });
@@ -75,9 +44,19 @@ export const sourceMapping = async (
         newConsoleData.push({
           message,
           location: {
-            url: originalPosition.source ?? "",
-            line: originalPosition.line ?? 0,
-            column: originalPosition.column ?? 0,
+            url: original.source ?? "",
+            line: original.line ?? 0,
+            column: original.column ?? 0,
+          },
+        });
+      } catch {
+        console.log("Source map not found or failed to load.");
+        newConsoleData.push({
+          message,
+          location: {
+            url: getFilename(location.url),
+            line: location.line,
+            column: location.column,
           },
         });
       }
