@@ -1,13 +1,13 @@
 import httpProxy from "http-proxy";
 import http from "http";
 import { IncomingMessage, ServerResponse } from "http";
-import { injectionCode } from "./services/injectionCode";
+import { injectionCode } from "./injectionCode";
 
 export const createProxy = (): void => {
-  // Configurar el proxy HTTP
+  // Configure the HTTP proxy
   const proxy = httpProxy.createProxyServer({});
 
-  // Crear servidor proxy que inyecta el código en respuestas HTML
+  // Create a server that injects the code into HTML responses
   const server = http.createServer(
     (req: IncomingMessage, res: ServerResponse) => {
       const _write = res.write;
@@ -56,14 +56,14 @@ export const createProxy = (): void => {
         return _end.call(res, undefined, "utf8", callback);
       };
 
-      // Redirigir peticiones al servidor que corre en el puerto 5173
+      // Redirect requests to the server running on port 5173
       proxy.web(req, res, {
         target: "http://localhost:5173",
       });
     }
   );
 
-  // Iniciar el servidor proxy en el puerto 3000
+  // Start the proxy server on port 3000
   const PROXY_PORT = 3000;
   server.listen(PROXY_PORT, () => {
     console.log(`Proxy running on http://localhost:${PROXY_PORT}`);
