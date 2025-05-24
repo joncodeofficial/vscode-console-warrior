@@ -22,7 +22,7 @@ export const watcherNodeModules = (vscode: typeof VSCODE) => {
     }
   };
 
-  // Escanea al inicio por si ya existen
+  // Scan for existing node_modules
   const scanExisting = (dir: string) => {
     const entries = fs.readdirSync(dir, { withFileTypes: true });
     for (const entry of entries) {
@@ -31,7 +31,7 @@ export const watcherNodeModules = (vscode: typeof VSCODE) => {
         if (entry.name === "node_modules") {
           activatePlugin(fullPath);
         } else {
-          scanExisting(fullPath); // recursivo
+          scanExisting(fullPath); // recursive
         }
       }
     }
@@ -39,12 +39,12 @@ export const watcherNodeModules = (vscode: typeof VSCODE) => {
 
   scanExisting(workspacePath);
 
-  // Si ya existe node_modules al iniciar
+  // if node_modules already exists at startup
   if (fs.existsSync(nodeModulesPath)) {
     activatePlugin(nodeModulesPath);
   }
 
-  // Watch for creación y eliminación de node_modules
+  // Watch for creation and deletion of node_modules
   const watcher = vscode.workspace.createFileSystemWatcher(
     new vscode.RelativePattern(workspacePath, "**/node_modules"),
     false, // watch create
@@ -59,7 +59,7 @@ export const watcherNodeModules = (vscode: typeof VSCODE) => {
 
   watcher.onDidDelete(() => {
     vscode.window.showInformationMessage("node_modules eliminado");
-    // Aquí podrías desactivar tu plugin si es necesario
+    // Here you could deactivate your plugin if necessary
   });
 
   return watcher;
