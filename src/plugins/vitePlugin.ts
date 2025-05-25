@@ -32,7 +32,7 @@ export const vitePlugin = (vscode: VSCODE, relativePath: string) => {
       // The code you want to insert
       const pluginCode = `const server = await createServer({
       plugins: [{
-          name: "console-inject-plugin",
+          name: "console-warrior-plugin",
           transformIndexHtml(html) {
               return new Promise((resolve) => {
                   const vscodePath = path.resolve(process.env.HOME || '', '.vscode/extensions/probando.js');
@@ -44,9 +44,9 @@ export const vitePlugin = (vscode: VSCODE, relativePath: string) => {
       }],`;
 
       // Check if the plugin already exists
-      if (fileContent.includes("console-inject-plugin")) {
+      if (fileContent.includes("console-warrior-plugin")) {
         vscode.window.showInformationMessage(
-          "El plugin console-inject-plugin ya está presente en el archivo."
+          "El plugin console-warrior-plugin ya está presente en el archivo."
         );
         return;
       }
@@ -58,7 +58,7 @@ export const vitePlugin = (vscode: VSCODE, relativePath: string) => {
         const test = "server.printUrls();";
 
         const testCode = `
-          console.log(colors.green("  ➜  Console inject ⚔️  supports"), colors.magenta(colors.bold("VITE")));
+          console.log(colors.green("  ➜  Console Warrior ⚔️  supports"), colors.magenta(colors.bold("VITE")));
           console.log(colors.green("  ➜  ================================"));
           server.printUrls();
           `;
@@ -68,7 +68,7 @@ export const vitePlugin = (vscode: VSCODE, relativePath: string) => {
         // Write the modified file content back to the file
         fs.writeFileSync(targetFile, fileContent, "utf8");
         vscode.window.showInformationMessage(
-          "Plugin Console inject insertado correctamente en el archivo cli.js de Vite."
+          "Plugin Console warrior insertado correctamente en el archivo cli.js de Vite."
         );
       } else {
         vscode.window.showErrorMessage(
