@@ -1,25 +1,27 @@
 {
   "name": "console-warrior",
-  "displayName": "console warrior",
-  "description": "it is an free similar to console ninja open source",
-  "version": "0.0.1",
+  "displayName": "Console Warrior",
+  "description": "Visualize console.log messages directly in VSCode editor inline, boosting debugging and productivity.",
+  "version": "0.0.11",
+  "publisher": "Jonpena",
+  "icon": "images/icon.png",
   "engines": {
     "vscode": "^1.97.0"
   },
   "categories": [
-    "Programming Languages",
+    "Visualization",
     "Linters",
-    "Other"
+    "Debuggers"
   ],
   "activationEvents": [
     "workspaceContains:package.json"
   ],
-  "main": "./out/extension.js",
+  "main": "./dist/extension.js",
   "contributes": {
     "commands": []
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
+    "vscode:prepublish": "npm run compile && sh ./add_version.sh 0.0.11",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
@@ -47,5 +49,5 @@
     "portscanner": "^2.2.0",
     "ws": "^8.18.0"
   },
-  "packageManager": "pnpm@10.8.1+sha512.c50088ba998c67b8ca8c99df8a5e02fd2ae2e2b29aaf238feaa9e124248d3f48f9fb6db2424949ff901cffbb5e0f0cc1ad6aedb602cd29450751d11c35023677"
+  "packageManager": "pnpm@10.8.1"
 }
