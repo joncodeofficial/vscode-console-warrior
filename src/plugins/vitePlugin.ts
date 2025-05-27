@@ -35,7 +35,7 @@ export const vitePlugin = (vscode: VSCODE, relativePath: string) => {
           name: "console-warrior-plugin",
           transformIndexHtml(html) {
               return new Promise((resolve) => {
-                  const vscodePath = path.resolve(process.env.HOME || '', '.vscode/extensions/probando.js');
+                  const vscodePath = path.resolve(process.env.HOME || '', '.vscode/extensions/jonpena.console-warrior-');
                   import(vscodePath)
                       .then(function (n) { return n.injectionCode; })
                       .then(result => resolve(html.replace("</head>", result + "</head>")));
@@ -71,12 +71,10 @@ export const vitePlugin = (vscode: VSCODE, relativePath: string) => {
           "Plugin Console warrior insertado correctamente en el archivo cli.js de Vite."
         );
       } else {
-        vscode.window.showErrorMessage(
-          `No se encontró el punto de inserción "${insertionPoint}" en el archivo. Es posible que la versión de Vite sea diferente.`
-        );
+        console.log("No find the insertion point.");
       }
     } catch (error) {
-      vscode.window.showErrorMessage(`Error al modificar el archivo`);
+      vscode.window.showErrorMessage(`Error to insert plugin: ${error}`);
     }
   })();
 };
