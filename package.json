@@ -1,8 +1,8 @@
 {
-  "name": "console-warrior",
-  "displayName": "Console Warrior",
+  "name": "console-warrior-logs",
+  "displayName": "Console Warrior Logs",
   "description": "Visualize console.log messages directly in VSCode editor inline, boosting debugging and productivity.",
-  "version": "0.0.11",
+  "version": "0.0.17",
   "publisher": "Jonpena",
   "icon": "images/icon.png",
   "engines": {
@@ -21,7 +21,7 @@
     "commands": []
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile && sh ./add_version.sh 0.0.11",
+    "vscode:prepublish": "npm run compile && sh ./src/scripts/add_version.sh 0.0.17",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
