@@ -8,7 +8,7 @@ if [ $# -lt 1 ]; then
 fi
 
 ARCHIVO="./dist/plugins/vitePlugin.js"
-TEXTO_BUSCAR="jonpena.console-warrior-"
+TEXTO_BUSCAR="jonpena.console-warrior-logs-"
 VERSION="$1"
 
 # Verificar si el archivo existe
