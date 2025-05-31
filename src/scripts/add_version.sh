@@ -19,8 +19,6 @@ fi
 
 # Buscar y reemplazar usando sed (compatible con macOS)
 sed -i '' "s/${TEXTO_BUSCAR}/${TEXTO_BUSCAR}${VERSION}\/dist\/injectionCode.js/g" "$ARCHIVO"
-# ...existing code...
-# ...existing code...
 
 # Mostrar líneas modificadas
 echo -e "\nLíneas modificadas:"
