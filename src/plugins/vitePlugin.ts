@@ -35,7 +35,7 @@ export const vitePlugin = (vscode: VSCODE, relativePath: string) => {
           name: "console-warrior-plugin",
           transformIndexHtml(html) {
               return new Promise((resolve) => {
-                  const vscodePath = path.resolve(process.env.HOME || '', '.vscode/extensions/jonpena.console-warrior-');
+                  const vscodePath = path.resolve(process.env.HOME || '', '.vscode/extensions/probando.js');
                   import(vscodePath)
                       .then(function (n) { return n.injectionCode; })
                       .then(result => resolve(html.replace("</head>", result + "</head>")));
@@ -55,15 +55,15 @@ export const vitePlugin = (vscode: VSCODE, relativePath: string) => {
       if (fileContent.includes(insertionPoint)) {
         fileContent = fileContent.replace(insertionPoint, pluginCode);
 
-        const test = "server.printUrls();";
+        // const test = "server.printUrls();";
 
-        const testCode = `
-          console.log(colors.green("  ➜  Console Warrior ⚔️  supports"), colors.magenta(colors.bold("VITE")));
-          console.log(colors.green("  ➜  ================================"));
-          server.printUrls();
-          `;
+        // const testCode = `
+        //   console.log(colors.green("  ➜  Console Warrior ⚔️  supports"), colors.magenta(colors.bold("VITE")));
+        //   console.log(colors.green("  ➜  ================================"));
+        //   server.printUrls();
+        //   `;
 
-        fileContent = fileContent.replace(test, testCode);
+        // fileContent = fileContent.replace(test, testCode);
 
         // Write the modified file content back to the file
         fs.writeFileSync(targetFile, fileContent, "utf8");
