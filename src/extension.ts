@@ -1,23 +1,27 @@
 import * as vscode from "vscode";
 import WebSocket from "ws";
 import { monitoringChanges } from "./monitoringChanges";
-import { UPDATE_RATE } from "./constants";
+import { UPDATE_RATE, WS_PORT } from "./constants";
 import { IConsoleData } from "./types/consoleData.interface";
 import { sourceMapping } from "./sourceMapping";
 import { createProxy } from "./createProxy";
 import { updateConsoleDataMap } from "./updateConsoleDataMap";
 import { watcherNodeModules } from "./utils/watcherNodeModules";
-import { broadcastToClients } from "./utils/broadcastToClients";
 import { IConsoleDataMap } from "./types/consoleDataMap.interface";
 import { renderDecorations } from "./renderDecorations";
 import { ISourceMapCache } from "./types/sourceMapCache.interface";
-import { isConsoleLogCorrect } from "./utils/isConsoleLogCorrect";
+import { connectToCentralWS } from "./connectToCentralWS";
+import { startCentralSW } from "./startCentralSW";
+import { IBackendConnections } from "./types/backendConnections.interface";
+import { addConsoleWarriorPort } from "./commands/addConsoleWarriorPort";
+import { removeCommentedConsoles } from "./utils/removeCommentedConsoles";
 
 let decorationType: vscode.TextEditorDecorationType;
-const wss = new WebSocket.Server({ port: 27029 });
+let socket: WebSocket | null = null;
 const consoleData: IConsoleData[] = [];
 const sourceMapCache: ISourceMapCache = new Map();
 const consoleDataMap: IConsoleDataMap = new Map();
+const backendConnections: IBackendConnections = new Map();
 
 // Create the decoration type
 decorationType = vscode.window.createTextEditorDecorationType({
@@ -27,27 +31,18 @@ decorationType = vscode.window.createTextEditorDecorationType({
 });
 
 export function activate(context: vscode.ExtensionContext) {
-  // Configure the HTTP proxy
-  createProxy();
+  startCentralSW(
+    consoleData,
+    sourceMapCache,
+    consoleDataMap,
+    backendConnections
+  );
 
-  // Send message to all connected clients
-  wss.on("connection", (ws) => {
-    console.log("Cliente conectado al WebSocket");
-
-    consoleData.length = 0;
-    sourceMapCache.clear();
-    consoleDataMap.clear();
-
-    ws.on("message", (message) => {
-      try {
-        const data: IConsoleData = JSON.parse(message.toString());
-        // console.log(data);
-        if (data.message !== "") consoleData.push(data);
-      } catch (e) {
-        console.warn("Error parsing WebSocket message");
-      }
-    });
-  });
+  socket = connectToCentralWS(
+    WS_PORT,
+    context.workspaceState.get("port") ?? 0,
+    consoleData
+  );
 
   monitoringChanges(
     consoleData,
@@ -66,27 +61,26 @@ export function activate(context: vscode.ExtensionContext) {
         decorationType,
         consoleDataMap
       );
-
       consoleData.length = 0;
     },
     UPDATE_RATE
   );
 
-  vscode.workspace.onDidSaveTextDocument(
-    async (document: vscode.TextDocument) => {
-      const editor = vscode.window.activeTextEditor;
-      if (editor && editor.document === document) {
-        // First enable auto-reload
-        // broadcastToClients(wss, { type: "enableAutoReload" });
-        // Then send reload command
-        // broadcastToClients(wss, { type: "reload" });
-        // consoleData.length = 0;
-        // sourceMapCache.clear();
-        // consoleDataMap.clear();
-        // vscode.window.activeTextEditor?.setDecorations(decorationType, []);
-      }
-    }
-  );
+  // vscode.workspace.onDidSaveTextDocument(
+  //   async (document: vscode.TextDocument) => {
+  //     const editor = vscode.window.activeTextEditor;
+  //     if (editor && editor.document === document) {
+  //       // First enable auto-reload
+  //       // broadcastToClients(wss, { type: "enableAutoReload" });
+  //       // Then send reload command
+  //       // broadcastToClients(wss, { type: "reload" });
+  //       // consoleData.length = 0;
+  //       // sourceMapCache.clear();
+  //       // consoleDataMap.clear();
+  //       // vscode.window.activeTextEditor?.setDecorations(decorationType, []);
+  //     }
+  //   }
+  // );
 
   vscode.workspace.onDidChangeTextDocument((editor) => {
     const activeEditor = vscode.window.activeTextEditor;
@@ -94,20 +88,7 @@ export function activate(context: vscode.ExtensionContext) {
     if (editor.contentChanges.length === 0) return;
     // If the active editor is the same as the current editor
     if (activeEditor && editor.document === activeEditor.document) {
-      const filePath = editor.document.uri.fsPath;
-      // Walk through all lines with decorations in the current file
-      for (const [file, innerMap] of consoleDataMap) {
-        if (filePath.endsWith(file)) {
-          for (const [key] of innerMap) {
-            const lineText = editor.document.lineAt(parseInt(key) - 1).text;
-
-            if (!isConsoleLogCorrect(lineText) && innerMap.has(key)) {
-              innerMap.delete(key);
-            }
-          }
-          if (innerMap.size === 0) consoleDataMap.delete(file);
-        }
-      }
+      removeCommentedConsoles(editor, consoleDataMap);
     }
 
     // Render decorations again
@@ -119,6 +100,10 @@ export function activate(context: vscode.ExtensionContext) {
   });
 
   context.subscriptions.push(watcherNodeModules(vscode)!);
+
+  context.subscriptions.push(
+    addConsoleWarriorPort(context, socket, consoleData)
+  );
 }
 
 export function deactivate() {
