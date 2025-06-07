@@ -2,7 +2,7 @@
   "name": "console-warrior-logs",
   "displayName": "Console Warrior Logs",
   "description": "Visualize console.log messages directly in VSCode editor inline, boosting debugging and productivity.",
-  "version": "0.0.17",
+  "version": "0.0.20",
   "publisher": "Jonpena",
   "icon": "images/icon.png",
   "engines": {
@@ -18,10 +18,15 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
-    "commands": []
+    "commands": [
+      {
+        "command": "extension.addPort",
+        "title": "Connect to Console Warrior Port"
+      }
+    ]
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile && sh ./src/scripts/add_version.sh 0.0.17",
+    "vscode:prepublish": "npm run compile && sh ./src/scripts/add_version.sh 0.0.20",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
