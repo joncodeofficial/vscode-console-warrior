@@ -98,7 +98,7 @@ export const injectionCode = `
   }
 
   function connectWebSocket() {
-    ws = new WebSocket("ws://localhost:27029");
+    ws = new WebSocket("ws://localhost:9000");
 
     ws.onopen = function() {
       originalConsoleLog("WebSocket connection established");
@@ -136,12 +136,12 @@ export const injectionCode = `
     };
 
     ws.onerror = function(error) {
-      // originalConsoleLog("WebSocket error:", error);
+      originalConsoleLog("WebSocket error:", error);
     };
 
     ws.onclose = function() {
-      originalConsoleLog("WebSocket closed, reconnecting in 3s...");
-      setTimeout(connectWebSocket, 3000);
+      originalConsoleLog("WebSocket closed, reconnecting in 5s...");
+      setTimeout(connectWebSocket, 5000);
     };
   }
 

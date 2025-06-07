@@ -2,6 +2,7 @@ import httpProxy from "http-proxy";
 import http from "http";
 import { IncomingMessage, ServerResponse } from "http";
 import { injectionCode } from "./injectionCode";
+import { PROXY_PORT } from "./constants";
 
 export const createProxy = (): void => {
   // Configure the HTTP proxy
@@ -64,7 +65,6 @@ export const createProxy = (): void => {
   );
 
   // Start the proxy server on port 3000
-  const PROXY_PORT = 3000;
   server.listen(PROXY_PORT, () => {
     console.log(`Proxy running on http://localhost:${PROXY_PORT}`);
   });
