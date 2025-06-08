@@ -26,6 +26,10 @@ export const vitePlugin = (vscode: VSCODE, relativePath: string) => {
       // Read the file content
       let fileContent = fs.readFileSync(targetFile, "utf8");
 
+      const ext = vscode.extensions.getExtension(
+        "jonpena.console-warrior-logs"
+      );
+
       // The specific insertion point
       const insertionPoint = "const server = await createServer({";
 
@@ -35,7 +39,7 @@ export const vitePlugin = (vscode: VSCODE, relativePath: string) => {
           name: "console-warrior-plugin",
           transformIndexHtml(html) {
               return new Promise((resolve) => {
-                  const vscodePath = path.resolve(process.env.HOME || '', '.vscode/extensions/probando.js');
+                  const vscodePath = path.resolve("${ext?.extensionPath}/dist/injectionCode.js");
                   import(vscodePath)
                       .then(function (n) { return n.injectionCode; })
                       .then(result => resolve(html.replace("</head>", result + "</head>")));
