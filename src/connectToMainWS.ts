@@ -6,7 +6,7 @@ export const connectToMainWS = (port: number, consoleData: IConsoleData[]) => {
   const socket = new WebSocket(`ws://localhost:${WS_PORT}`);
 
   socket.on("open", () => {
-    console.log("[Server WS] Connected to Central using port:", port);
+    console.log("[Client WS] Connected to Central with port:", port);
 
     socket.send(
       JSON.stringify({ type: "server-connect", id: port.toString() })

@@ -17,7 +17,7 @@ export async function startMainSW(
   if (status === "closed") {
     // Create server WebSocket Central
     const wss = new WebSocketServer({ port: WS_PORT });
-    console.log(`Central server started on port ${WS_PORT}`);
+    console.log(`[Central WS] started on port ${WS_PORT}`);
 
     wss.on("connection", (ws) => {
       consoleData.length = 0;
@@ -35,7 +35,7 @@ export async function startMainSW(
           backendId = data.id;
           backendConnections.set(data.id, ws);
           isBackend = true;
-          console.log(`Server with id ${backendId} connected`);
+          console.log(`[Client WS] with id ${backendId} connected`);
           return;
         }
 

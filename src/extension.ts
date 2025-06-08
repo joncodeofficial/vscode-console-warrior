@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 import WebSocket from "ws";
 import { monitoringChanges } from "./monitoringChanges";
-import { UPDATE_RATE } from "./constants";
 import { IConsoleData } from "./types/consoleData.interface";
 import { sourceMapping } from "./sourceMapping";
 import { updateConsoleDataMap } from "./updateConsoleDataMap";
@@ -46,7 +45,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   vscode.workspace.onDidChangeTextDocument((editor) => {
     const activeEditor = vscode.window.activeTextEditor;
-    // Ignore  if empty changes
+    // Ignore if empty changes
     if (editor.contentChanges.length === 0) return;
     // If the active editor is the same as the current editor
     if (activeEditor && editor.document === activeEditor.document) {
