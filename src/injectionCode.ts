@@ -18,7 +18,7 @@ export const injectionCode = `
           break;
         }
       }
-      let match = relevantLine.match(/\\((.+?\\.(?:js|ts|jsx|tsx|vue|svelte\\.tsx)(\\?[^:)]+)?):(\\d+):(\\d+)\\)/);
+      let match = relevantLine.match(/\\((.+?\\.(?:js|ts|jsx|tsx|vue|svelte)(\\?[^:)]+)?):(\\d+):(\\d+)\\)/);
 
       if (match) {
         return {  
@@ -27,7 +27,7 @@ export const injectionCode = `
           column: parseInt(match[4])
         };
       }
-      match = relevantLine.match(/at\\s+(.+?\\.(?:js|ts|jsx|tsx|vue|svelte\\.tsx)(\\?[^:)]+)?):(\\d+):(\\d+)/);
+      match = relevantLine.match(/at\\s+(.+?\\.(?:js|ts|jsx|tsx|vue|svelte)(\\?[^:)]+)?):(\\d+):(\\d+)/);
 
       if (match) {
         return {
@@ -74,7 +74,7 @@ export const injectionCode = `
     if (Array.isArray(value)) {
       if (value.length === 0) return "[]";
       const items = value.map(item => spacing + prettyPrint(item, indent + 2));
-      return "[\\n" + items.join(",\\n") + "\\n" + " ".repeat(indent - 2) + "]";
+      return "[\\n" + items.join(",\\n") + " ]";
     } else if (typeof value === "function") {
       return "function";
     } else if (typeof value === "object" && value !== null) {
@@ -83,7 +83,7 @@ export const injectionCode = `
         const formattedValue = prettyPrint(val, indent + 2);
         return \`\${spacing}\${formattedKey}: \${formattedValue}\`;
       });
-      return "{\\n" + entries.join(",\\n") + "\\n" + " ".repeat(indent - 2) + "}";
+      return "{\\n" + entries.join(",\\n") + " }";
     } else {
       return JSON.stringify(value);
     }
@@ -109,7 +109,7 @@ export const injectionCode = `
         var args = Array.prototype.slice.call(arguments);
         var location = getStackInfo();
         var logData = {
-          type: "log",
+          type: "client-message",
           message: args.map(serializeArg).join(" "),
           location: location
         };
@@ -127,7 +127,7 @@ export const injectionCode = `
     ws.onmessage = function(event) {
       try {
         const data = JSON.parse(event.data);
-        if (data.type && data.type !== "log") {
+        if (data.type && data.type !== "client-message") {
           handleCommand(data);
         }
       } catch (e) {
@@ -136,12 +136,12 @@ export const injectionCode = `
     };
 
     ws.onerror = function(error) {
-      originalConsoleLog("WebSocket error:", error);
+      // originalConsoleLog("WebSocket error:", error);
     };
 
     ws.onclose = function() {
-      originalConsoleLog("WebSocket closed, reconnecting in 5s...");
-      setTimeout(connectWebSocket, 5000);
+      originalConsoleLog("WebSocket closed, reconnecting in 3s...");
+      setTimeout(connectWebSocket, 3000);
     };
   }
 
@@ -151,7 +151,7 @@ export const injectionCode = `
     var args = Array.prototype.slice.call(arguments);
     var location = getStackInfo();
     var logData = {
-      type: "log",
+      type: "client-message",
       message: args.map(serializeArg).join(" "),
       location: location
     };
