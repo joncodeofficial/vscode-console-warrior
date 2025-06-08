@@ -1,6 +1,5 @@
 import * as vscode from "vscode";
-import { WS_PORT } from "../constants";
-import { connectToCentralWS } from "../connectToCentralWS";
+import { connectToMainWS } from "../connectToMainWS";
 import { WebSocket } from "ws";
 import { IConsoleData } from "../types/consoleData.interface";
 
@@ -27,11 +26,9 @@ export const addConsoleWarriorPort = (
 
       if (socket) socket.close();
 
-      socket = connectToCentralWS(
-        WS_PORT,
-        context.workspaceState.get("port") ?? 0,
-        consoleData
-      );
+      const getPort: number = context.workspaceState.get("port") ?? 0;
+
+      socket = connectToMainWS(getPort, consoleData);
 
       vscode.window.showInformationMessage(
         `Console Warrior Logs listening on port ${num}`
