@@ -4,9 +4,15 @@ import { formatString } from "./utils/formatString";
 import { isConsoleLogCorrect } from "./utils/isConsoleLogCorrect";
 import { IConsoleDataMap } from "./types/consoleDataMap.interface";
 
+// Create the decoration type
+export const decorationType = vscode.window.createTextEditorDecorationType({
+  color: "#00FF00", // Color green
+  textDecoration: "none; pointer-events: none;",
+  rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
+});
+
 export const renderDecorations = (
   editor: vscode.TextEditor | undefined,
-  decorationType: vscode.TextEditorDecorationType,
   consoleDataMap: IConsoleDataMap
 ) => {
   if (!editor) return;
