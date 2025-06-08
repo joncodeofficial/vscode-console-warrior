@@ -1,21 +1,25 @@
+import { createHash } from "crypto";
+import { UPDATE_RATE } from "./constants";
+
 type CallbackFunction<T> = (array: T[]) => void;
 
-export function monitoringChanges<T>(
+const hashArray = <T>(array: T[]): string => {
+  return createHash("sha1").update(JSON.stringify(array)).digest("hex");
+};
+
+export const monitoringChanges = <T>(
   array: T[],
-  callback: CallbackFunction<T>,
-  interval: number = 500
-): () => void {
-  let lastState = JSON.stringify(array);
+  callback: CallbackFunction<T>
+) => {
+  let lastHash = hashArray(array);
 
   const intervalId = setInterval(() => {
-    const currentState = JSON.stringify(array);
-
-    if (currentState !== lastState) {
+    const currentHash = hashArray(array);
+    if (currentHash !== lastHash) {
       callback(array);
-      lastState = currentState;
+      lastHash = currentHash;
     }
-  }, interval);
+  }, UPDATE_RATE);
 
-  // Return a cleanup function to stop monitoring
-  return () => clearInterval(intervalId);
-}
+  return () => clearInterval(intervalId); // Cleanup
+};
