@@ -6,7 +6,7 @@ import { getPortFromUrl } from "./utils/getPortFromUrl";
 import { ISourceMapCache } from "./types/sourceMapCache.interface";
 import { IConsoleDataMap } from "./types/consoleDataMap.interface";
 
-export async function startCentralSW(
+export async function startMainSW(
   consoleData: IConsoleData[],
   sourceMapCache: ISourceMapCache,
   consoleDataMap: IConsoleDataMap,

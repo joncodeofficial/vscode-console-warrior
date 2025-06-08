@@ -1,12 +1,9 @@
 import { WebSocket } from "ws";
 import { IConsoleData } from "./types/consoleData.interface";
+import { WS_PORT } from "./constants";
 
-export const connectToCentralWS = (
-  server: number,
-  port: number,
-  consoleData: IConsoleData[]
-) => {
-  const socket = new WebSocket(`ws://localhost:${server}`);
+export const connectToMainWS = (port: number, consoleData: IConsoleData[]) => {
+  const socket = new WebSocket(`ws://localhost:${WS_PORT}`);
 
   socket.on("open", () => {
     console.log("[Server WS] Connected to Central using port:", port);
