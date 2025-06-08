@@ -8,6 +8,10 @@
   "engines": {
     "vscode": "^1.97.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jonpena/vscode-console-warrior.git"
+  },
   "categories": [
     "Visualization",
     "Linters",
