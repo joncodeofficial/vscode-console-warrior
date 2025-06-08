@@ -1,86 +1,48 @@
 import * as vscode from "vscode";
 import WebSocket from "ws";
 import { monitoringChanges } from "./monitoringChanges";
-import { UPDATE_RATE, WS_PORT } from "./constants";
+import { UPDATE_RATE } from "./constants";
 import { IConsoleData } from "./types/consoleData.interface";
 import { sourceMapping } from "./sourceMapping";
-import { createProxy } from "./createProxy";
 import { updateConsoleDataMap } from "./updateConsoleDataMap";
 import { watcherNodeModules } from "./utils/watcherNodeModules";
 import { IConsoleDataMap } from "./types/consoleDataMap.interface";
-import { renderDecorations } from "./renderDecorations";
+import { decorationType, renderDecorations } from "./renderDecorations";
 import { ISourceMapCache } from "./types/sourceMapCache.interface";
-import { connectToCentralWS } from "./connectToCentralWS";
-import { startCentralSW } from "./startCentralSW";
-import { IBackendConnections } from "./types/backendConnections.interface";
+import { connectToMainWS } from "./connectToMainWS";
+import { startMainSW } from "./startMainSW";
+import { IServerConnections } from "./types/serverConnections.interface";
 import { addConsoleWarriorPort } from "./commands/addConsoleWarriorPort";
 import { removeCommentedConsoles } from "./utils/removeCommentedConsoles";
 
-let decorationType: vscode.TextEditorDecorationType;
 let socket: WebSocket | null = null;
 const consoleData: IConsoleData[] = [];
 const sourceMapCache: ISourceMapCache = new Map();
 const consoleDataMap: IConsoleDataMap = new Map();
-const backendConnections: IBackendConnections = new Map();
-
-// Create the decoration type
-decorationType = vscode.window.createTextEditorDecorationType({
-  color: "#00FF00", // Color green
-  textDecoration: "none; pointer-events: none;",
-  rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
-});
+const serverConnections: IServerConnections = new Map();
 
 export function activate(context: vscode.ExtensionContext) {
-  startCentralSW(
-    consoleData,
-    sourceMapCache,
-    consoleDataMap,
-    backendConnections
-  );
+  let connectPort: number = context.workspaceState.get("port") ?? 0;
 
-  socket = connectToCentralWS(
-    WS_PORT,
-    context.workspaceState.get("port") ?? 0,
-    consoleData
-  );
+  // Start Main Server
+  startMainSW(consoleData, sourceMapCache, consoleDataMap, serverConnections);
 
-  monitoringChanges(
-    consoleData,
-    async () => {
-      const newConsoleData = await sourceMapping(consoleData, sourceMapCache);
-      if (!newConsoleData || newConsoleData.length === 0) return;
+  // Connect to Main Server like a client
+  socket = connectToMainWS(connectPort, consoleData);
 
-      updateConsoleDataMap(
-        vscode.window.activeTextEditor,
-        newConsoleData,
-        consoleDataMap
-      );
+  monitoringChanges(consoleData, async () => {
+    const newConsoleData = await sourceMapping(consoleData, sourceMapCache);
 
-      renderDecorations(
-        vscode.window.activeTextEditor,
-        decorationType,
-        consoleDataMap
-      );
-      consoleData.length = 0;
-    },
-    UPDATE_RATE
-  );
+    // Early return if no new data
+    if (!newConsoleData?.length) return;
 
-  // vscode.workspace.onDidSaveTextDocument(
-  //   async (document: vscode.TextDocument) => {
-  //     const editor = vscode.window.activeTextEditor;
-  //     if (editor && editor.document === document) {
-  //       // First enable auto-reload
-  //       // broadcastToClients(wss, { type: "enableAutoReload" });
-  //       // Then send reload command
-  //       // broadcastToClients(wss, { type: "reload" });
-  //       // consoleData.length = 0;
-  //       // sourceMapCache.clear();
-  //       // consoleDataMap.clear();
-  //       // vscode.window.activeTextEditor?.setDecorations(decorationType, []);
-  //     }
-  //   }
-  // );
+    const editor = vscode.window.activeTextEditor;
+
+    updateConsoleDataMap(editor, newConsoleData, consoleDataMap);
+    renderDecorations(editor, consoleDataMap);
+
+    consoleData.length = 0;
+  });
 
   vscode.workspace.onDidChangeTextDocument((editor) => {
     const activeEditor = vscode.window.activeTextEditor;
@@ -90,13 +52,8 @@ export function activate(context: vscode.ExtensionContext) {
     if (activeEditor && editor.document === activeEditor.document) {
       removeCommentedConsoles(editor, consoleDataMap);
     }
-
     // Render decorations again
-    renderDecorations(
-      vscode.window.activeTextEditor,
-      decorationType,
-      consoleDataMap
-    );
+    renderDecorations(vscode.window.activeTextEditor, consoleDataMap);
   });
 
   context.subscriptions.push(watcherNodeModules(vscode)!);
