@@ -10,13 +10,26 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jonpena/vscode-console-warrior.git"
+    "url": "https://github.com/jonpena/vscode-console-warrior-logs.git"
   },
   "categories": [
     "Visualization",
     "Linters",
-    "Debuggers"
+    "Debuggers",
+    "Other"
   ],
+  "keywords": [
+    "console.log",
+    "debugging",
+    "logs",
+    "visualization",
+    "inline logs",
+    "console warrior"
+  ],
+  "bugs": {
+    "url": "https://github.com/jonpena/vscode-console-warrior-logs/issues"
+  },
+  "homepage": "https://github.com/jonpena/vscode-console-warrior-logs#readme",
   "activationEvents": [
     "workspaceContains:package.json"
   ],
