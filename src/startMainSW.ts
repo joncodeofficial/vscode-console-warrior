@@ -1,10 +1,10 @@
-import portscanner from "portscanner";
-import { WebSocket, WebSocketServer } from "ws";
-import { WS_PORT } from "./constants";
-import { IConsoleData } from "./types/consoleData.interface";
-import { getPortFromUrl } from "./utils/getPortFromUrl";
-import { ISourceMapCache } from "./types/sourceMapCache.interface";
-import { IConsoleDataMap } from "./types/consoleDataMap.interface";
+import portscanner from 'portscanner';
+import { WebSocket, WebSocketServer } from 'ws';
+import { WS_PORT } from './constants';
+import { IConsoleData } from './types/consoleData.interface';
+import { getPortFromUrl } from './utils/getPortFromUrl';
+import { ISourceMapCache } from './types/sourceMapCache.interface';
+import { IConsoleDataMap } from './types/consoleDataMap.interface';
 
 export async function startMainSW(
   consoleData: IConsoleData[],
@@ -12,14 +12,14 @@ export async function startMainSW(
   consoleDataMap: IConsoleDataMap,
   backendConnections: Map<string, WebSocket>
 ) {
-  const status = await portscanner.checkPortStatus(WS_PORT, "127.0.0.1");
+  const status = await portscanner.checkPortStatus(WS_PORT, '127.0.0.1');
 
-  if (status === "closed") {
+  if (status === 'closed') {
     // Create server WebSocket Central
     const wss = new WebSocketServer({ port: WS_PORT });
     console.log(`[Central WS] started on port ${WS_PORT}`);
 
-    wss.on("connection", (ws) => {
+    wss.on('connection', (ws) => {
       consoleData.length = 0;
       sourceMapCache.clear();
       consoleDataMap.clear();
@@ -27,11 +27,11 @@ export async function startMainSW(
       let isBackend = false;
       let backendId: string | null = null;
 
-      ws.on("message", (msg) => {
+      ws.on('message', (msg) => {
         const data: IConsoleData = JSON.parse(msg.toString());
 
         // 1. if is a server identify it
-        if (data.type === "server-connect" && data.id) {
+        if (data.type === 'server-connect' && data.id) {
           backendId = data.id;
           backendConnections.set(data.id, ws);
           isBackend = true;
@@ -40,20 +40,18 @@ export async function startMainSW(
         }
 
         // 2. if is a client frontend send message to a backend
-        if (data.type === "client-message" && data.location.url) {
-          const target = backendConnections.get(
-            getPortFromUrl(data.location.url as string)
-          );
+        if (data.type === 'client-message' && data.location.url) {
+          const target = backendConnections.get(getPortFromUrl(data.location.url as string));
           if (target && target.readyState === WebSocket.OPEN) {
             target.send(msg);
           } else {
-            console.warn("No server found for client message");
+            console.warn('No server found for client message');
           }
           return;
         }
       });
 
-      ws.on("close", () => {
+      ws.on('close', () => {
         if (isBackend && backendId) {
           backendConnections.delete(backendId);
           console.log(`Server ${backendId} disconnected`);

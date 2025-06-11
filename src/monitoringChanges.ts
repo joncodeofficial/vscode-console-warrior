@@ -1,16 +1,13 @@
-import { createHash } from "crypto";
-import { UPDATE_RATE } from "./constants";
+import { createHash } from 'crypto';
+import { UPDATE_RATE } from './constants';
 
 type CallbackFunction<T> = (array: T[]) => void;
 
 const hashArray = <T>(array: T[]): string => {
-  return createHash("sha1").update(JSON.stringify(array)).digest("hex");
+  return createHash('sha1').update(JSON.stringify(array)).digest('hex');
 };
 
-export const monitoringChanges = <T>(
-  array: T[],
-  callback: CallbackFunction<T>
-) => {
+export const monitoringChanges = <T>(array: T[], callback: CallbackFunction<T>) => {
   let lastHash = hashArray(array);
 
   const intervalId = setInterval(() => {

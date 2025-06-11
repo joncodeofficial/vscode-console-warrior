@@ -1,6 +1,6 @@
-import { IConsoleDataMap } from "../types/consoleDataMap.interface";
-import * as vscode from "vscode";
-import { isConsoleLogCorrect } from "./isConsoleLogCorrect";
+import { IConsoleDataMap } from '../types/consoleDataMap.interface';
+import * as vscode from 'vscode';
+import { isConsoleLogCorrect } from './isConsoleLogCorrect';
 
 export const removeCommentedConsoles = (
   editor: vscode.TextDocumentChangeEvent,

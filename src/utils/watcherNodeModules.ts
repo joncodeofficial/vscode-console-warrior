@@ -1,8 +1,8 @@
-import fs from "fs";
-import path from "path";
-import { checkIfNodeModulesReady } from "./checkIfNodeModulesReady";
-import { vitePlugin } from "../plugins/vitePlugin";
-import * as VSCODE from "vscode";
+import fs from 'fs';
+import path from 'path';
+import { checkIfNodeModulesReady } from './checkIfNodeModulesReady';
+import { vitePlugin } from '../plugins/vitePlugin';
+import * as VSCODE from 'vscode';
 
 export const watcherNodeModules = (vscode: typeof VSCODE) => {
   const workspacePath = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
@@ -10,7 +10,7 @@ export const watcherNodeModules = (vscode: typeof VSCODE) => {
 
   const activatedPaths = new Set<string>();
 
-  const nodeModulesPath = path.join(workspacePath, "node_modules");
+  const nodeModulesPath = path.join(workspacePath, 'node_modules');
 
   const activatePlugin = async (nodeModulesPath: string) => {
     const ready = await checkIfNodeModulesReady(nodeModulesPath);
@@ -28,7 +28,7 @@ export const watcherNodeModules = (vscode: typeof VSCODE) => {
     for (const entry of entries) {
       const fullPath = path.join(dir, entry.name);
       if (entry.isDirectory()) {
-        if (entry.name === "node_modules") {
+        if (entry.name === 'node_modules') {
           activatePlugin(fullPath);
         } else {
           scanExisting(fullPath); // recursive
@@ -46,19 +46,19 @@ export const watcherNodeModules = (vscode: typeof VSCODE) => {
 
   // Watch for creation and deletion of node_modules
   const watcher = vscode.workspace.createFileSystemWatcher(
-    new vscode.RelativePattern(workspacePath, "**/node_modules"),
+    new vscode.RelativePattern(workspacePath, '**/node_modules'),
     false, // watch create
     true, // ignore change
     false // watch delete
   );
 
   watcher.onDidCreate(() => {
-    vscode.window.showInformationMessage("node_modules creado");
+    vscode.window.showInformationMessage('node_modules creado');
     activatePlugin(nodeModulesPath);
   });
 
   watcher.onDidDelete(() => {
-    vscode.window.showInformationMessage("node_modules eliminado");
+    vscode.window.showInformationMessage('node_modules eliminado');
     // Here you could deactivate your plugin if necessary
   });
 

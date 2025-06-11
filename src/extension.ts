@@ -1,18 +1,18 @@
-import * as vscode from "vscode";
-import WebSocket from "ws";
-import { monitoringChanges } from "./monitoringChanges";
-import { IConsoleData } from "./types/consoleData.interface";
-import { sourceMapping } from "./sourceMapping";
-import { updateConsoleDataMap } from "./updateConsoleDataMap";
-import { watcherNodeModules } from "./utils/watcherNodeModules";
-import { IConsoleDataMap } from "./types/consoleDataMap.interface";
-import { decorationType, renderDecorations } from "./renderDecorations";
-import { ISourceMapCache } from "./types/sourceMapCache.interface";
-import { connectToMainWS } from "./connectToMainWS";
-import { startMainSW } from "./startMainSW";
-import { IServerConnections } from "./types/serverConnections.interface";
-import { addConsoleWarriorPort } from "./commands/addConsoleWarriorPort";
-import { removeCommentedConsoles } from "./utils/removeCommentedConsoles";
+import * as vscode from 'vscode';
+import WebSocket from 'ws';
+import { monitoringChanges } from './monitoringChanges';
+import { IConsoleData } from './types/consoleData.interface';
+import { sourceMapping } from './sourceMapping';
+import { updateConsoleDataMap } from './updateConsoleDataMap';
+import { watcherNodeModules } from './utils/watcherNodeModules';
+import { IConsoleDataMap } from './types/consoleDataMap.interface';
+import { decorationType, renderDecorations } from './renderDecorations';
+import { ISourceMapCache } from './types/sourceMapCache.interface';
+import { connectToMainWS } from './connectToMainWS';
+import { startMainSW } from './startMainSW';
+import { IServerConnections } from './types/serverConnections.interface';
+import { addConsoleWarriorPort } from './commands/addConsoleWarriorPort';
+import { removeCommentedConsoles } from './utils/removeCommentedConsoles';
 
 let socket: WebSocket | null = null;
 const consoleData: IConsoleData[] = [];
@@ -21,7 +21,7 @@ const consoleDataMap: IConsoleDataMap = new Map();
 const serverConnections: IServerConnections = new Map();
 
 export function activate(context: vscode.ExtensionContext) {
-  let connectPort: number = context.workspaceState.get("port") ?? 0;
+  let connectPort: number = context.workspaceState.get('port') ?? 0;
 
   // Start Main Server
   startMainSW(consoleData, sourceMapCache, consoleDataMap, serverConnections);
@@ -57,9 +57,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(watcherNodeModules(vscode)!);
 
-  context.subscriptions.push(
-    addConsoleWarriorPort(context, socket, consoleData)
-  );
+  context.subscriptions.push(addConsoleWarriorPort(context, socket, consoleData));
 }
 
 export function deactivate() {

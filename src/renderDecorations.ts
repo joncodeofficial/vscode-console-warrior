@@ -1,13 +1,13 @@
-import * as vscode from "vscode";
-import { truncateString } from "./utils/truncateString";
-import { formatString } from "./utils/formatString";
-import { isConsoleLogCorrect } from "./utils/isConsoleLogCorrect";
-import { IConsoleDataMap } from "./types/consoleDataMap.interface";
+import * as vscode from 'vscode';
+import { truncateString } from './utils/truncateString';
+import { formatString } from './utils/formatString';
+import { isConsoleLogCorrect } from './utils/isConsoleLogCorrect';
+import { IConsoleDataMap } from './types/consoleDataMap.interface';
 
 // Create the decoration type
 export const decorationType = vscode.window.createTextEditorDecorationType({
-  color: "#00FF00", // Color green
-  textDecoration: "none; pointer-events: none;",
+  color: '#00FF00', // Color green
+  textDecoration: 'none; pointer-events: none;',
   rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
 });
 
@@ -29,18 +29,15 @@ export const renderDecorations = (
       if (line < 0 || line >= document.lineCount) continue;
 
       const lineText = document.lineAt(line).text;
-      if (!lineText.includes("console.log(") || !isConsoleLogCorrect(lineText))
-        continue;
+      if (!lineText.includes('console.log(') || !isConsoleLogCorrect(lineText)) continue;
 
       const closingIndex = lineText.length + 2;
       decorations.push({
         range: new vscode.Range(line, closingIndex, line, closingIndex),
         renderOptions: {
           after: {
-            contentText:
-              " ➜ " +
-              truncateString(formatString(values.toArray().join(" ➜ "))),
-            color: "#73daca",
+            contentText: ' ➜ ' + truncateString(formatString(values.toArray().join(' ➜ '))),
+            color: '#73daca',
           },
         },
       });

@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from 'fs';
 
 export const checkIfNodeModulesReady = async (
   dir: string,
@@ -7,7 +7,7 @@ export const checkIfNodeModulesReady = async (
 ): Promise<boolean> => {
   for (let i = 0; i < MAX_TRIES; i++) {
     try {
-      const items = fs.readdirSync(dir).filter((name) => !name.startsWith("."));
+      const items = fs.readdirSync(dir).filter((name) => !name.startsWith('.'));
       if (items.length > 0) return true;
     } catch (e) {
       console.log(e);

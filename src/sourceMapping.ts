@@ -1,11 +1,7 @@
-import { IConsoleData } from "./types/consoleData.interface";
-import { ISourceMapCache } from "./types/sourceMapCache.interface";
-import {
-  SourceMapInput,
-  TraceMap,
-  originalPositionFor,
-} from "@jridgewell/trace-mapping";
-import { getFilename } from "./utils/getFilename";
+import { IConsoleData } from './types/consoleData.interface';
+import { ISourceMapCache } from './types/sourceMapCache.interface';
+import { SourceMapInput, TraceMap, originalPositionFor } from '@jridgewell/trace-mapping';
+import { getFilename } from './utils/getFilename';
 
 export const sourceMapping = async (
   consoleData: IConsoleData[],
@@ -14,9 +10,9 @@ export const sourceMapping = async (
   const newConsoleData: IConsoleData[] = [];
 
   for (const { location, message } of consoleData) {
-    if (!location.url.includes("@vite/client")) {
-      const sourceUrl = location.url.split("?")[0];
-      const timeParam = location.url.split("t=")[1];
+    if (!location.url.includes('@vite/client')) {
+      const sourceUrl = location.url.split('?')[0];
+      const timeParam = location.url.split('t=')[1];
       const cacheKey = `${sourceUrl}-${timeParam}`;
 
       try {
@@ -26,13 +22,13 @@ export const sourceMapping = async (
           const sourceMapUrl = `${sourceUrl}.map`;
           const response = await fetch(sourceMapUrl);
 
-          if (!response.ok) throw new Error("Failed to fetch sourcemap");
+          if (!response.ok) throw new Error('Failed to fetch sourcemap');
 
           const sourceMapData = (await response.json()) as SourceMapInput;
           tracer = new TraceMap(sourceMapData);
           sourceMapCache.set(cacheKey, tracer);
         } else {
-          console.log("Cached sourcemap to enhance performance.");
+          console.log('Cached sourcemap to enhance performance.');
           tracer = sourceMapCache.get(cacheKey)!;
         }
 
@@ -44,13 +40,13 @@ export const sourceMapping = async (
         newConsoleData.push({
           message,
           location: {
-            url: original.source ?? "",
+            url: original.source ?? '',
             line: original.line ?? 0,
             column: original.column ?? 0,
           },
         });
       } catch {
-        console.log("Source map not found or failed to load.");
+        console.log('Source map not found or failed to load.');
         newConsoleData.push({
           message,
           location: {
