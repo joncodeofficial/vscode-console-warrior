@@ -51,7 +51,7 @@ Stay tuned for:
 - 📚 Plugin system for extensibility
 - ⚙️ Configuration options for filtering logs
 
-If you'd like to contribute, please check the [Issues](https://github.com/jonpena/console-warrior-logs/issues) and [Roadmap](https://github.com/jonpena/console-warrior-logs/projects/1).
+If you'd like to contribute, please check the [Issues](https://github.com/jonpena/vscode-console-warrior-logs/issues)
 
 ---
 
@@ -63,15 +63,8 @@ If you'd like to contribute, please check the [Issues](https://github.com/jonpen
 
 ## 📌 Roadmap & Feedback
 
-- [🗂️ Roadmap](https://github.com/jonpena/console-warrior-logs/projects/1)
-- [🪲 Report Issues](https://github.com/jonpena/console-warrior-logs/issues)
-- [📖 Changelog](https://github.com/jonpena/console-warrior-logs/releases)
-
----
-
-## 🧩 License
-
-This project is [MIT licensed](LICENSE).
+- [🪲 Report Issues](https://github.com/jonpena/vscode-console-warrior-logs/issues)
+- [📖 Changelog](https://github.com/jonpena/vscode-console-warrior-logs/releases)
 
 ---
 
