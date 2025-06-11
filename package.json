@@ -38,7 +38,8 @@
     "commands": [
       {
         "command": "extension.addPort",
-        "title": "Connect to Console Warrior Port"
+        "title": "Connect to Console Warrior Port",
+        "category": "Console Warrior Logs"
       }
     ]
   },
