@@ -35,7 +35,7 @@ You can install this extension from the [Visual Studio Code Marketplace](https:/
 
 ---
 
-## 🧠 Why Console Warrior?
+## 🧠 Why Console Warrior Logs?
 
 There was no truly open source, no-profit tool to bring live `console.log` outputs directly into VSCode. This project was born to fill that gap for web developers who want faster feedback loops and a cleaner debugging experience.
 
@@ -67,5 +67,15 @@ If you'd like to contribute, please check the [Issues](https://github.com/jonpen
 - [📖 Changelog](https://github.com/jonpena/vscode-console-warrior-logs/releases)
 
 ---
+
+## ⚖️ Legal Notice
+
+This project was **developed entirely from scratch**, without access to or use of any proprietary source code.  
+It is **inspired by publicly visible behavior** of other tools, but the **implementation, logic, architecture, and design decisions are original** and written line by line by the author.
+
+Console Warrior Logs is a **non-profit, open source** initiative created for the benefit of the web development community.  
+All code contributions and usage are governed by the project's open source license.
+
+If you are a rights holder and have questions or concerns, please feel free to open an issue or contact the project maintainer.
 
 Built with ❤️ by [@jonpena](https://github.com/jonpena)
