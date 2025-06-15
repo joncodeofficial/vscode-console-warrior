@@ -39,7 +39,7 @@
         "assets": [
           {
             "path": "dist/*.vsix",
-            "label": "VS Code Extension"
+            "label": "vscode-console-warrior-logs"
           }
         ]
       }
