@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.0.1 (2025-06-15)</small>
+
+- fix: update package name and version in package.json ([347af65](https://github.com/jonpena/vscode-console-warrior-logs/commit/347af65))
+
 ## 1.0.0 (2025-06-15)
 
 - fix: :art: improve ESLint configuration formatting and structure ([6ea7b47](https://github.com/jonpena/vscode-console-warrior-logs/commit/6ea7b47))
