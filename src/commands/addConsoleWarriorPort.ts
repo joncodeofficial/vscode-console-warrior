@@ -20,16 +20,12 @@ export const addConsoleWarriorPort = (
       },
     });
 
-    if (input !== undefined) {
+    if (input) {
       const num = Number(input);
       context.workspaceState.update('port', num);
-
       if (socket) socket.close();
-
       const getPort: number = context.workspaceState.get('port') ?? 0;
-
       socket = connectToMainWS(getPort, consoleData);
-
       vscode.window.showInformationMessage(`Console Warrior Logs listening on port ${num}`);
     }
   });
