@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.0.2 (2025-06-15)</small>
+
+- fix: enhance release workflow and configuration for better semantic release integration ([4cd4813](https://github.com/jonpena/vscode-console-warrior-logs/commit/4cd4813))
+
 ## <small>1.0.1 (2025-06-15)</small>
 
 - fix: update package name and version in package.json ([347af65](https://github.com/jonpena/vscode-console-warrior-logs/commit/347af65))
