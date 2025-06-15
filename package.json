@@ -33,6 +33,7 @@
     "format:check": "prettier --check src",
     "lint": "eslint src",
     "lint:fix": "eslint --fix src",
+    "package": "vsce package",
     "prepare": "simple-git-hooks",
     "pretest": "npm run compile && npm run lint",
     "test": "vscode-test",
