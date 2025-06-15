@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.0.4 (2025-06-15)</small>
+
+- fix: add changelog entry for version 1.0.3 with updated VS Code extension label ([47b99aa](https://github.com/jonpena/vscode-console-warrior-logs/commit/47b99aa))
+- fix: update version number and asset label in configuration files ([4e5734c](https://github.com/jonpena/vscode-console-warrior-logs/commit/4e5734c))
+
 ## <small>1.0.3 (2025-06-15)</small>
 
 - fix: update version and label for VS Code extension ([f4f87c9](https://github.com/jonpena/vscode-console-warrior-logs/commit/f4f87c9))
