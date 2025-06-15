@@ -1,7 +1,7 @@
 {
   "name": "console-warrior-logs",
   "displayName": "Console Warrior Logs",
-  "version": "0.0.25",
+  "version": "1.0.0",
   "description": "Visualize console.log messages directly in VSCode editor inline, boosting debugging and productivity.",
   "categories": [
     "Visualization",
