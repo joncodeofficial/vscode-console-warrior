@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.0.3 (2025-06-15)</small>
+
+- fix: update version and label for VS Code extension ([f4f87c9](https://github.com/jonpena/vscode-console-warrior-logs/commit/f4f87c9))
+
 ## <small>1.0.2 (2025-06-15)</small>
 
 - fix: enhance release workflow and configuration for better semantic release integration ([4cd4813](https://github.com/jonpena/vscode-console-warrior-logs/commit/4cd4813))
