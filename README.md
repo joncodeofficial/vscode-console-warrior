@@ -77,5 +77,3 @@ Console Warrior Logs is a **non-profit, open source** initiative created for the
 All code contributions and usage are governed by the project's open source license.
 
 If you are a rights holder and have questions or concerns, please feel free to open an issue or contact the project maintainer.
-
-Built with ❤️ by [@jonpena](https://github.com/jonpena)
