@@ -1,17 +1,8 @@
 {
-  "version": "0.0.25",
-  "publisher": "Jonpena",
   "name": "console-warrior-logs",
   "displayName": "Console Warrior Logs",
+  "version": "0.0.25",
   "description": "Visualize console.log messages directly in VSCode editor inline, boosting debugging and productivity.",
-  "icon": "images/icon.png",
-  "engines": {
-    "vscode": "^1.97.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/jonpena/vscode-console-warrior-logs.git"
-  },
   "categories": [
     "Visualization",
     "Linters",
@@ -26,14 +17,28 @@
     "inline logs",
     "console warrior logs"
   ],
+  "homepage": "https://github.com/jonpena/vscode-console-warrior-logs#readme",
   "bugs": {
     "url": "https://github.com/jonpena/vscode-console-warrior-logs/issues"
   },
-  "homepage": "https://github.com/jonpena/vscode-console-warrior-logs#readme",
-  "activationEvents": [
-    "workspaceContains:package.json"
-  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jonpena/vscode-console-warrior-logs.git"
+  },
+  "publisher": "Jonpena",
   "main": "./dist/extension.js",
+  "scripts": {
+    "compile": "tsc -p ./",
+    "format": "prettier --write --ignore-unknown src",
+    "format:check": "prettier --check src",
+    "lint": "eslint src",
+    "lint:fix": "eslint --fix src",
+    "prepare": "simple-git-hooks",
+    "pretest": "npm run compile && npm run lint",
+    "test": "vscode-test",
+    "vscode:prepublish": "npm run compile",
+    "watch": "tsc -watch -p ./"
+  },
   "contributes": {
     "commands": [
       {
@@ -43,18 +48,41 @@
       }
     ]
   },
-  "scripts": {
-    "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint",
-    "lint": "eslint src",
-    "lint:fix": "eslint --fix src",
-    "format": "prettier --check src",
-    "format:fix": "prettier --write src",
-    "test": "vscode-test"
+  "activationEvents": [
+    "workspaceContains:package.json"
+  ],
+  "simple-git-hooks": {
+    "pre-commit": "npx lint-staged",
+    "commit-msg": "npx commitlint --edit $1"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "lint-staged": {
+    "*": "prettier --write --ignore-unknown",
+    "package.json": "sort-package-json"
+  },
+  "prettier": {
+    "printWidth": 100
+  },
+  "dependencies": {
+    "@jridgewell/trace-mapping": "^0.3.25",
+    "denque": "^2.1.0",
+    "http-proxy": "^1.18.1",
+    "portscanner": "^2.2.0",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^11.0.3",
+    "@semantic-release/npm": "^12.0.1",
+    "@semantic-release/release-notes-generator": "^14.0.3",
     "@types/http-proxy": "^1.17.16",
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
@@ -66,15 +94,15 @@
     "@vscode/test-cli": "^0.0.10",
     "@vscode/test-electron": "^2.4.1",
     "eslint": "^9.28.0",
+    "lint-staged": "^16.1.2",
     "prettier": "^3.5.3",
+    "semantic-release": "^24.2.5",
+    "simple-git-hooks": "^2.13.0",
+    "sort-package-json": "^3.2.1",
     "typescript": "^5.7.3"
   },
-  "dependencies": {
-    "@jridgewell/trace-mapping": "^0.3.25",
-    "denque": "^2.1.0",
-    "http-proxy": "^1.18.1",
-    "portscanner": "^2.2.0",
-    "ws": "^8.18.0"
+  "engines": {
+    "vscode": "^1.97.0"
   },
-  "packageManager": "pnpm@10.8.1"
+  "icon": "images/icon.png"
 }
