@@ -15,7 +15,7 @@ export const vitePlugin = (vscode: VSCODE, relativePath: string) => {
       // Specific path to the file cli.js in vite
       const targetFile = path.join(relativePath, '/vite/dist/node/cli.js');
 
-      // Verificar que el archivo existe
+      // Verify if the file exists
       if (!fs.existsSync(targetFile)) {
         vscode.window.showErrorMessage(
           `El archivo ${targetFile} no existe. Asegúrate de que Vite esté instalado en tu proyecto.`
@@ -26,27 +26,46 @@ export const vitePlugin = (vscode: VSCODE, relativePath: string) => {
       // Read the file content
       let fileContent = fs.readFileSync(targetFile, 'utf8');
 
-      const ext = vscode.extensions.getExtension('jonpena.console-warrior-logs');
+      const extensionPath = vscode.extensions.getExtension(
+        'jonpena.console-warrior-logs'
+      )?.extensionPath;
 
-      // The specific insertion point
+      if (!extensionPath) return;
+
+      const isExtensionCreated = fileContent.includes('console-warrior-logs-plugin');
+      const isExtensionCurrentVersion = fileContent.includes(extensionPath);
+      // if not found, Add plugin in the file in the correct position
       const insertionPoint = 'const server = await createServer({';
 
-      // The code you want to insert
+      // Insert the plugin code
       const pluginCode = `const server = await createServer({
+      /* guide start */
       plugins: [{
-          name: "console-warrior-plugin",
+          name: "console-warrior-logs-plugin",
           transformIndexHtml(html) {
               return new Promise((resolve) => {
-                  const vscodePath = path.resolve("${ext?.extensionPath}/dist/injectionCode.js");
+                  const vscodePath = path.resolve("${extensionPath}/dist/injectionCode.js");
                   import(vscodePath)
                       .then(function (n) { return n.injectionCode; })
-                      .then(result => resolve(html.replace("</head>", result + "</head>")));
+                      .then(injection => resolve(html.replace("</head>", injection + "</head>")));
               });
           },
-      }],`;
+      }], /* guide end */`;
 
-      // Check if the plugin already exists
-      if (fileContent.includes('console-warrior-plugin')) {
+      // Update the plugin if it already exists
+      if (isExtensionCreated && !isExtensionCurrentVersion) {
+        // Usamos una RegExp para encontrar y eliminar el contenido entre los delimitadores
+        fileContent = fileContent.replace(
+          /\r?\n?\/\* guide start \*\/[\s\S]*?\/\* guide end \*\/\r?\n?/g,
+          ''
+        );
+        fs.writeFileSync(targetFile, fileContent, 'utf-8');
+        vscode.window.showInformationMessage(
+          'El plugin console-warrior-plugin se actualizó correctamente en el archivo cli.js de Vite.'
+        );
+      }
+
+      if (isExtensionCreated) {
         vscode.window.showInformationMessage(
           'El plugin console-warrior-plugin ya está presente en el archivo.'
         );
@@ -56,16 +75,6 @@ export const vitePlugin = (vscode: VSCODE, relativePath: string) => {
       // Replace the insertion point with our plugin code
       if (fileContent.includes(insertionPoint)) {
         fileContent = fileContent.replace(insertionPoint, pluginCode);
-
-        // const test = "server.printUrls();";
-
-        // const testCode = `
-        //   console.log(colors.green("  ➜  Console Warrior ⚔️  supports"), colors.magenta(colors.bold("VITE")));
-        //   console.log(colors.green("  ➜  ================================"));
-        //   server.printUrls();
-        //   `;
-
-        // fileContent = fileContent.replace(test, testCode);
 
         // Write the modified file content back to the file
         fs.writeFileSync(targetFile, fileContent, 'utf8');
