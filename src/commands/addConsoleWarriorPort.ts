@@ -1,12 +1,12 @@
 import * as vscode from 'vscode';
 import { connectToMainWS } from '../connectToMainWS';
 import { WebSocket } from 'ws';
-import { IConsoleData } from '../types/consoleData.interface';
+import { ConsoleData } from '../types/consoleData.interface';
 
 export const addConsoleWarriorPort = (
   context: vscode.ExtensionContext,
   socket: WebSocket | null,
-  consoleData: IConsoleData[]
+  consoleData: ConsoleData[]
 ) => {
   return vscode.commands.registerCommand('extension.addPort', async () => {
     const input = await vscode.window.showInputBox({

@@ -1,25 +1,25 @@
 import * as vscode from 'vscode';
 import WebSocket from 'ws';
 import { monitoringChanges } from './monitoringChanges';
-import { IConsoleData } from './types/consoleData.interface';
+import { ConsoleData } from './types/consoleData.interface';
 import { sourceMapping } from './sourceMapping';
 import { updateConsoleDataMap } from './updateConsoleDataMap';
 import { watcherNodeModules } from './utils/watcherNodeModules';
-import { IConsoleDataMap } from './types/consoleDataMap.interface';
+import { ConsoleDataMap } from './types/consoleDataMap.interface';
 import { decorationType, renderDecorations } from './renderDecorations';
-import { ISourceMapCache } from './types/sourceMapCache.interface';
+import { SourceMapCache } from './types/sourceMapCache.interface';
 import { connectToMainWS } from './connectToMainWS';
 import { startMainSW } from './startMainSW';
-import { IServerConnections } from './types/serverConnections.interface';
+import { ServerConnections } from './types/serverConnections.interface';
 import { addConsoleWarriorPort } from './commands/addConsoleWarriorPort';
 import { removeCommentedConsoles } from './utils/removeCommentedConsoles';
 import { DEFAULT_PORT } from './constants';
 
 let socket: WebSocket | null = null;
-const consoleData: IConsoleData[] = [];
-const sourceMapCache: ISourceMapCache = new Map();
-const consoleDataMap: IConsoleDataMap = new Map();
-const serverConnections: IServerConnections = new Map();
+const consoleData: ConsoleData[] = [];
+const sourceMapCache: SourceMapCache = new Map();
+const consoleDataMap: ConsoleDataMap = new Map();
+const serverConnections: ServerConnections = new Map();
 
 export function activate(context: vscode.ExtensionContext) {
   let connectPort: number = context.workspaceState.get('port') ?? DEFAULT_PORT;

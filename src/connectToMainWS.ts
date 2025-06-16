@@ -1,8 +1,8 @@
 import { WebSocket } from 'ws';
-import { IConsoleData } from './types/consoleData.interface';
+import { ConsoleData } from './types/consoleData.interface';
 import { WS_PORT } from './constants';
 
-export const connectToMainWS = (port: number, consoleData: IConsoleData[]) => {
+export const connectToMainWS = (port: number, consoleData: ConsoleData[]) => {
   const socket = new WebSocket(`ws://localhost:${WS_PORT}`);
 
   socket.on('open', () => {
@@ -13,7 +13,7 @@ export const connectToMainWS = (port: number, consoleData: IConsoleData[]) => {
 
   socket.on('message', (message) => {
     try {
-      const data: IConsoleData = JSON.parse(message.toString());
+      const data: ConsoleData = JSON.parse(message.toString());
       consoleData.push(data);
     } catch (e) {
       console.warn('Error parsing WebSocket message');

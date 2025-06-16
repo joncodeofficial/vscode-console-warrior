@@ -1,13 +1,10 @@
-import { IConsoleData } from './types/consoleData.interface';
-import { ISourceMapCache } from './types/sourceMapCache.interface';
+import { ConsoleData } from './types/consoleData.interface';
+import { SourceMapCache } from './types/sourceMapCache.interface';
 import { SourceMapInput, TraceMap, originalPositionFor } from '@jridgewell/trace-mapping';
 import { getFilename } from './utils/getFilename';
 
-export const sourceMapping = async (
-  consoleData: IConsoleData[],
-  sourceMapCache: ISourceMapCache
-) => {
-  const newConsoleData: IConsoleData[] = [];
+export const sourceMapping = async (consoleData: ConsoleData[], sourceMapCache: SourceMapCache) => {
+  const newConsoleData: ConsoleData[] = [];
 
   for (const { location, message } of consoleData) {
     if (!location.url.includes('@vite/client')) {

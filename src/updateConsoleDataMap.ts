@@ -1,13 +1,13 @@
 import * as vscode from 'vscode';
 import Denque from 'denque';
-import { IConsoleData } from './types/consoleData.interface';
-import { IConsoleDataMap } from './types/consoleDataMap.interface';
+import { ConsoleData } from './types/consoleData.interface';
+import { ConsoleDataMap } from './types/consoleDataMap.interface';
 import { MAX_DECORATIONS } from './constants';
 
 export const updateConsoleDataMap = (
   editor: vscode.TextEditor | undefined,
-  consoleData: IConsoleData[],
-  consoleDataMap: IConsoleDataMap
+  consoleData: ConsoleData[],
+  consoleDataMap: ConsoleDataMap
 ) => {
   if (!editor) return;
 

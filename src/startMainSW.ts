@@ -1,15 +1,15 @@
 import portscanner from 'portscanner';
 import { WebSocket, WebSocketServer } from 'ws';
 import { WS_PORT } from './constants';
-import { IConsoleData } from './types/consoleData.interface';
+import { ConsoleData } from './types/consoleData.interface';
 import { getPortFromUrl } from './utils/getPortFromUrl';
-import { ISourceMapCache } from './types/sourceMapCache.interface';
-import { IConsoleDataMap } from './types/consoleDataMap.interface';
+import { SourceMapCache } from './types/sourceMapCache.interface';
+import { ConsoleDataMap } from './types/consoleDataMap.interface';
 
 export async function startMainSW(
-  consoleData: IConsoleData[],
-  sourceMapCache: ISourceMapCache,
-  consoleDataMap: IConsoleDataMap,
+  consoleData: ConsoleData[],
+  sourceMapCache: SourceMapCache,
+  consoleDataMap: ConsoleDataMap,
   backendConnections: Map<string, WebSocket>
 ) {
   const status = await portscanner.checkPortStatus(WS_PORT, '127.0.0.1');
@@ -28,7 +28,7 @@ export async function startMainSW(
       let backendId: string | null = null;
 
       ws.on('message', (msg) => {
-        const data: IConsoleData = JSON.parse(msg.toString());
+        const data: ConsoleData = JSON.parse(msg.toString());
 
         // 1. if is a server identify it
         if (data.type === 'server-connect' && data.id) {
