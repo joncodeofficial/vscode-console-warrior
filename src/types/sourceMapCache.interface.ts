@@ -1,3 +1,3 @@
 import { TraceMap } from '@jridgewell/trace-mapping';
 
-export type ISourceMapCache = Map<string, TraceMap>;
+export type SourceMapCache = Map<string, TraceMap>;
