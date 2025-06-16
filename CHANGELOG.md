@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.1.3 (2025-06-16)</small>
+
+- fix: correct import statement for dynamic module loading in vitePlugin ([c126b52](https://github.com/jonpena/vscode-console-warrior-logs/commit/c126b52))
+- fix: remove unnecessary information messages for node_modules events ([5cda69f](https://github.com/jonpena/vscode-console-warrior-logs/commit/5cda69f))
+- refactor: streamline error handling and improve code readability in vitePlugin ([a38200b](https://github.com/jonpena/vscode-console-warrior-logs/commit/a38200b))
+
 ## <small>1.1.2 (2025-06-16)</small>
 
 - fix: convert path to file URL on Windows for injection code ([b86d160](https://github.com/jonpena/vscode-console-warrior-logs/commit/b86d160))
