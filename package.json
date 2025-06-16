@@ -1,7 +1,7 @@
 {
   "name": "console-warrior-logs",
   "displayName": "Console Warrior",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Visualize console.log messages directly in VSCode editor inline, boosting debugging and productivity.",
   "categories": [
     "Visualization",
@@ -54,11 +54,6 @@
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged",
     "commit-msg": "npx commitlint --edit $1"
-  },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
   },
   "lint-staged": {
     "*": "prettier --write --ignore-unknown",
