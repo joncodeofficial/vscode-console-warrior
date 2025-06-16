@@ -1,63 +1,60 @@
 # Console Warrior Logs
 
-**Visualize `console.log` messages directly inside your VSCode editor. Boost your debugging flow without leaving your code.**
+## 🚀 Visualize `console.log` messages directly inside your VSCode editor.
 
-![Logo](images/icon.png)
+![Presentation](images/presentation.gif)
 
 ---
 
 ## ✨ Features
 
-- 🚀 Inline display of `console.log` messages from the browser.
-- 🌐 WebSocket-based communication for real-time logging.
-- 🛠️ One-click command to connect to your log stream.
+- 🚀 Inline display of `console.log` output from the browser.
+- 🌐 Real-time WebSocket-based communication.
+- ⚡ One-click command to connect to your log stream.
 - 🧩 Currently supports **Vite-based** projects.
 - 💡 Open source & built for the community.
 
----
+## ⚙️ How to Use
 
-## 📦 Installation
+1. Start your Vite dev server (only Vite is supported for now, with some limitations).
+2. By default, the extension connects to port `5173`.
+3. To use a different port (e.g. if you have multiple Vite apps), open the command palette and run:
+   Then enter the new port your app is using.
+4. Open any file with `console.log` statements.
+5. 🎉 Logs will appear directly under the lines where they’re called.
 
-You can install this extension from the [Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=jonpena.console-warrior-logs) or by searching for:
-
----
-
-## ⚙️ Usage
-
-1. Make sure your project is running with a compatible `vite` dev server.
-2. Run the command:
-
-3. Enter the port number used by your frontend for WebSocket communication (e.g., `5173`).
-4. Now open a file with `console.log` statements.
-5. 🎉 Console output will appear directly under each line where it was logged.
-
-> ℹ️ Currently supports **Vite** apps in the browser. Support for other frameworks and environments is coming soon!
+> ⚠️ Currently supports **only Vite** apps running in the browser, and support is limited. Compatibility with other tools and environments is planned for future versions.
 
 ---
 
 ## 🧠 Why Console Warrior Logs?
 
-There was no truly open source, no-profit tool to bring live `console.log` outputs directly into VSCode. This project was born to fill that gap for web developers who want faster feedback loops and a cleaner debugging experience.
+Modern debugging deserves modern tools — but until now, there wasn’t a truly **open source**, **community-driven**, and **non-profit** extension that brings real-time `console.log` output directly into VSCode.
 
----
+**Console Warrior Logs** was created to change that.
+
+Built from the ground up and released under the **Apache 2.0 license**, this project is designed to help developers:
+
+- ⚡ Improve feedback loops during development
+- 🧼 Keep their workflow clean and efficient
+- 🤝 Collaborate on a tool made by and for the dev community
+
+Whether you're contributing code or simply using it day-to-day, you're part of the mission to make debugging in VSCode a smoother experience — without relying on closed or commercial solutions.
 
 ## 🤝 Contributing
 
-We **welcome contributions**! The goal of this project is to build a solid and well-supported developer tool together with the community.
+We **welcome contributions** of all kinds! Whether you're improving documentation, optimizing performance, adding support for new environments or frameworks, or working on testing — you're invited to collaborate.
 
-Stay tuned for:
+Please make sure to follow the contribution guidelines outlined in [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 
-- 🔧 Better framework detection (Next.js, Astro, etc.)
+We're especially looking forward to contributions in:
+
+- 🔧 Framework support (e.g., Next.js, Astro, etc.)
 - 📚 Plugin system for extensibility
-- ⚙️ Configuration options for filtering logs
+- ⚙️ Configuration options (log filtering, formatting, etc.)
+- 🧪 Tests and developer experience improvements
 
-If you'd like to contribute, please check the [Issues](https://github.com/jonpena/vscode-console-warrior-logs/issues)
-
----
-
-## 📸 Screenshots
-
-![Example Screenshot](images/screenshot.gif)
+If you're ready to help, check out the [Issues](https://github.com/jonpena/vscode-console-warrior-logs/issues) to get started.
 
 ---
 
@@ -71,9 +68,11 @@ If you'd like to contribute, please check the [Issues](https://github.com/jonpen
 ## ⚖️ Legal Notice
 
 This project was **developed entirely from scratch**, without access to or use of any proprietary source code.  
-It is **inspired by publicly visible behavior** of other tools, but the **implementation, logic, architecture, and design decisions are original** and written line by line by the author.
+While it may be **inspired by the publicly observable behavior** of similar tools, all code, logic, architecture, and design decisions are **100% original** and implemented independently by the author.
 
-Console Warrior Logs is a **non-profit, open source** initiative created for the benefit of the web development community.  
-All code contributions and usage are governed by the project's open source license.
+Console Warrior Logs is a **non-profit, open source** initiative created to serve the web development community.  
+All usage and contributions are governed by the project's open source license.
 
-If you are a rights holder and have questions or concerns, please feel free to open an issue or contact the project maintainer.
+> ⚠️ This extension is **not affiliated with, endorsed by, or related to Console Ninja or any similar commercial tool**.
+
+If you're a rights holder and have questions or concerns, please open an issue or contact the project maintainer directly.
