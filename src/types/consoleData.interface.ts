@@ -1,4 +1,4 @@
-export type IConsoleData = {
+export type ConsoleData = {
   type?: string;
   id?: string;
   message: string;
