@@ -13,6 +13,7 @@ import { startMainSW } from './startMainSW';
 import { IServerConnections } from './types/serverConnections.interface';
 import { addConsoleWarriorPort } from './commands/addConsoleWarriorPort';
 import { removeCommentedConsoles } from './utils/removeCommentedConsoles';
+import { DEFAULT_PORT } from './constants';
 
 let socket: WebSocket | null = null;
 const consoleData: IConsoleData[] = [];
@@ -21,7 +22,7 @@ const consoleDataMap: IConsoleDataMap = new Map();
 const serverConnections: IServerConnections = new Map();
 
 export function activate(context: vscode.ExtensionContext) {
-  let connectPort: number = context.workspaceState.get('port') ?? 0;
+  let connectPort: number = context.workspaceState.get('port') ?? DEFAULT_PORT;
 
   // Start Main Server
   startMainSW(consoleData, sourceMapCache, consoleDataMap, serverConnections);
