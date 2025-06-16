@@ -1,8 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-type VSCODE = typeof import('vscode');
 
-export const vitePlugin = (vscode: VSCODE, relativePath: string) => {
+export const vitePlugin = (vscode: typeof import('vscode'), relativePath: string) => {
   return (() => {
     try {
       // Get the current workspace
