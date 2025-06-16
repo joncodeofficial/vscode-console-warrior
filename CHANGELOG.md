@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.0.8 (2025-06-16)</small>
+
+- fix: update display name and version in package.json to 1.0.8 ([53e2d68](https://github.com/jonpena/vscode-console-warrior-logs/commit/53e2d68))
+
 ## <small>1.0.7 (2025-06-16)</small>
 
 - fix: update version in package.json to 1.0.7 and adjust vitePlugin type definition ([07812b7](https://github.com/jonpena/vscode-console-warrior-logs/commit/07812b7))
