@@ -32,7 +32,7 @@ export const vitePlugin = (vscode: typeof import('vscode'), relativePath: string
       }
 
       const isExtensionCreated = fileContent.includes('console-warrior-logs-plugin');
-      const isExtensionCurrentVersion = fileContent.includes(extensionPath);
+      const isExtensionCurrentVersion = fileContent.includes(formatPath);
       // if not found, Add plugin in the file in the correct position
       const insertionPoint = 'const server = await createServer({';
 
