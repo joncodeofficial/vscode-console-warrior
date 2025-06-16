@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.0.6 (2025-06-16)</small>
+
+- fix: update display name and version in package.json ([ac09a4a](https://github.com/jonpena/vscode-console-warrior-logs/commit/ac09a4a))
+
 ## <small>1.0.5 (2025-06-16)</small>
 
 - fix: comment out error and information messages in vitePlugin ([1f4511e](https://github.com/jonpena/vscode-console-warrior-logs/commit/1f4511e))
