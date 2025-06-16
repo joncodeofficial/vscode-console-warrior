@@ -2,7 +2,7 @@
 
 ## 🚀 Visualize `console.log` messages directly inside your VSCode editor.
 
-![Presentation](images/presentation.gif)
+![Presentation](https://raw.githubusercontent.com/jonpena/vscode-console-warrior-logs/main/images/presentation.gif)
 
 ---
 
