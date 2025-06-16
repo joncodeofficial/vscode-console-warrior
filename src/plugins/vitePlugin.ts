@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { pathToFileURL } from 'url';
 
 export const vitePlugin = (vscode: typeof import('vscode'), relativePath: string) => {
   return (() => {
@@ -31,6 +32,13 @@ export const vitePlugin = (vscode: typeof import('vscode'), relativePath: string
 
       if (!extensionPath) return;
 
+      let formatPath = path.resolve(extensionPath, 'dist/injectionCode.js');
+
+      // Convert the path to a file URL on Windows
+      if (process.platform === 'win32') {
+        formatPath = pathToFileURL(formatPath).toString();
+      }
+
       const isExtensionCreated = fileContent.includes('console-warrior-logs-plugin');
       const isExtensionCurrentVersion = fileContent.includes(extensionPath);
       // if not found, Add plugin in the file in the correct position
@@ -43,7 +51,7 @@ export const vitePlugin = (vscode: typeof import('vscode'), relativePath: string
           name: "console-warrior-logs-plugin",
           transformIndexHtml(html) {
               return new Promise((resolve) => {
-                  const vscodePath = path.resolve("${extensionPath}/dist/injectionCode.js");
+                  const vscodePath = ${extensionPath};
                   import(vscodePath)
                       .then(function (n) { return n.injectionCode; })
                       .then(injection => resolve(html.replace("</head>", injection + "</head>")));
