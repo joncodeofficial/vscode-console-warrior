@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.1.1 (2025-06-16)</small>
+
+- refactor: rename IConsoleData to ConsoleData for consistency ([f256f48](https://github.com/jonpena/vscode-console-warrior-logs/commit/f256f48))
+- refactor: rename IConsoleDataMap to ConsoleDataMap for consistency ([d973468](https://github.com/jonpena/vscode-console-warrior-logs/commit/d973468))
+- refactor: rename IServerConnections to ServerConnections for consistency ([06b7c0c](https://github.com/jonpena/vscode-console-warrior-logs/commit/06b7c0c))
+- refactor: rename ISourceMapCache to SourceMapCache for consistency ([94438e5](https://github.com/jonpena/vscode-console-warrior-logs/commit/94438e5))
+- refactor: replace IConsoleData and related interfaces with ConsoleData for consistency ([40037d2](https://github.com/jonpena/vscode-console-warrior-logs/commit/40037d2))
+- refactor: restrict ConsoleData type to 'client-message' or 'server-connect' ([d74e95a](https://github.com/jonpena/vscode-console-warrior-logs/commit/d74e95a))
+- fix: empty message not response to ws ([be30d7e](https://github.com/jonpena/vscode-console-warrior-logs/commit/be30d7e))
+- chore: add packageManager field to package.json ([6173275](https://github.com/jonpena/vscode-console-warrior-logs/commit/6173275))
+- chore: update version to 1.1.1 and fix image link in README ([c59f9aa](https://github.com/jonpena/vscode-console-warrior-logs/commit/c59f9aa))
+- chore: update version to 1.1.2 in package.json ([a0cb235](https://github.com/jonpena/vscode-console-warrior-logs/commit/a0cb235))
+
 ## 1.1.0 (2025-06-16)
 
 - chore: bump version to 1.0.9 and remove commitlint configuration ([c2db768](https://github.com/jonpena/vscode-console-warrior-logs/commit/c2db768))
