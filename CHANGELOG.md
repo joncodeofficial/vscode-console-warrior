@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.0.5 (2025-06-16)</small>
+
+- fix: comment out error and information messages in vitePlugin ([1f4511e](https://github.com/jonpena/vscode-console-warrior-logs/commit/1f4511e))
+- fix: update package name and version in package.json ([54d4790](https://github.com/jonpena/vscode-console-warrior-logs/commit/54d4790))
+
 ## <small>1.0.4 (2025-06-15)</small>
 
 - fix: add changelog entry for version 1.0.3 with updated VS Code extension label ([47b99aa](https://github.com/jonpena/vscode-console-warrior-logs/commit/47b99aa))
