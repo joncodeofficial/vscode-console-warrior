@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { truncateString } from './utils/truncateString';
 import { formatString } from './utils/formatString';
 import { isConsoleLogCorrect } from './utils/isConsoleLogCorrect';
-import { IConsoleDataMap } from './types/consoleDataMap.interface';
+import { ConsoleDataMap } from './types/consoleDataMap.interface';
 
 // Create the decoration type
 export const decorationType = vscode.window.createTextEditorDecorationType({
@@ -13,7 +13,7 @@ export const decorationType = vscode.window.createTextEditorDecorationType({
 
 export const renderDecorations = (
   editor: vscode.TextEditor | undefined,
-  consoleDataMap: IConsoleDataMap
+  consoleDataMap: ConsoleDataMap
 ) => {
   if (!editor) return;
 

@@ -1,10 +1,10 @@
-import { IConsoleDataMap } from '../types/consoleDataMap.interface';
+import { ConsoleDataMap } from '../types/consoleDataMap.interface';
 import * as vscode from 'vscode';
 import { isConsoleLogCorrect } from './isConsoleLogCorrect';
 
 export const removeCommentedConsoles = (
   editor: vscode.TextDocumentChangeEvent,
-  consoleDataMap: IConsoleDataMap
+  consoleDataMap: ConsoleDataMap
 ) => {
   const filePath = editor.document.uri.fsPath;
 
