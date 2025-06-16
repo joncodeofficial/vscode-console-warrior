@@ -43,8 +43,7 @@ export const vitePlugin = (vscode: typeof import('vscode'), relativePath: string
           name: "console-warrior-logs-plugin",
           transformIndexHtml(html) {
               return new Promise((resolve) => {
-                  const vscodePath = ${formatPath};
-                  import(vscodePath)
+                  import("${formatPath}")
                       .then(function (n) { return n.injectionCode; })
                       .then(injection => resolve(html.replace("</head>", injection + "</head>")));
               });
