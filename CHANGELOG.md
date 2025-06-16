@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.1.2 (2025-06-16)</small>
+
+- fix: convert path to file URL on Windows for injection code ([b86d160](https://github.com/jonpena/vscode-console-warrior-logs/commit/b86d160))
+
 ## <small>1.1.1 (2025-06-16)</small>
 
 - refactor: rename IConsoleData to ConsoleData for consistency ([f256f48](https://github.com/jonpena/vscode-console-warrior-logs/commit/f256f48))
