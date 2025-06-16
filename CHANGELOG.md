@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.1.4 (2025-06-16)</small>
+
+- fix: correct logic for checking current version of the extension in vitePlugin ([7416487](https://github.com/jonpena/vscode-console-warrior-logs/commit/7416487))
+
 ## <small>1.1.3 (2025-06-16)</small>
 
 - fix: correct import statement for dynamic module loading in vitePlugin ([c126b52](https://github.com/jonpena/vscode-console-warrior-logs/commit/c126b52))
