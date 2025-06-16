@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.1.0 (2025-06-16)
+
+- chore: bump version to 1.0.9 and remove commitlint configuration ([c2db768](https://github.com/jonpena/vscode-console-warrior-logs/commit/c2db768))
+- refactor: update README for clarity and improved structure ([22ea60a](https://github.com/jonpena/vscode-console-warrior-logs/commit/22ea60a))
+- feat: add commitlint configuration to enforce conventional commit messages ([c680052](https://github.com/jonpena/vscode-console-warrior-logs/commit/c680052))
+- feat: add presentation GIF to enhance visual documentation ([ce20a54](https://github.com/jonpena/vscode-console-warrior-logs/commit/ce20a54))
+- fix: use DEFAULT_PORT constant for connectPort fallback in activate function ([4b0f630](https://github.com/jonpena/vscode-console-warrior-logs/commit/4b0f630))
+
 ## <small>1.0.8 (2025-06-16)</small>
 
 - fix: update display name and version in package.json to 1.0.8 ([53e2d68](https://github.com/jonpena/vscode-console-warrior-logs/commit/53e2d68))
