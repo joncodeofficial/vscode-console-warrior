@@ -1,3 +1,3 @@
 import { WebSocket } from 'ws';
 
-export type IServerConnections = Map<string, WebSocket>;
+export type ServerConnections = Map<string, WebSocket>;
