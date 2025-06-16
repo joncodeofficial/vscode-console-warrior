@@ -16,7 +16,6 @@ export const watcherNodeModules = (vscode: typeof VSCODE) => {
     const ready = await checkIfNodeModulesReady(nodeModulesPath);
     if (ready) {
       vitePlugin(vscode, nodeModulesPath);
-      vscode.window.showInformationMessage(`Activado en: ${nodeModulesPath}`);
       console.log(`Activado en: ${nodeModulesPath}`);
       activatedPaths.add(nodeModulesPath);
     }
@@ -53,12 +52,11 @@ export const watcherNodeModules = (vscode: typeof VSCODE) => {
   );
 
   watcher.onDidCreate(() => {
-    vscode.window.showInformationMessage('node_modules creado');
     activatePlugin(nodeModulesPath);
   });
 
   watcher.onDidDelete(() => {
-    vscode.window.showInformationMessage('node_modules eliminado');
+    console.log('Node modules deleted');
     // Here you could deactivate your plugin if necessary
   });
 
