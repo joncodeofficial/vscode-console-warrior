@@ -41,8 +41,10 @@ export async function startMainSW(
 
         // 2. if is a client frontend send message to a backend
         if (data.type === 'client-message' && data.location.url) {
-          const target = backendConnections.get(getPortFromUrl(data.location.url as string));
-          if (target && target.readyState === WebSocket.OPEN) {
+          const getPort = getPortFromUrl(data.location.url as string);
+          const getMessage = data.message;
+          const target = backendConnections.get(getPort);
+          if (getMessage && target && target.readyState === WebSocket.OPEN) {
             target.send(msg);
           } else {
             console.warn('No server found for client message');
