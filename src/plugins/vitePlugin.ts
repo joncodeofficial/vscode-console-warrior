@@ -8,7 +8,7 @@ export const vitePlugin = (vscode: VSCODE, relativePath: string) => {
       // Get the current workspace
       const workspaceFolders = vscode.workspace.workspaceFolders;
       if (!workspaceFolders) {
-        vscode.window.showErrorMessage('No hay un workspace abierto.');
+        // vscode.window.showErrorMessage('No hay un workspace abierto.');
         return;
       }
 
@@ -17,9 +17,9 @@ export const vitePlugin = (vscode: VSCODE, relativePath: string) => {
 
       // Verify if the file exists
       if (!fs.existsSync(targetFile)) {
-        vscode.window.showErrorMessage(
-          `El archivo ${targetFile} no existe. Asegúrate de que Vite esté instalado en tu proyecto.`
-        );
+        // vscode.window.showErrorMessage(
+        //   `El archivo ${targetFile} no existe. Asegúrate de que Vite esté instalado en tu proyecto.`
+        // );
         return;
       }
 
@@ -60,15 +60,15 @@ export const vitePlugin = (vscode: VSCODE, relativePath: string) => {
           ''
         );
         fs.writeFileSync(targetFile, fileContent, 'utf-8');
-        vscode.window.showInformationMessage(
-          'El plugin console-warrior-plugin se actualizó correctamente en el archivo cli.js de Vite.'
-        );
+        // vscode.window.showInformationMessage(
+        //   'El plugin console-warrior-plugin se actualizó correctamente en el archivo cli.js de Vite.'
+        // );
       }
 
       if (isExtensionCreated) {
-        vscode.window.showInformationMessage(
-          'El plugin console-warrior-plugin ya está presente en el archivo.'
-        );
+        // vscode.window.showInformationMessage(
+        //   'El plugin console-warrior-plugin ya está presente en el archivo.'
+        // );
         return;
       }
 
@@ -78,9 +78,9 @@ export const vitePlugin = (vscode: VSCODE, relativePath: string) => {
 
         // Write the modified file content back to the file
         fs.writeFileSync(targetFile, fileContent, 'utf8');
-        vscode.window.showInformationMessage(
-          'Plugin Console warrior insertado correctamente en el archivo cli.js de Vite.'
-        );
+        // vscode.window.showInformationMessage(
+        //   'Plugin Console warrior insertado correctamente en el archivo cli.js de Vite.'
+        // );
       } else {
         console.log('No find the insertion point.');
       }
