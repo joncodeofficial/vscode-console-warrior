@@ -1,5 +1,5 @@
 export type ConsoleData = {
-  type?: string;
+  type?: 'client-message' | 'server-connect';
   id?: string;
   message: string;
   location: {
