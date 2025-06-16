@@ -7,21 +7,13 @@ export const vitePlugin = (vscode: typeof import('vscode'), relativePath: string
     try {
       // Get the current workspace
       const workspaceFolders = vscode.workspace.workspaceFolders;
-      if (!workspaceFolders) {
-        // vscode.window.showErrorMessage('No hay un workspace abierto.');
-        return;
-      }
+      if (!workspaceFolders) return;
 
       // Specific path to the file cli.js in vite
       const targetFile = path.join(relativePath, '/vite/dist/node/cli.js');
 
       // Verify if the file exists
-      if (!fs.existsSync(targetFile)) {
-        // vscode.window.showErrorMessage(
-        //   `El archivo ${targetFile} no existe. Asegúrate de que Vite esté instalado en tu proyecto.`
-        // );
-        return;
-      }
+      if (!fs.existsSync(targetFile)) return;
 
       // Read the file content
       let fileContent = fs.readFileSync(targetFile, 'utf8');
@@ -51,7 +43,7 @@ export const vitePlugin = (vscode: typeof import('vscode'), relativePath: string
           name: "console-warrior-logs-plugin",
           transformIndexHtml(html) {
               return new Promise((resolve) => {
-                  const vscodePath = ${extensionPath};
+                  const vscodePath = ${formatPath};
                   import(vscodePath)
                       .then(function (n) { return n.injectionCode; })
                       .then(injection => resolve(html.replace("</head>", injection + "</head>")));
@@ -67,27 +59,15 @@ export const vitePlugin = (vscode: typeof import('vscode'), relativePath: string
           ''
         );
         fs.writeFileSync(targetFile, fileContent, 'utf-8');
-        // vscode.window.showInformationMessage(
-        //   'El plugin console-warrior-plugin se actualizó correctamente en el archivo cli.js de Vite.'
-        // );
       }
 
-      if (isExtensionCreated) {
-        // vscode.window.showInformationMessage(
-        //   'El plugin console-warrior-plugin ya está presente en el archivo.'
-        // );
-        return;
-      }
+      if (isExtensionCreated) return;
 
       // Replace the insertion point with our plugin code
       if (fileContent.includes(insertionPoint)) {
         fileContent = fileContent.replace(insertionPoint, pluginCode);
-
         // Write the modified file content back to the file
         fs.writeFileSync(targetFile, fileContent, 'utf8');
-        // vscode.window.showInformationMessage(
-        //   'Plugin Console warrior insertado correctamente en el archivo cli.js de Vite.'
-        // );
       } else {
         console.log('No find the insertion point.');
       }
