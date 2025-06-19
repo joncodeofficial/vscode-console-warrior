@@ -48,7 +48,7 @@ jobs:
       - name: Publish to VS Code Marketplace
         if: steps.semantic-release.outcome == 'success'
         run: |
-          echo "🔐 Publishing extension with vsce..."
+          echo "📦 Publishing extension..."
           npx vsce publish --pat $VSCE_PAT --no-yarn
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}

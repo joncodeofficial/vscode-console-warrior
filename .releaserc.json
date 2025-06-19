@@ -26,6 +26,7 @@
         "changelogTitle": "# Changelog\n\nAll notable changes to this project will be documented in this file."
       }
     ],
+    "@semantic-release/npm",
     [
       "@semantic-release/git",
       {
