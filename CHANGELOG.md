@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.1.5 (2025-06-19)</small>
+
+- fix: standardize cache syntax and add publish step for VS Code Marketplace ([e26ca5d](https://github.com/jonpena/vscode-console-warrior-logs/commit/e26ca5d))
+- chore: update version to 1.1.5 and remove packageManager entry from package.json ([bf7ff0f](https://github.com/jonpena/vscode-console-warrior-logs/commit/bf7ff0f))
+
 ## <small>1.1.4 (2025-06-16)</small>
 
 - fix: correct logic for checking current version of the extension in vitePlugin ([7416487](https://github.com/jonpena/vscode-console-warrior-logs/commit/7416487))
