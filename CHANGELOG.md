@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.1.6 (2025-06-19)</small>
+
+- fix: update publish message in release workflow and add @semantic-release/npm plugin ([2aaf727](https://github.com/jonpena/vscode-console-warrior-logs/commit/2aaf727))
+- fix: wrap @semantic-release/npm configuration in an array for proper parsing ([f386c13](https://github.com/jonpena/vscode-console-warrior-logs/commit/f386c13))
+- chore: update version to 0.0.0 and add @semantic-release/npm dependency ([bb95af1](https://github.com/jonpena/vscode-console-warrior-logs/commit/bb95af1))
+
 ## <small>1.1.5 (2025-06-19)</small>
 
 - fix: standardize cache syntax and add publish step for VS Code Marketplace ([e26ca5d](https://github.com/jonpena/vscode-console-warrior-logs/commit/e26ca5d))
