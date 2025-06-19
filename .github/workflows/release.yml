@@ -22,7 +22,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "npm"
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
@@ -37,6 +37,7 @@ jobs:
         run: vsce package --out ./dist/
 
       - name: Semantic Release
+        id: semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           GIT_AUTHOR_NAME: github-actions[bot]
@@ -44,3 +45,10 @@ jobs:
           GIT_COMMITTER_NAME: github-actions[bot]
           GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
         run: npx semantic-release
+      - name: Publish to VS Code Marketplace
+        if: steps.semantic-release.outcome == 'success'
+        run: |
+          echo "🔐 Publishing extension with vsce..."
+          npx vsce publish --pat $VSCE_PAT --no-yarn
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
