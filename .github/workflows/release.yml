@@ -45,9 +45,6 @@ jobs:
         env:
           DISPLAY: ':99.0'
 
-      - name: Package VSIX
-        run: npm run package
-
       - name: Semantic Release
         id: semantic-release
         env:
@@ -58,8 +55,12 @@ jobs:
           GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
         run: npx semantic-release
 
+      - name: Package VSIX
+        if: steps.semantic-release.outputs.new-release-published == 'true'
+        run: npm run package
+
       - name: Publish to VS Code Marketplace
-        if: steps.semantic-release.outcome == 'success'
+        if: steps.semantic-release.outputs.new-release-published == 'true'
         run: |
           npx vsce publish --pat $VSCE_PAT --no-yarn
         env:
