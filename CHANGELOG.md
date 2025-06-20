@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.1.8 (2025-06-20)</small>
+
+- fix: correct package script command for VSIX packaging ([377bc98](https://github.com/jonpena/vscode-console-warrior/commit/377bc98))
+- fix: update package command to use npm script for VSIX packaging ([ebd692a](https://github.com/jonpena/vscode-console-warrior/commit/ebd692a))
+
 ## <small>1.1.7 (2025-06-20)</small>
 
 - refactor: rename project from Console Warrior Logs to Console Warrior ([2fa15de](https://github.com/jonpena/vscode-console-warrior/commit/2fa15de))
