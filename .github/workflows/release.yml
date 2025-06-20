@@ -34,7 +34,7 @@ jobs:
         run: npm run compile
 
       - name: Package VSIX
-        run: vsce package --out ./dist/
+        run: npm run package
 
       - name: Semantic Release
         id: semantic-release
