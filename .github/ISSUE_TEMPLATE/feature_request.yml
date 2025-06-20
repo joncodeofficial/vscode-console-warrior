@@ -6,26 +6,46 @@ body:
   - type: markdown
     attributes:
       value: |
-        Have an idea for improving the extension? Let us know! Please be clear and detailed so others can understand and discuss it.
+        ## 🎯 Feature Request Template
+
+        Thank you for suggesting a new idea! Please complete the sections below to describe your feature clearly.
+
   - type: textarea
     id: description
     attributes:
-      label: Describe the feature you'd like
-      placeholder: A clear and concise description of what you want to happen.
+      label: 📝 Description
+      description: What is the feature? What problem does it solve?
+      placeholder: Describe the context and what's missing or needs improvement.
     validations:
       required: true
+
   - type: textarea
-    id: use_case
+    id: goal
     attributes:
-      label: Use case
-      placeholder: Why is this feature useful? Describe the problem it solves or the context where it's needed.
+      label: 🎯 Goal
+      description: What should be achieved when this feature is implemented?
+      placeholder: E.g. "Ensure the decorators have enough contrast in both dark and light mode."
+
   - type: textarea
-    id: alternatives
+    id: notes
     attributes:
-      label: Alternatives considered
-      placeholder: Did you consider any other approaches or workarounds?
+      label: 💡 Notes
+      description: Add technical hints, references, or how you think this can be implemented.
+      placeholder: E.g. "Consider using vscode.window.activeColorTheme and theme-aware colors."
+
+  - type: dropdown
+    id: difficulty
+    attributes:
+      label: 🧠 Difficulty
+      description: How complex do you think this task is?
+      options:
+        - 🟢 Easy – Suitable for first-time contributors
+        - 🟡 Medium – Requires some experience with VSCode extensions
+        - 🔴 Hard – Might involve deeper architectural decisions
+
   - type: textarea
-    id: additional
+    id: context
     attributes:
-      label: Additional context or mockups (optional)
-      placeholder: Links, screenshots, diagrams, or anything that helps explain the idea.
+      label: 📎 Additional Context
+      description: Anything else that helps understanding the feature (mockups, screenshots, links).
+      placeholder: Optional but helpful!
