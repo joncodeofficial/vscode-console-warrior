@@ -1,0 +1,51 @@
+name: Bug Report
+description: Report a bug or unexpected behavior in the extension.
+title: '[Bug]: '
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to report a bug. Please fill out the following fields to help us fix it faster.
+  - type: input
+    id: vscode_version
+    attributes:
+      label: VSCode version
+      placeholder: ex. 1.90.0
+    validations:
+      required: true
+  - type: input
+    id: extension_version
+    attributes:
+      label: Extension version
+      placeholder: ex. 0.3.2
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open VSCode
+        2. Activate the extension
+        3. Do X
+        4. Error appears
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      placeholder: Describe what you expected to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      placeholder: Describe what actually happened.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / Console output
+      placeholder: If relevant, paste logs from the VSCode developer tools or terminal.
