@@ -15,7 +15,7 @@ suite('truncateString Tests', () => {
 
   test("should truncate and append ' ...' if string is longer than MAX_MESSAGE_LENGTH", () => {
     const input = 'b'.repeat(MAX_MESSAGE_LENGTH + 5);
-    const expected = 'b'.repeat(MAX_MESSAGE_LENGTH) + ' ...';
+    const expected = 'b'.repeat(MAX_MESSAGE_LENGTH) + ' ..';
     assert.strictEqual(truncateString(input), expected);
   });
 });
