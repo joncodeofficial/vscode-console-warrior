@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.2.0 (2025-06-20)
+
+- feat: add bug report template for improved issue tracking ([481e823](https://github.com/jonpena/vscode-console-warrior/commit/481e823))
+- feat: add feature request template for user suggestions ([9a73310](https://github.com/jonpena/vscode-console-warrior/commit/9a73310))
+- feat: add pull request template for better contribution guidelines ([9389e9a](https://github.com/jonpena/vscode-console-warrior/commit/9389e9a))
+
 ## <small>1.1.8 (2025-06-20)</small>
 
 - fix: correct package script command for VSIX packaging ([377bc98](https://github.com/jonpena/vscode-console-warrior/commit/377bc98))
