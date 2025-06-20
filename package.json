@@ -32,11 +32,9 @@
     "format:check": "prettier --check src",
     "lint": "eslint src",
     "lint:fix": "eslint --fix src",
-    "package": "vsce package",
+    "package": "vsce package --out ./dist/",
     "prepare": "simple-git-hooks",
-    "pretest": "npm run compile && npm run lint",
     "test": "vscode-test",
-    "vscode:prepublish": "npm run compile",
     "watch": "tsc -watch -p ./"
   },
   "contributes": {
