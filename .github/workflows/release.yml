@@ -27,6 +27,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install vsce
+        run: npm install -g @vscode/vsce
+
+      - name: Build extension
+        run: npm run compile
+
       - name: Start X virtual framebuffer
         run: |
           sudo apt-get update
@@ -34,16 +40,10 @@ jobs:
           export DISPLAY=':99.0'
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
-      - name: Run All Tests
+      - name: Run Tests
         run: npm test
         env:
           DISPLAY: ':99.0'
-
-      - name: Install vsce
-        run: npm install -g @vscode/vsce
-
-      - name: Build extension
-        run: npm run compile
 
       - name: Package VSIX
         run: npm run package
@@ -61,7 +61,6 @@ jobs:
       - name: Publish to VS Code Marketplace
         if: steps.semantic-release.outcome == 'success'
         run: |
-          echo "📦 Publishing extension in marketplace..."
           npx vsce publish --pat $VSCE_PAT --no-yarn
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
