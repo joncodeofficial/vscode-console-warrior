@@ -1,4 +1,4 @@
-# Console Warrior Logs
+# Console Warrior
 
 ## 🚀 Visualize `console.log` messages directly inside your VSCode editor.
 
@@ -27,11 +27,11 @@
 
 ---
 
-## 🧠 Why Console Warrior Logs?
+## 🧠 Why Console Warrior?
 
 Modern debugging deserves modern tools — but until now, there wasn’t a truly **open source**, **community-driven**, and **non-profit** extension that brings real-time `console.log` output directly into VSCode.
 
-**Console Warrior Logs** was created to change that.
+**Console Warrior** was created to change that.
 
 Built from the ground up and released under the **Apache 2.0 license**, this project is designed to help developers:
 
@@ -70,7 +70,7 @@ If you're ready to help, check out the [Issues](https://github.com/jonpena/vscod
 This project was **developed entirely from scratch**, without access to or use of any proprietary source code.  
 While it may be **inspired by the publicly observable behavior** of similar tools, all code, logic, architecture, and design decisions are **100% original** and implemented independently by the author.
 
-Console Warrior Logs is a **non-profit, open source** initiative created to serve the web development community.  
+Console Warrior is a **non-profit, open source** initiative created to serve the web development community.  
 All usage and contributions are governed by the project's open source license.
 
 > ⚠️ This extension is **not affiliated with, endorsed by, or related to Console Ninja or any similar commercial tool**.

@@ -1,4 +1,4 @@
-# Contributing to vscode-console-warrior-logs
+# Contributing to vscode-console-warrior
 
 Thank you for your interest in contributing to this project! This document outlines the standards and processes we follow to maintain high code quality. Please read these guidelines before submitting pull requests.
 

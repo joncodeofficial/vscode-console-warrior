@@ -1,5 +1,5 @@
 {
-  "name": "console-warrior-logs",
+  "name": "console-warrior",
   "displayName": "Console Warrior",
   "version": "1.1.6",
   "description": "Visualize console.log messages directly in VSCode editor inline, boosting debugging and productivity.",
@@ -14,15 +14,15 @@
     "logs",
     "visualization",
     "inline logs",
-    "console warrior logs"
+    "console warrior"
   ],
-  "homepage": "https://github.com/jonpena/vscode-console-warrior-logs#readme",
+  "homepage": "https://github.com/jonpena/vscode-console-warrior#readme",
   "bugs": {
-    "url": "https://github.com/jonpena/vscode-console-warrior-logs/issues"
+    "url": "https://github.com/jonpena/vscode-console-warrior/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jonpena/vscode-console-warrior-logs.git"
+    "url": "https://github.com/jonpena/vscode-console-warrior.git"
   },
   "publisher": "Jonpena",
   "main": "./dist/extension.js",
@@ -44,7 +44,7 @@
       {
         "command": "extension.addPort",
         "title": "Connect to Port",
-        "category": "Console Warrior Logs"
+        "category": "Console Warrior"
       }
     ]
   },

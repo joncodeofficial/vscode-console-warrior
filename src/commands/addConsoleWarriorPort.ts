@@ -26,7 +26,7 @@ export const addConsoleWarriorPort = (
       if (socket) socket.close();
       const getPort: number = context.workspaceState.get('port') ?? 0;
       socket = connectToMainWS(getPort, consoleData);
-      vscode.window.showInformationMessage(`Console Warrior Logs listening on port ${num}`);
+      vscode.window.showInformationMessage(`Console Warrior listening on port ${num}`);
     }
   });
 };

@@ -18,9 +18,8 @@ export const vitePlugin = (vscode: typeof import('vscode'), relativePath: string
       // Read the file content
       let fileContent = fs.readFileSync(targetFile, 'utf8');
 
-      const extensionPath = vscode.extensions.getExtension(
-        'jonpena.console-warrior-logs'
-      )?.extensionPath;
+      const extensionPath =
+        vscode.extensions.getExtension('jonpena.console-warrior')?.extensionPath;
 
       if (!extensionPath) return;
 
@@ -31,7 +30,7 @@ export const vitePlugin = (vscode: typeof import('vscode'), relativePath: string
         formatPath = pathToFileURL(formatPath).toString();
       }
 
-      const isExtensionCreated = fileContent.includes('console-warrior-logs-plugin');
+      const isExtensionCreated = fileContent.includes('console-warrior-plugin');
       const isExtensionCurrentVersion = fileContent.includes(formatPath);
       // if not found, Add plugin in the file in the correct position
       const insertionPoint = 'const server = await createServer({';
@@ -40,7 +39,7 @@ export const vitePlugin = (vscode: typeof import('vscode'), relativePath: string
       const pluginCode = `const server = await createServer({
       /* guide start */
       plugins: [{
-          name: "console-warrior-logs-plugin",
+          name: "console-warrior-plugin",
           transformIndexHtml(html) {
               return new Promise((resolve) => {
                   import("${formatPath}")
