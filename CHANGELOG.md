@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.1.7 (2025-06-20)</small>
+
+- refactor: rename project from Console Warrior Logs to Console Warrior ([2fa15de](https://github.com/jonpena/vscode-console-warrior/commit/2fa15de))
+- fix: comment out performance logging for cached sourcemaps ([0e024d2](https://github.com/jonpena/vscode-console-warrior/commit/0e024d2))
+
 ## <small>1.1.6 (2025-06-19)</small>
 
 - fix: update publish message in release workflow and add @semantic-release/npm plugin ([2aaf727](https://github.com/jonpena/vscode-console-warrior-logs/commit/2aaf727))
