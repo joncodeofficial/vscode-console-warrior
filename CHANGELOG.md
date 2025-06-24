@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.2.1 (2025-06-24)</small>
+
+- fix: enhance stack trace parsing and WebSocket logging functionality Thanks Roy Almada ([19011f5](https://github.com/jonpena/vscode-console-warrior/commit/19011f5))
+- chore: correct expected output in truncateString test case ([e566110](https://github.com/jonpena/vscode-console-warrior/commit/e566110))
+- chore: fix expected output in truncateString test case ([477778f](https://github.com/jonpena/vscode-console-warrior/commit/477778f))
+- chore: improve WebSocket connection handling and error logging ([49507a9](https://github.com/jonpena/vscode-console-warrior/commit/49507a9))
+- chore: move VSIX packaging step after semantic release check ([2a3ef24](https://github.com/jonpena/vscode-console-warrior/commit/2a3ef24))
+- chore: move X virtual framebuffer setup before running tests ([286a09c](https://github.com/jonpena/vscode-console-warrior/commit/286a09c))
+- chore: reorder steps in release workflow to install vsce and build extension before running tests ([95a0741](https://github.com/jonpena/vscode-console-warrior/commit/95a0741))
+- chore: reorder steps in release workflow to run tests after installing vsce ([540cd4f](https://github.com/jonpena/vscode-console-warrior/commit/540cd4f))
+- chore: simplify variable names in monitoringChanges and text document change handler ([8748cf8](https://github.com/jonpena/vscode-console-warrior/commit/8748cf8))
+- chore: update feature request template for clarity and detail ([96ab09d](https://github.com/jonpena/vscode-console-warrior/commit/96ab09d))
+- chore: update test file path from 'out/test/**/\*.test.js' to 'dist/test/**/\*.test.js' ([9f6cd77](https://github.com/jonpena/vscode-console-warrior/commit/9f6cd77))
+- test: add test step to release workflow and improve publish message ([eb5a048](https://github.com/jonpena/vscode-console-warrior/commit/eb5a048))
+
 ## 1.2.0 (2025-06-20)
 
 - feat: add bug report template for improved issue tracking ([481e823](https://github.com/jonpena/vscode-console-warrior/commit/481e823))
