@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.2.2 (2025-06-24)</small>
+
+- fix: remove unnecessary blank line in activate function ([24083ec](https://github.com/jonpena/vscode-console-warrior/commit/24083ec))
+
 ## <small>1.2.1 (2025-06-24)</small>
 
 - fix: enhance stack trace parsing and WebSocket logging functionality Thanks Roy Almada ([19011f5](https://github.com/jonpena/vscode-console-warrior/commit/19011f5))
