@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.2.6 (2025-06-24)</small>
+
+- fix: update release workflow by optimizing step names and upgrading semantic-release action ([ea201bd](https://github.com/jonpena/vscode-console-warrior/commit/ea201bd))
+- fix: update release workflow to use manual semantic-release output and improve step definitions ([dc9f806](https://github.com/jonpena/vscode-console-warrior/commit/dc9f806))
+
 ## [1.2.5](https://github.com/jonpena/vscode-console-warrior/compare/v1.2.4...v1.2.5) (2025-06-24)
 
 ### Bug Fixes
