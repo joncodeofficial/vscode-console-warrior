@@ -1,8 +1,10 @@
 name: Release
+
 on:
   push:
     branches:
       - main
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -11,6 +13,7 @@ jobs:
       issues: write
       pull-requests: write
       id-token: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -39,24 +42,23 @@ jobs:
           sudo apt-get install -y xvfb
           export DISPLAY=':99.0'
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+        shell: bash
 
       - name: Run Tests
         run: npm test
         env:
           DISPLAY: ':99.0'
 
-      - name: Package .VSIX
+      - name: Package VSIX
         run: npm run package
 
       - name: Semantic Release
         id: semantic-release
+        uses: cycjimmy/semantic-release-action@v3
+        with:
+          branch: main
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          GIT_AUTHOR_NAME: github-actions[bot]
-          GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
-          GIT_COMMITTER_NAME: github-actions[bot]
-          GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
-        run: npx semantic-release
 
       - name: Publish to VS Code Marketplace
         if: steps.semantic-release.outputs.new-release-published == 'true'
