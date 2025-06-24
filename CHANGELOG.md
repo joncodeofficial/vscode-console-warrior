@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.2.4 (2025-06-24)</small>
+
+- fix: clean up release workflow by removing unnecessary blank lines and optimizing steps ([e5da40c](https://github.com/jonpena/vscode-console-warrior/commit/e5da40c))
+
 ## [1.2.3](https://github.com/jonpena/vscode-console-warrior/compare/v1.2.2...v1.2.3) (2025-06-24)
 
 ### Bug Fixes
