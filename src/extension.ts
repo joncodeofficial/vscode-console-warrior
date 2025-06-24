@@ -32,10 +32,8 @@ export function activate(context: vscode.ExtensionContext) {
 
   monitoringChanges(consoleData, async () => {
     const newConsoleData = await sourceMapping(consoleData, sourceMapCache);
-
     // Early return if no new data
     if (!newConsoleData?.length) return;
-
     const editor = vscode.window.activeTextEditor;
 
     updateConsoleDataMap(editor, newConsoleData, consoleDataMap);
@@ -44,20 +42,19 @@ export function activate(context: vscode.ExtensionContext) {
     consoleData.length = 0;
   });
 
-  vscode.workspace.onDidChangeTextDocument((editor) => {
+  vscode.workspace.onDidChangeTextDocument((textEditor) => {
     const activeEditor = vscode.window.activeTextEditor;
     // Ignore if empty changes
-    if (editor.contentChanges.length === 0) return;
+    if (textEditor.contentChanges.length === 0) return;
     // If the active editor is the same as the current editor
-    if (activeEditor && editor.document === activeEditor.document) {
-      removeCommentedConsoles(editor, consoleDataMap);
+    if (activeEditor && textEditor.document === activeEditor.document) {
+      removeCommentedConsoles(textEditor, consoleDataMap);
     }
     // Render decorations again
     renderDecorations(vscode.window.activeTextEditor, consoleDataMap);
   });
 
   context.subscriptions.push(watcherNodeModules(vscode)!);
-
   context.subscriptions.push(addConsoleWarriorPort(context, socket, consoleData));
 }
 
