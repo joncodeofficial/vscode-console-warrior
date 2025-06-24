@@ -26,7 +26,6 @@ export function activate(context: vscode.ExtensionContext) {
 
   // Start Main Server
   startMainSW(consoleData, sourceMapCache, consoleDataMap, serverConnections);
-
   // Connect to Main Server like a client
   socket = connectToMainWS(connectPort, consoleData);
 
