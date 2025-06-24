@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.3](https://github.com/jonpena/vscode-console-warrior/compare/v1.2.2...v1.2.3) (2025-06-24)
+
+### Bug Fixes
+
+- clean up release workflow by removing unnecessary lines and improving structure ([f01cc73](https://github.com/jonpena/vscode-console-warrior/commit/f01cc737f7a3061df53085de9491bdd6e2cbcaf6))
+
 ## <small>1.2.2 (2025-06-24)</small>
 
 - fix: remove unnecessary blank line in activate function ([24083ec](https://github.com/jonpena/vscode-console-warrior/commit/24083ec))
