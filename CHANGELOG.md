@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.3.1 (2025-06-29)</small>
+
+- fix: correct version number from 1.3.0 to 1.2.7 in CHANGELOG.md ([32fbe5f](https://github.com/jonpena/vscode-console-warrior/commit/32fbe5f))
+- refactor: remove unused broadcastToClients utility function ([d3785a1](https://github.com/jonpena/vscode-console-warrior/commit/d3785a1))
+
 ## 1.2.7 (2025-06-29)
 
 - fix: watcherNodeModules now working great in monorepos ([b1469fe](https://github.com/jonpena/vscode-console-warrior/commit/b1469fe))
