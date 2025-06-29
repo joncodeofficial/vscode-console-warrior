@@ -25,7 +25,6 @@ export const sourceMapping = async (consoleData: ConsoleData[], sourceMapCache: 
           tracer = new TraceMap(sourceMapData);
           sourceMapCache.set(cacheKey, tracer);
         } else {
-          // console.log('Cached sourcemap to enhance performance.');
           tracer = sourceMapCache.get(cacheKey)!;
         }
 
