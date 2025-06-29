@@ -6,11 +6,20 @@ import { ConsoleDataMap } from './types/consoleDataMap.interface';
 
 // Create the decoration type
 export const decorationType = vscode.window.createTextEditorDecorationType({
-  color: '#00FF00', // Color green
-  textDecoration: 'none; pointer-events: none;',
+  textDecoration: 'pointer-events: none;',
   rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
 });
 
+// Get the current theme color
+const getCurrentThemeColor = () => {
+  if (vscode.window.activeColorTheme.kind === vscode.ColorThemeKind.Light) {
+    return '#005f5f';
+  } else {
+    return '#73daca';
+  }
+};
+
+// Render decorations for the current file
 export const renderDecorations = (
   editor: vscode.TextEditor | undefined,
   consoleDataMap: ConsoleDataMap
@@ -37,7 +46,7 @@ export const renderDecorations = (
         renderOptions: {
           after: {
             contentText: ' ➜ ' + truncateString(formatString(values.toArray().join(' ➜ '))),
-            color: '#73daca',
+            color: getCurrentThemeColor(),
           },
         },
       });
