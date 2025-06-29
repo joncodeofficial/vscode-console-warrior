@@ -26,13 +26,6 @@ body:
       description: What should be achieved when this feature is implemented?
       placeholder: E.g. "Ensure the decorators have enough contrast in both dark and light mode."
 
-  - type: textarea
-    id: notes
-    attributes:
-      label: 💡 Notes
-      description: Add technical hints, references, or how you think this can be implemented.
-      placeholder: E.g. "Consider using vscode.window.activeColorTheme and theme-aware colors."
-
   - type: dropdown
     id: difficulty
     attributes:
