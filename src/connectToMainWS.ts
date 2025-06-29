@@ -15,7 +15,6 @@ export const connectToMainWS = (port: number, consoleData: ConsoleData[]) => {
   socket.on('message', (message) => {
     try {
       const data: ConsoleData = JSON.parse(message.toString());
-      console.log(data);
       consoleData.push(data);
     } catch (_) {
       console.warn('Error parsing WebSocket message');
