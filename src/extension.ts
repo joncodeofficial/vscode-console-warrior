@@ -11,7 +11,7 @@ import { SourceMapCache } from './types/sourceMapCache.interface';
 import { connectToMainWS } from './connectToMainWS';
 import { startMainSW } from './startMainSW';
 import { ServerConnections } from './types/serverConnections.interface';
-import { addConsoleWarriorPort } from './commands/addConsoleWarriorPort';
+import { commandConnectPort } from './commands/commandConnectPort';
 import { removeCommentedConsoles } from './utils/removeCommentedConsoles';
 import { DEFAULT_PORT } from './constants';
 
@@ -34,10 +34,8 @@ export function activate(context: vscode.ExtensionContext) {
     // Early return if no new data
     if (!newConsoleData?.length) return;
     const editor = vscode.window.activeTextEditor;
-
     updateConsoleDataMap(editor, newConsoleData, consoleDataMap);
     renderDecorations(editor, consoleDataMap);
-
     consoleData.length = 0;
   });
 
@@ -54,7 +52,7 @@ export function activate(context: vscode.ExtensionContext) {
   });
 
   context.subscriptions.push(watcherNodeModules(vscode)!);
-  context.subscriptions.push(addConsoleWarriorPort(context, socket, consoleData));
+  context.subscriptions.push(commandConnectPort(context, socket, consoleData));
 }
 
 export function deactivate() {
