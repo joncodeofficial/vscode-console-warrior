@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.3.3 (2025-06-29)</small>
+
+- fix: update decoration color handling to use theme-aware function ([646cc1c](https://github.com/jonpena/vscode-console-warrior/commit/646cc1c))
+
 ## <small>1.3.2 (2025-06-29)</small>
 
 - fix: update version number in CHANGELOG.md from 1.3.1 to 1.2.8 ([9ec6c3f](https://github.com/jonpena/vscode-console-warrior/commit/9ec6c3f))
