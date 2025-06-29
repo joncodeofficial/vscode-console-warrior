@@ -3,12 +3,12 @@ import { connectToMainWS } from '../connectToMainWS';
 import { WebSocket } from 'ws';
 import { ConsoleData } from '../types/consoleData.interface';
 
-export const addConsoleWarriorPort = (
+export const commandConnectPort = (
   context: vscode.ExtensionContext,
   socket: WebSocket | null,
   consoleData: ConsoleData[]
 ) => {
-  return vscode.commands.registerCommand('extension.addPort', async () => {
+  return vscode.commands.registerCommand('extension.connectToPort', async () => {
     const input = await vscode.window.showInputBox({
       prompt: 'Enter a port (1 - 65535)',
       validateInput: (value) => {
@@ -21,12 +21,11 @@ export const addConsoleWarriorPort = (
     });
 
     if (input) {
-      const num = Number(input);
-      context.workspaceState.update('port', num);
       if (socket) socket.close();
-      const getPort: number = context.workspaceState.get('port') ?? 0;
-      socket = connectToMainWS(getPort, consoleData);
-      vscode.window.showInformationMessage(`Console Warrior listening on port ${num}`);
+      const port = Number(input);
+      socket = connectToMainWS(port, consoleData);
+      context.workspaceState.update('port', port);
+      vscode.window.showInformationMessage(`Console Warrior listening on port ${port}`);
     }
   });
 };
