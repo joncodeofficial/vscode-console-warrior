@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.3.0 (2025-06-29)
+
+- fix: watcherNodeModules now working great in monorepos ([b1469fe](https://github.com/jonpena/vscode-console-warrior/commit/b1469fe))
+- refactor: add commandConnectPort to handle port connection with validation ([b0a5130](https://github.com/jonpena/vscode-console-warrior/commit/b0a5130))
+- refactor: add DELAY and MAX_TRIES constants to improve configuration options ([8261c0d](https://github.com/jonpena/vscode-console-warrior/commit/8261c0d))
+- refactor: remove console log for incoming WebSocket messages ([49ae0d2](https://github.com/jonpena/vscode-console-warrior/commit/49ae0d2))
+- refactor: remove DELAY and MAX_TRIES constants from index.ts ([0dc6acc](https://github.com/jonpena/vscode-console-warrior/commit/0dc6acc))
+- refactor: remove redundant console log for cached sourcemaps ([c1f251e](https://github.com/jonpena/vscode-console-warrior/commit/c1f251e))
+- refactor: rename addConsoleWarriorPort to commandConnectPort for clarity ([3c5cad0](https://github.com/jonpena/vscode-console-warrior/commit/3c5cad0))
+- refactor: simplify checkIfNodeModulesReady function by removing parameters ([e8163b1](https://github.com/jonpena/vscode-console-warrior/commit/e8163b1))
+- refactor: streamline checkIfNodeModulesReady function and improve stability checks ([7ec9f4c](https://github.com/jonpena/vscode-console-warrior/commit/7ec9f4c))
+- feat: add sleep utility function for promise-based delays ([f02c6f4](https://github.com/jonpena/vscode-console-warrior/commit/f02c6f4))
+
 ## <small>1.2.6 (2025-06-24)</small>
 
 - fix: update release workflow by optimizing step names and upgrading semantic-release action ([ea201bd](https://github.com/jonpena/vscode-console-warrior/commit/ea201bd))
