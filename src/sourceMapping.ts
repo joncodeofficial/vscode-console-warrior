@@ -7,51 +7,51 @@ export const sourceMapping = async (consoleData: ConsoleData[], sourceMapCache: 
   const newConsoleData: ConsoleData[] = [];
 
   for (const { location, message } of consoleData) {
-    if (!location.url.includes('@vite/client')) {
-      const sourceUrl = location.url.split('?')[0];
-      const timeParam = location.url.split('t=')[1];
-      const cacheKey = `${sourceUrl}-${timeParam}`;
+    // Skip if the location is a vite client
+    if (location.url.includes('@vite/client')) continue;
 
-      try {
-        let tracer: TraceMap;
-        // Check if the source map is already cached
-        if (!sourceMapCache.has(cacheKey)) {
-          const sourceMapUrl = `${sourceUrl}.map`;
-          const response = await fetch(sourceMapUrl);
-          if (!response.ok) throw new Error('Failed to fetch sourcemap');
-          const sourceMapData = (await response.json()) as SourceMapInput;
-          tracer = new TraceMap(sourceMapData);
-          sourceMapCache.set(cacheKey, tracer);
-        } else {
-          tracer = sourceMapCache.get(cacheKey)!;
-        }
+    const [baseUrl, queryString] = location.url.split('?');
+    const timeParam = new URLSearchParams(queryString).get('t') ?? '';
+    const cacheKey = `${baseUrl}-${timeParam}`;
 
-        const original = originalPositionFor(tracer, {
+    try {
+      let tracer: TraceMap;
+      // Check if the source map is already cached
+      if (!sourceMapCache.has(cacheKey)) {
+        const sourceMapUrl = `${baseUrl}.map`;
+        const response = await fetch(sourceMapUrl);
+        if (!response.ok) throw new Error('Failed to fetch sourcemap');
+        const sourceMapData = (await response.json()) as SourceMapInput;
+        tracer = new TraceMap(sourceMapData);
+        sourceMapCache.set(cacheKey, tracer);
+      } else {
+        tracer = sourceMapCache.get(cacheKey)!;
+      }
+
+      const original = originalPositionFor(tracer, {
+        line: location.line,
+        column: location.column,
+      });
+
+      // Add the original location using the source map
+      newConsoleData.push({
+        message,
+        location: {
+          url: original.source ?? '',
+          line: original.line ?? 0,
+          column: original.column ?? 0,
+        },
+      });
+    } catch {
+      // If the source map is not found, add the original location to the console data
+      newConsoleData.push({
+        message,
+        location: {
+          url: getFilename(location.url),
           line: location.line,
           column: location.column,
-        });
-
-        // Add the original location using the source map
-        newConsoleData.push({
-          message,
-          location: {
-            url: original.source ?? '',
-            line: original.line ?? 0,
-            column: original.column ?? 0,
-          },
-        });
-      } catch {
-        console.log('Source map not found or failed to fetch.');
-        // If the source map is not found, add the original location to the console data
-        newConsoleData.push({
-          message,
-          location: {
-            url: getFilename(location.url),
-            line: location.line,
-            column: location.column,
-          },
-        });
-      }
+        },
+      });
     }
   }
   return newConsoleData;
