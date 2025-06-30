@@ -14,13 +14,11 @@ export const sourceMapping = async (consoleData: ConsoleData[], sourceMapCache: 
 
       try {
         let tracer: TraceMap;
-
+        // Check if the source map is already cached
         if (!sourceMapCache.has(cacheKey)) {
           const sourceMapUrl = `${sourceUrl}.map`;
           const response = await fetch(sourceMapUrl);
-
           if (!response.ok) throw new Error('Failed to fetch sourcemap');
-
           const sourceMapData = (await response.json()) as SourceMapInput;
           tracer = new TraceMap(sourceMapData);
           sourceMapCache.set(cacheKey, tracer);
@@ -33,6 +31,7 @@ export const sourceMapping = async (consoleData: ConsoleData[], sourceMapCache: 
           column: location.column,
         });
 
+        // Add the original location using the source map
         newConsoleData.push({
           message,
           location: {
@@ -42,7 +41,8 @@ export const sourceMapping = async (consoleData: ConsoleData[], sourceMapCache: 
           },
         });
       } catch {
-        console.log('Source map not found or failed to load.');
+        console.log('Source map not found or failed to fetch.');
+        // If the source map is not found, add the original location to the console data
         newConsoleData.push({
           message,
           location: {
