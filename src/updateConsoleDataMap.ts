@@ -12,8 +12,8 @@ export const updateConsoleDataMap = (
   if (!editor) return;
 
   for (const { message, location } of consoleData) {
-    const { url, line } = location;
-    const lineKey = line.toString();
+    const url = location.url;
+    const key = location.line.toString();
 
     // Ensure a map exists for the file URL
     if (!consoleDataMap.has(url)) {
@@ -21,16 +21,19 @@ export const updateConsoleDataMap = (
     }
     const fileMap = consoleDataMap.get(url)!;
 
-    // Ensure a queue exists for the line number
-    if (!fileMap.has(lineKey)) {
-      fileMap.set(lineKey, new Denque<string>());
+    // Ensure a denque exists for the line number
+    if (!fileMap.has(key)) {
+      fileMap.set(key, new Denque<string>());
     }
-    const messageQueue = fileMap.get(lineKey)!;
+    const messageDenque = fileMap.get(key);
 
-    // Add the new message to the front of the queue
-    messageQueue.unshift(message);
+    // If the denque is empty, skip it
+    if (!messageDenque) continue;
 
-    // Limit the queue size to 1000 messages
-    if (messageQueue.size() > MAX_DECORATIONS) messageQueue.pop();
+    // Add the new message to the front of the denque
+    messageDenque.unshift(message);
+
+    // Limit the denque size to 1000 messages
+    if (messageDenque.size() > MAX_DECORATIONS) messageDenque.pop();
   }
 };
