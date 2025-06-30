@@ -30,7 +30,7 @@ export async function startMainSW(
       ws.on('message', (msg) => {
         const data: ConsoleData = JSON.parse(msg.toString());
 
-        // 1. if is a server identify it
+        // if is a server identify it
         if (data.type === 'server-connect' && data.id) {
           backendId = data.id;
           backendConnections.set(data.id, ws);
@@ -39,7 +39,7 @@ export async function startMainSW(
           return;
         }
 
-        // 2. if is a client frontend send message to a backend
+        // if is a client frontend send message to a backend
         if (data.type === 'client-message' && data.location.url) {
           const getPort = getPortFromUrl(data.location.url as string);
           const getMessage = data.message;
