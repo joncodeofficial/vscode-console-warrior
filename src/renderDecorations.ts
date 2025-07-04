@@ -4,20 +4,26 @@ import { formatString } from './utils/formatString';
 import { isConsoleLogCorrect } from './utils/isConsoleLogCorrect';
 import { ConsoleDataMap } from './types/consoleDataMap.interface';
 
-// Create the decoration type
+// Create a decoration type for console log annotations
 export const decorationType = vscode.window.createTextEditorDecorationType({
-  textDecoration: 'pointer-events: none;',
-  rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
+  textDecoration: 'pointer-events: none;', // Prevent interaction with decoration
+  rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed, // Decoration stays with text range
 });
 
 // Get the current theme color
 const getCurrentThemeColor = () => {
-  if (vscode.window.activeColorTheme.kind === vscode.ColorThemeKind.Light) {
-    return '#005f5f';
-  } else {
-    return '#73daca';
+  switch (vscode.window.activeColorTheme.kind) {
+    case vscode.ColorThemeKind.Light:
+      return '#005f5f';
+    case vscode.ColorThemeKind.Dark:
+      return '#73daca';
+    default:
+      return '#73daca'; // fallback
   }
 };
+
+// Format the counter text
+const formatCounterText = (count: number) => (count > 1 ? ` ✕${count} ➜ ` : ' ');
 
 // Render decorations for the current file
 export const renderDecorations = (
@@ -29,24 +35,31 @@ export const renderDecorations = (
   const document = editor.document;
   const currentFilePath = document.uri.fsPath;
   const decorations: vscode.DecorationOptions[] = [];
+  const themeColor = getCurrentThemeColor();
 
-  for (const [file, innerMap] of consoleDataMap) {
-    if (!currentFilePath.endsWith(file)) continue;
+  // Loop through the console data map and render decorations for each line
+  for (const [filePath, positionsMap] of consoleDataMap) {
+    // Check if the current file path matches the file path in the map
+    if (!currentFilePath.endsWith(filePath)) continue;
 
-    for (const [position, values] of innerMap) {
+    // Loop through the positions map and render decorations for each line
+    for (const [position, { consoleMessages, counter }] of positionsMap) {
       const line = parseInt(position) - 1;
+      // Check if the line number is within the document's line count
       if (line < 0 || line >= document.lineCount) continue;
 
       const lineText = document.lineAt(line).text;
-      if (!lineText.includes('console.log(') || !isConsoleLogCorrect(lineText)) continue;
-
+      if (!isConsoleLogCorrect(lineText)) continue;
       const closingIndex = lineText.length + 2;
+
       decorations.push({
         range: new vscode.Range(line, closingIndex, line, closingIndex),
         renderOptions: {
           after: {
-            contentText: ' ➜ ' + truncateString(formatString(values.toArray().join(' ➜ '))),
-            color: getCurrentThemeColor(),
+            contentText:
+              formatCounterText(counter) +
+              truncateString(formatString(consoleMessages.toArray().join(' ➜ '))),
+            color: themeColor,
           },
         },
       });
