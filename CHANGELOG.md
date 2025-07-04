@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.3.4 (2025-07-04)</small>
+
+- fix: add counter to decorator ([093b500](https://github.com/jonpena/vscode-console-warrior/commit/093b500))
+- refactor: change getFilename function declaration to arrow function syntax ([d6a2b1e](https://github.com/jonpena/vscode-console-warrior/commit/d6a2b1e))
+- refactor: enhance consoleDataMap entry creation and message handling logic ([cc4b573](https://github.com/jonpena/vscode-console-warrior/commit/cc4b573))
+- refactor: improve logging message for source map fetch failure and enhance comment clarity ([84dc78f](https://github.com/jonpena/vscode-console-warrior/commit/84dc78f))
+- refactor: restructure ConsoleDataMap type to improve clarity and maintainability ([1457293](https://github.com/jonpena/vscode-console-warrior/commit/1457293))
+- refactor: simplify variable assignments in updateConsoleDataMap function ([e2ad5d2](https://github.com/jonpena/vscode-console-warrior/commit/e2ad5d2))
+- refactor: streamline source map fetching logic and improve readability ([9bc0d04](https://github.com/jonpena/vscode-console-warrior/commit/9bc0d04))
+- style: improve comment formatting in startMainSW function ([ec8059c](https://github.com/jonpena/vscode-console-warrior/commit/ec8059c))
+- chore: remove notes section from feature request template ([b555b01](https://github.com/jonpena/vscode-console-warrior/commit/b555b01))
+
 ## <small>1.3.3 (2025-06-29)</small>
 
 - fix: update decoration color handling to use theme-aware function ([646cc1c](https://github.com/jonpena/vscode-console-warrior/commit/646cc1c))
