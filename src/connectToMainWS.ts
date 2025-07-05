@@ -27,8 +27,8 @@ export const connectToMainWS = (port: number, consoleData: ConsoleData[]) => {
   });
 
   // Handle errors
-  socket.on('error', (err) => {
-    console.error('[Server WS] Error:', err);
+  socket.on('error', (_) => {
+    console.error('[Server WS] Error connecting to Central');
   });
 
   return socket;
