@@ -1,8 +1,8 @@
 import * as VSCODE from 'vscode';
 import path from 'path';
 import fs from 'fs';
-import { checkIfNodeModulesReady } from './checkIfNodeModulesReady';
-import { vitePlugin } from '../plugins/vitePlugin';
+import { checkIfNodeModulesReady } from './utils';
+import { vitePlugin } from './plugins/vitePlugin';
 
 // This function activates the Vite plugin for a given node_modules path
 const activatePlugin = async (vscode: typeof VSCODE, nodeModulesPath: string) => {
