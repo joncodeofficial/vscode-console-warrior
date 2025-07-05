@@ -5,20 +5,24 @@ import { ConsoleData } from './types/consoleData.interface';
 import { getPortFromUrl } from './utils/getPortFromUrl';
 import { SourceMapCache } from './types/sourceMapCache.interface';
 import { ConsoleDataMap } from './types/consoleDataMap.interface';
+import { ServerConnections } from './types/serverConnections.interface';
 
-export async function startMainSW(
+// Start Main Server
+export const startMainSW = async (
   consoleData: ConsoleData[],
   sourceMapCache: SourceMapCache,
   consoleDataMap: ConsoleDataMap,
-  backendConnections: Map<string, WebSocket>
-) {
+  backendConnections: ServerConnections
+) => {
   const status = await portscanner.checkPortStatus(WS_PORT, '127.0.0.1');
 
   if (status === 'closed') {
     // Create server WebSocket Central
     const wss = new WebSocketServer({ port: WS_PORT });
+
     console.log(`[Central WS] started on port ${WS_PORT}`);
 
+    // Listen for new connections
     wss.on('connection', (ws) => {
       consoleData.length = 0;
       sourceMapCache.clear();
@@ -27,6 +31,7 @@ export async function startMainSW(
       let isBackend = false;
       let backendId: string | null = null;
 
+      // Listen for messages from clients
       ws.on('message', (msg) => {
         const data: ConsoleData = JSON.parse(msg.toString());
 
@@ -41,10 +46,9 @@ export async function startMainSW(
 
         // if is a client frontend send message to a backend
         if (data.type === 'client-message' && data.location.url) {
-          const getPort = getPortFromUrl(data.location.url as string);
-          const getMessage = data.message;
+          const getPort = getPortFromUrl(data.location.url);
           const target = backendConnections.get(getPort);
-          if (getMessage && target && target.readyState === WebSocket.OPEN) {
+          if (data.message && target?.readyState === WebSocket.OPEN) {
             target.send(msg);
           } else {
             console.warn('No server found for client message');
@@ -53,6 +57,7 @@ export async function startMainSW(
         }
       });
 
+      // Close server WebSocket Central
       ws.on('close', () => {
         if (isBackend && backendId) {
           backendConnections.delete(backendId);
@@ -61,4 +66,4 @@ export async function startMainSW(
       });
     });
   }
-}
+};
