@@ -1,11 +1,8 @@
 import portscanner from 'portscanner';
 import { WebSocket, WebSocketServer } from 'ws';
 import { WS_PORT } from './constants';
-import { ConsoleData } from './types/consoleData.interface';
-import { getPortFromUrl } from './utils/getPortFromUrl';
-import { SourceMapCache } from './types/sourceMapCache.interface';
-import { ConsoleDataMap } from './types/consoleDataMap.interface';
-import { ServerConnections } from './types/serverConnections.interface';
+import { ConsoleData, ConsoleDataMap, ServerConnections, SourceMapCache } from './types';
+import { getPortFromUrl } from './utils';
 
 // Start Main Server
 export const startMainSW = async (

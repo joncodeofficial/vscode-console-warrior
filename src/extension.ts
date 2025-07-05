@@ -1,22 +1,17 @@
 import * as vscode from 'vscode';
-import WebSocket from 'ws';
 import { monitoringChanges } from './monitoringChanges';
-import { ConsoleData } from './types/consoleData.interface';
 import { sourceMapping } from './sourceMapping';
 import { updateConsoleDataMap } from './updateConsoleDataMap';
-import { watcherNodeModules } from './utils/watcherNodeModules';
-import { ConsoleDataMap } from './types/consoleDataMap.interface';
+import { watcherNodeModules } from './watcherNodeModules';
 import { decorationType, renderDecorations } from './renderDecorations';
-import { SourceMapCache } from './types/sourceMapCache.interface';
 import { connectToMainWS } from './connectToMainWS';
 import { startMainSW } from './startMainSW';
-import { ServerConnections } from './types/serverConnections.interface';
+import { ServerConnections, ConsoleData, ConsoleDataMap, SourceMapCache } from './types';
 import { commandConnectPort } from './commands/commandConnectPort';
-import { removeCommentedConsoles } from './utils/removeCommentedConsoles';
+import { removeCommentedConsoles } from './removeCommentedConsoles';
 import { DEFAULT_PORT } from './constants';
-import { disposable } from './utils/disposable';
+import { disposable } from './utils';
 
-let socket: WebSocket | null = null;
 const consoleData: ConsoleData[] = [];
 const sourceMapCache: SourceMapCache = new Map();
 const consoleDataMap: ConsoleDataMap = new Map();
@@ -28,7 +23,7 @@ export function activate(context: vscode.ExtensionContext) {
   // Start Main Server
   startMainSW(consoleData, sourceMapCache, consoleDataMap, serverConnections);
   // Connect to Main Server like a client
-  socket = connectToMainWS(connectPort, consoleData);
+  const socket = connectToMainWS(connectPort, consoleData);
 
   const stopMonitoring = monitoringChanges(consoleData, async () => {
     const newConsoleData = await sourceMapping(consoleData, sourceMapCache);

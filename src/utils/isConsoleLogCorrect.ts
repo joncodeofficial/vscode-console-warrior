@@ -1,4 +1,4 @@
-export function isConsoleLogCorrect(line: string): boolean {
+export const isConsoleLogCorrect = (line: string) => {
   // Verifica si hay un console.log en un comentario
   // Comentario de línea //
   if (/^\s*\/\/.*console\.log/.test(line)) {
@@ -51,4 +51,4 @@ export function isConsoleLogCorrect(line: string): boolean {
   // - Es una línea completa con formato correcto (con o sin punto y coma), o
   // - Es parte de una instrucción multilinea válida
   return isCompleteLineWithSemicolon || isCompleteLineWithoutSemicolon || isMultiLine;
-}
+};

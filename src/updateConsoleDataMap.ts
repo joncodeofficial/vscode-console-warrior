@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import Denque from 'denque';
-import { ConsoleData } from './types/consoleData.interface';
-import { ConsoleDataMap } from './types/consoleDataMap.interface';
+import { ConsoleData, ConsoleDataMap } from './types';
 import { MAX_DECORATIONS } from './constants';
 
 export const updateConsoleDataMap = (

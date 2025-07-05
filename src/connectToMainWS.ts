@@ -1,5 +1,5 @@
 import { WebSocket } from 'ws';
-import { ConsoleData } from './types/consoleData.interface';
+import { ConsoleData } from './types';
 import { WS_PORT } from './constants';
 
 export const connectToMainWS = (port: number, consoleData: ConsoleData[]) => {

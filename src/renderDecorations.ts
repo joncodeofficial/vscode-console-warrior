@@ -1,8 +1,6 @@
 import * as vscode from 'vscode';
-import { truncateString } from './utils/truncateString';
-import { formatString } from './utils/formatString';
-import { isConsoleLogCorrect } from './utils/isConsoleLogCorrect';
-import { ConsoleDataMap } from './types/consoleDataMap.interface';
+import { truncateString, formatString, isConsoleLogCorrect } from './utils';
+import { ConsoleDataMap } from './types';
 
 // Create a decoration type for console log annotations
 export const decorationType = vscode.window.createTextEditorDecorationType({
