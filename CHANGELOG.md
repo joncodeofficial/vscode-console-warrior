@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.3.5 (2025-07-05)</small>
+
+- fix: improve subscription management and enhance readability in activate function ([946ae41](https://github.com/jonpena/vscode-console-warrior/commit/946ae41))
+- refactor: enhance startMainSW function structure and clarity ([dec0201](https://github.com/jonpena/vscode-console-warrior/commit/dec0201))
+- refactor: improve comments for clarity in monitoringChanges.ts ([8466793](https://github.com/jonpena/vscode-console-warrior/commit/8466793))
+- refactor: improve truncateString function for clarity and type safety ([2cdace9](https://github.com/jonpena/vscode-console-warrior/commit/2cdace9))
+- refactor: remove unused variable and update console log messages for clarity ([cd87218](https://github.com/jonpena/vscode-console-warrior/commit/cd87218))
+- refactor: simplify error handling in connectToMainWS function ([c1f67ef](https://github.com/jonpena/vscode-console-warrior/commit/c1f67ef))
+- refactor: update comment for clarity in getPortFromUrl function ([4388775](https://github.com/jonpena/vscode-console-warrior/commit/4388775))
+- chore: add disposable utility function for managing disposables ([7e63203](https://github.com/jonpena/vscode-console-warrior/commit/7e63203))
+
 ## <small>1.3.4 (2025-07-04)</small>
 
 - fix: add counter to decorator ([093b500](https://github.com/jonpena/vscode-console-warrior/commit/093b500))
