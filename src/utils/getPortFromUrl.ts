@@ -1,4 +1,4 @@
-// Compilas una sola vez la expresión regular
+// compiles once the regular expression
 const portRegex = /:(\d+)(?=\/|$)/;
 
 export const getPortFromUrl = (url: string): string => {
