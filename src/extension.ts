@@ -48,7 +48,7 @@ export function activate(context: vscode.ExtensionContext) {
   });
 
   context.subscriptions.push(watcherNodeModules(vscode)!);
-  context.subscriptions.push({ dispose: stopMonitoring });
+  context.subscriptions.push(disposable(() => stopMonitoring()));
   context.subscriptions.push(disposable(() => socket?.close()));
   context.subscriptions.push(disposable(() => decorationType.dispose()));
   context.subscriptions.push(commandConnectPort(context, socket, consoleData));
