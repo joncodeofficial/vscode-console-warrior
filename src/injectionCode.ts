@@ -4,7 +4,6 @@ export const injectionCode = `
   var originalConsoleLog = console.log;
   var messageQueue = [];
   var ws = null;
-  var autoReloadEnabled = false;
   const ansiRegex = /\\x1b\\[[0-9;]*m/g;
   const extensions = ['.js', '.ts', '.jsx', '.tsx', '.vue', '.svelte'];
 
@@ -34,7 +33,7 @@ export const injectionCode = `
           }
         }
       } else {
-        // Chrome/Safari format: "    at function (file:line:column)"
+        // Chrome/Safari format: "at function (file:line:column)"
         for (let i = 1; i < stackLines.length; i++) {
           const line = stackLines[i];
 
@@ -113,7 +112,6 @@ export const injectionCode = `
     ws = new WebSocket("ws://localhost:9000");
 
     ws.onopen = function() {
-      originalConsoleLog("WebSocket connection established");
       flushQueue();
     };
 
@@ -153,6 +151,6 @@ export const injectionCode = `
   connectWebSocket();
 
   // Debug: confirmation of injection
-  originalConsoleLog("Console interceptor initialized");
+  originalConsoleLog("Console Warrior initialized");
 })();
 </script>`;
