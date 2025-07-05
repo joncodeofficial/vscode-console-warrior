@@ -14,6 +14,7 @@ import { ServerConnections } from './types/serverConnections.interface';
 import { commandConnectPort } from './commands/commandConnectPort';
 import { removeCommentedConsoles } from './utils/removeCommentedConsoles';
 import { DEFAULT_PORT } from './constants';
+import { disposable } from './utils/disposable';
 
 let socket: WebSocket | null = null;
 const consoleData: ConsoleData[] = [];
@@ -29,7 +30,7 @@ export function activate(context: vscode.ExtensionContext) {
   // Connect to Main Server like a client
   socket = connectToMainWS(connectPort, consoleData);
 
-  monitoringChanges(consoleData, async () => {
+  const stopMonitoring = monitoringChanges(consoleData, async () => {
     const newConsoleData = await sourceMapping(consoleData, sourceMapCache);
     // Early return if no new data
     if (!newConsoleData?.length) return;
@@ -39,7 +40,7 @@ export function activate(context: vscode.ExtensionContext) {
     consoleData.length = 0;
   });
 
-  vscode.workspace.onDidChangeTextDocument((textEditor) => {
+  const onTextChangeDisposable = vscode.workspace.onDidChangeTextDocument((textEditor) => {
     const activeEditor = vscode.window.activeTextEditor;
     // Ignore if empty changes
     if (textEditor.contentChanges.length === 0) return;
@@ -52,11 +53,11 @@ export function activate(context: vscode.ExtensionContext) {
   });
 
   context.subscriptions.push(watcherNodeModules(vscode)!);
+  context.subscriptions.push({ dispose: stopMonitoring });
+  context.subscriptions.push(disposable(() => socket?.close()));
+  context.subscriptions.push(disposable(() => decorationType.dispose()));
   context.subscriptions.push(commandConnectPort(context, socket, consoleData));
+  context.subscriptions.push(onTextChangeDisposable);
 }
 
-export function deactivate() {
-  if (decorationType) {
-    decorationType.dispose();
-  }
-}
+export function deactivate() {}
