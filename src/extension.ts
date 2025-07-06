@@ -8,7 +8,7 @@ import { connectToMainWS } from './connectToMainWS';
 import { startMainSW } from './startMainSW';
 import { ServerConnections, ConsoleData, ConsoleDataMap, SourceMapCache } from './types';
 import { commandConnectPort } from './commands/commandConnectPort';
-import { removeCommentedConsoles } from './removeCommentedConsoles';
+import { removeDecorations } from './removeCommentedConsoles';
 import { DEFAULT_PORT } from './constants';
 import { disposable } from './utils';
 
@@ -41,7 +41,7 @@ export function activate(context: vscode.ExtensionContext) {
     if (textEditor.contentChanges.length === 0) return;
     // If the active editor is the same as the current editor
     if (activeEditor && textEditor.document === activeEditor.document) {
-      removeCommentedConsoles(textEditor, consoleDataMap);
+      removeDecorations(textEditor, consoleDataMap);
     }
     // Render decorations again
     renderDecorations(vscode.window.activeTextEditor, consoleDataMap);
