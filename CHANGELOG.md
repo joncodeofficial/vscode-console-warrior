@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.3.6 (2025-07-06)</small>
+
+- refactor: add functionality to watch and manage node_modules directory ([a65769c](https://github.com/jonpena/vscode-console-warrior/commit/a65769c))
+- refactor: consolidate type imports from individual files into a single types module ([9beb075](https://github.com/jonpena/vscode-console-warrior/commit/9beb075))
+- refactor: ensure proper disposal of stopMonitoring in context subscriptions ([08b2ee1](https://github.com/jonpena/vscode-console-warrior/commit/08b2ee1))
+- refactor: rename removeCommentedConsoles to removeDecorations for clarity in decoration handling ([b032603](https://github.com/jonpena/vscode-console-warrior/commit/b032603))
+- fix: rename removeCommentedConsoles to removeDecorations and improve variable naming for clarity ([1b1f666](https://github.com/jonpena/vscode-console-warrior/commit/1b1f666))
+- chore: add isInsideConsoleLog utility to check position within console.log() ([6263696](https://github.com/jonpena/vscode-console-warrior/commit/6263696))
+- chore: add type exports for ConsoleData, ConsoleDataMap, ServerConnections, and SourceMapCache ([793149a](https://github.com/jonpena/vscode-console-warrior/commit/793149a))
+- chore: add utility functions exports in index.ts ([9328d8c](https://github.com/jonpena/vscode-console-warrior/commit/9328d8c))
+
 ## <small>1.3.5 (2025-07-05)</small>
 
 - fix: improve subscription management and enhance readability in activate function ([946ae41](https://github.com/jonpena/vscode-console-warrior/commit/946ae41))
