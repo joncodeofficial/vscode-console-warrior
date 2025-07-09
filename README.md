@@ -70,6 +70,5 @@ All usage and contributions are governed by the project's open source license.
 
 If you're a rights holder and have questions or concerns, please open an issue or contact the project maintainer directly.
 
-<blockquote style="border-left: 4px solid orange; padding: 0.5em; background: #fff3cd;">
-<strong>⚠️ Warning:</strong> This extension is **not affiliated with, endorsed by, or related to Console Ninja or any similar commercial tool**.
-</blockquote>
+> [!WARNING]
+> Urgent info that needs immediate user attention to avoid problems.
