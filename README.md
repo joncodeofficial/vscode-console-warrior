@@ -24,7 +24,7 @@
 5. 🎉 Logs will appear directly under the lines where they’re called.
 
 > [!IMPORTANT]
-> ⚠️ Currently supports **only Vite** apps running in the browser, and support is limited. Compatibility with other tools and environments is planned for future versions.
+> Currently supports **only Vite** apps running in the browser, and support is limited. Compatibility with other tools and environments is planned for future versions.
 
 ---
 
