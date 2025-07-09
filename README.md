@@ -23,6 +23,7 @@
 4. Open any file with `console.log` statements.
 5. 🎉 Logs will appear directly under the lines where they’re called.
 
+> [!IMPORTANT]
 > ⚠️ Currently supports **only Vite** apps running in the browser, and support is limited. Compatibility with other tools and environments is planned for future versions.
 
 ---
@@ -66,9 +67,7 @@ While it may be **inspired by the publicly observable behavior** of similar tool
 Console Warrior is a **non-profit, open source** initiative created to serve the web development community.  
 All usage and contributions are governed by the project's open source license.
 
-> ⚠️ This extension is **not affiliated with, endorsed by, or related to Console Ninja or any similar commercial tool**.
+> [!WARNING]
+> This extension is not affiliated with, endorsed by, or related to **Console Ninja** or any similar **Commercial Tool**.
 
 If you're a rights holder and have questions or concerns, please open an issue or contact the project maintainer directly.
-
-> [!WARNING]
-> Urgent info that needs immediate user attention to avoid problems.
