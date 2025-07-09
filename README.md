@@ -58,13 +58,6 @@ If you're ready to help, check out the [Issues](https://github.com/jonpena/vscod
 
 ---
 
-## 📌 Roadmap & Feedback
-
-- [🪲 Report Issues](https://github.com/jonpena/vscode-console-warrior-logs/issues)
-- [📖 Changelog](https://github.com/jonpena/vscode-console-warrior-logs/releases)
-
----
-
 ## ⚖️ Legal Notice
 
 This project was **developed entirely from scratch**, without access to or use of any proprietary source code.  
@@ -76,3 +69,7 @@ All usage and contributions are governed by the project's open source license.
 > ⚠️ This extension is **not affiliated with, endorsed by, or related to Console Ninja or any similar commercial tool**.
 
 If you're a rights holder and have questions or concerns, please open an issue or contact the project maintainer directly.
+
+<blockquote style="border-left: 4px solid orange; padding: 0.5em; background: #fff3cd;">
+<strong>⚠️ Warning:</strong> This extension is **not affiliated with, endorsed by, or related to Console Ninja or any similar commercial tool**.
+</blockquote>
