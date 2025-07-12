@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.3.7 (2025-07-12)</small>
+
+- fix: setting new version of .vsix file into releases ([4f6331a](https://github.com/jonpena/vscode-console-warrior/commit/4f6331a))
+- docs: add important banner ([b9dbca6](https://github.com/jonpena/vscode-console-warrior/commit/b9dbca6))
+- docs: remove roadmap section and add warning about Console Ninja affiliation ([ac64998](https://github.com/jonpena/vscode-console-warrior/commit/ac64998))
+- docs: remove warning emoji ([db11d17](https://github.com/jonpena/vscode-console-warrior/commit/db11d17))
+- docs: testing warning ([49ad81d](https://github.com/jonpena/vscode-console-warrior/commit/49ad81d))
+
 ## <small>1.3.6 (2025-07-06)</small>
 
 - refactor: add functionality to watch and manage node_modules directory ([a65769c](https://github.com/jonpena/vscode-console-warrior/commit/a65769c))
