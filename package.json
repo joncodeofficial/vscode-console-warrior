@@ -94,5 +94,9 @@
   "engines": {
     "vscode": "^1.97.0"
   },
-  "icon": "images/icon.png"
+  "icon": "images/icon.png",
+  "galleryBanner": {
+    "color": "#11131C",
+    "theme": "dark"
+  }
 }
