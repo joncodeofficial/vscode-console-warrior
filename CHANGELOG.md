@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.3.8 (2025-07-12)</small>
+
+- fix: add banner dark mode ([b51f858](https://github.com/jonpena/vscode-console-warrior/commit/b51f858))
+
 ## <small>1.3.7 (2025-07-12)</small>
 
 - fix: setting new version of .vsix file into releases ([4f6331a](https://github.com/jonpena/vscode-console-warrior/commit/4f6331a))
