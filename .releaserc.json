@@ -45,7 +45,7 @@
         "assets": [
           {
             "path": "dist/*.vsix",
-            "label": "vscode-console-warrior.vsix"
+            "label": "vscode-console-warrior-${nextRelease.version}.vsix"
           }
         ]
       }
