@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.3.9 (2025-07-27)</small>
+
+- fix: add hoverMessage to the decorator ([56588cc](https://github.com/jonpena/vscode-console-warrior/commit/56588cc))
+- refactor: remove createProxy function and associated code ([afa849e](https://github.com/jonpena/vscode-console-warrior/commit/afa849e))
+- refactor: rename file to removeDecorations ([126c68e](https://github.com/jonpena/vscode-console-warrior/commit/126c68e))
+- refactor: update import statement for removeDecorations and streamline rendering logic ([eb8fb96](https://github.com/jonpena/vscode-console-warrior/commit/eb8fb96))
+- refactor: update package.json and package-lock.json to remove http-proxy dependencies ([5a514a9](https://github.com/jonpena/vscode-console-warrior/commit/5a514a9))
+
 ## <small>1.3.8 (2025-07-12)</small>
 
 - fix: add banner dark mode ([b51f858](https://github.com/jonpena/vscode-console-warrior/commit/b51f858))
