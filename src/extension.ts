@@ -4,11 +4,11 @@ import { sourceMapping } from './sourceMapping';
 import { updateConsoleDataMap } from './updateConsoleDataMap';
 import { watcherNodeModules } from './watcherNodeModules';
 import { decorationType, renderDecorations } from './renderDecorations';
+import { removeDecorations } from './removeDecorations';
 import { connectToMainWS } from './connectToMainWS';
 import { startMainSW } from './startMainSW';
 import { ServerConnections, ConsoleData, ConsoleDataMap, SourceMapCache } from './types';
 import { commandConnectPort } from './commands/commandConnectPort';
-import { removeDecorations } from './removeCommentedConsoles';
 import { DEFAULT_PORT } from './constants';
 import { disposable } from './utils';
 
@@ -42,9 +42,8 @@ export function activate(context: vscode.ExtensionContext) {
     // If the active editor is the same as the current editor
     if (activeEditor && textEditor.document === activeEditor.document) {
       removeDecorations(textEditor, consoleDataMap);
+      renderDecorations(vscode.window.activeTextEditor, consoleDataMap);
     }
-    // Render decorations again
-    renderDecorations(vscode.window.activeTextEditor, consoleDataMap);
   });
 
   context.subscriptions.push(watcherNodeModules(vscode)!);
