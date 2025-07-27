@@ -23,6 +23,23 @@ const getCurrentThemeColor = () => {
 // Format the counter text
 const formatCounterText = (count: number) => (count > 1 ? ` ✕${count} ➜ ` : ' ');
 
+// Create a markdown string for the hover message
+const createHoverMessage = (messages: string[]): vscode.MarkdownString => {
+  const formattedMessages = [...messages]
+    .map((msg, index) => {
+      return `${messages.length - index} → ${msg}`;
+    })
+    .join('\n\n');
+
+  const markdown = new vscode.MarkdownString();
+  const inputText = messages.length === 1 ? 'Input' : 'Inputs';
+  markdown.appendMarkdown(`**Console Warrior Messages • ${messages.length} ${inputText} ⚔️**\n\n`);
+  markdown.appendCodeblock(formattedMessages, 'javascript');
+  markdown.appendMarkdown(`\n*🧠 Keep slicing logs, warrior.*`);
+  markdown.isTrusted = true;
+  return markdown;
+};
+
 // Render decorations for the current file
 export const renderDecorations = (
   editor: vscode.TextEditor | undefined,
@@ -50,6 +67,8 @@ export const renderDecorations = (
       if (!isConsoleLogCorrect(lineText)) continue;
       const closingIndex = lineText.length + 2;
 
+      const markdown = createHoverMessage(consoleMessages.toArray());
+
       decorations.push({
         range: new vscode.Range(line, closingIndex, line, closingIndex),
         renderOptions: {
@@ -60,6 +79,7 @@ export const renderDecorations = (
             color: themeColor,
           },
         },
+        hoverMessage: markdown,
       });
     }
   }
