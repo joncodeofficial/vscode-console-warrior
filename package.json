@@ -60,7 +60,6 @@
   "dependencies": {
     "@jridgewell/trace-mapping": "^0.3.25",
     "denque": "^2.1.0",
-    "http-proxy": "^1.18.1",
     "portscanner": "^2.2.0",
     "ws": "^8.18.0"
   },
@@ -73,7 +72,6 @@
     "@semantic-release/github": "^11.0.3",
     "@semantic-release/npm": "^12.0.1",
     "@semantic-release/release-notes-generator": "^14.0.3",
-    "@types/http-proxy": "^1.17.16",
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
     "@types/portscanner": "^2.1.4",
