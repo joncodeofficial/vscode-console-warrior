@@ -1,4 +1,4 @@
-export const isConsoleLogCorrect = (line: string) => {
+export const isConsoleCorrect = (line: string) => {
   // Verifica si hay un console.log en un comentario
   // Comentario de línea //
   if (/^\s*\/\/.*console\.log/.test(line)) {
