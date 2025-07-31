@@ -1,7 +1,6 @@
 import { ConsoleDataMap } from './types';
 import * as vscode from 'vscode';
-import { isConsoleLogCorrect } from './utils';
-import { isInsideConsoleLog } from './utils/isInsideConsoleLog';
+import { isConsoleCorrect, isPositionInsideConsole } from './utils';
 
 // Remove commented consoles
 export const removeDecorations = (
@@ -18,7 +17,7 @@ export const removeDecorations = (
         const lineText = editor.document.lineAt(line).text;
 
         // if console.log is commented, delete
-        if (!isConsoleLogCorrect(lineText) && positionsMap.has(position)) {
+        if (!isConsoleCorrect(lineText) && positionsMap.has(position)) {
           positionsMap.delete(position);
           continue;
         }
@@ -29,7 +28,7 @@ export const removeDecorations = (
 
         const start = change.range.start.character;
         // if change inside of the console.log, delete
-        if (isInsideConsoleLog(lineText, start)) positionsMap.delete(position);
+        if (isPositionInsideConsole(lineText, start)) positionsMap.delete(position);
       }
       if (positionsMap.size === 0) consoleDataMap.delete(file);
     }
