@@ -5,8 +5,8 @@ import { performance } from 'perf_hooks';
 suite('sleep Tests', () => {
   test('should resolve after the specified number of milliseconds', async () => {
     const start = performance.now();
-    await sleep(50);
+    await sleep(10);
     const end = performance.now();
-    assert.ok(end - start >= 50);
+    assert.ok(end - start >= 10);
   });
 });
