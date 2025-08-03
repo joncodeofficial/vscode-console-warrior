@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { truncateString, formatString, isConsoleLogCorrect } from './utils';
+import { truncateString, formatString, isConsoleCorrect } from './utils';
 import { ConsoleDataMap } from './types';
 
 // Create a decoration type for console log annotations
@@ -64,7 +64,7 @@ export const renderDecorations = (
       if (line < 0 || line >= document.lineCount) continue;
 
       const lineText = document.lineAt(line).text;
-      if (!isConsoleLogCorrect(lineText)) continue;
+      if (!isConsoleCorrect(lineText)) continue;
       const closingIndex = lineText.length + 2;
 
       const markdown = createHoverMessage(consoleMessages.toArray());
