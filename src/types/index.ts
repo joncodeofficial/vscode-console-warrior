@@ -1,4 +1,4 @@
-export { ConsoleData } from './consoleData.interface';
-export { ConsoleDataMap } from './consoleDataMap.interface';
-export { ServerConnections } from './serverConnections.interface';
-export { SourceMapCache } from './sourceMapCache.interface';
+export { ConsoleData } from './consoleData.types';
+export { ConsoleDataMap, ConsoleDataMapValue } from './consoleDataMap.types';
+export { ServerConnections } from './serverConnections.types';
+export { SourceMapCache } from './sourceMapCache.types';
