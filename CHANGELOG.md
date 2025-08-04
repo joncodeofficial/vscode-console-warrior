@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.3.10 (2025-08-04)</small>
+
+- fix: add timestamp to extension ([288c45b](https://github.com/jonpena/vscode-console-warrior/commit/288c45b))
+- fix: enhance hover message formatting and type definitions ([ba9ee08](https://github.com/jonpena/vscode-console-warrior/commit/ba9ee08))
+- fix: update WebSocket connection port and improve error handling ([e7c426d](https://github.com/jonpena/vscode-console-warrior/commit/e7c426d))
+- fix: update workspace state key for connection port to 'warrior-port' ([504cbb6](https://github.com/jonpena/vscode-console-warrior/commit/504cbb6))
+- refactor: correct export for isConsoleCorrect and add isPositionInsideConsole ([4a1bf32](https://github.com/jonpena/vscode-console-warrior/commit/4a1bf32))
+- refactor: correct message type checks in WebSocket connection handling ([9764e59](https://github.com/jonpena/vscode-console-warrior/commit/9764e59))
+- refactor: correct message type in WebSocket connection ([456581a](https://github.com/jonpena/vscode-console-warrior/commit/456581a))
+- refactor: remove isInsideConsoleLog utility function ([5a4416e](https://github.com/jonpena/vscode-console-warrior/commit/5a4416e))
+- refactor: rename isConsoleLogCorrect to isConsoleCorrect for consistency ([18ebc88](https://github.com/jonpena/vscode-console-warrior/commit/18ebc88))
+- refactor: update console utility function names for consistency ([d11d075](https://github.com/jonpena/vscode-console-warrior/commit/d11d075))
+- refactor: update import path for ConsoleData and correct workspace state key to 'warrior-port' ([d634d5f](https://github.com/jonpena/vscode-console-warrior/commit/d634d5f))
+- refactor: update WebSocket port to match new configuration ([abfea44](https://github.com/jonpena/vscode-console-warrior/commit/abfea44))
+- chore: correct typo in monitoringChanges function comment ([90a4406](https://github.com/jonpena/vscode-console-warrior/commit/90a4406))
+- chore: rename file and function ([3c2aa10](https://github.com/jonpena/vscode-console-warrior/commit/3c2aa10))
+- chore: rename file and function ([e8ac780](https://github.com/jonpena/vscode-console-warrior/commit/e8ac780))
+- chore: rename type files for ConsoleData, ConsoleDataMap, ServerConnections, and SourceMapCache ([c05a889](https://github.com/jonpena/vscode-console-warrior/commit/c05a889))
+- chore: update package version to 1.3.9 and rename command to connectToPort ([bce7ec6](https://github.com/jonpena/vscode-console-warrior/commit/bce7ec6))
+- chore: update type exports to use correct file extensions ([2a4ed32](https://github.com/jonpena/vscode-console-warrior/commit/2a4ed32))
+- test: add sleep function tests ([33987c1](https://github.com/jonpena/vscode-console-warrior/commit/33987c1))
+- test: add unit tests for disposable utility function ([f81cf5d](https://github.com/jonpena/vscode-console-warrior/commit/f81cf5d))
+- test: add unit tests for getPortFromUrl function ([3ccbcec](https://github.com/jonpena/vscode-console-warrior/commit/3ccbcec))
+- test: add unit tests for isPositionInsideConsole function ([b158daa](https://github.com/jonpena/vscode-console-warrior/commit/b158daa))
+- test: remove redundant tab test from formatString tests ([e4dd947](https://github.com/jonpena/vscode-console-warrior/commit/e4dd947))
+- test: rename isConsoleLogCorrect to isConsoleCorrect in test suite ([5334c8b](https://github.com/jonpena/vscode-console-warrior/commit/5334c8b))
+- test: update sleep test to reflect correct timeout duration ([b7c68da](https://github.com/jonpena/vscode-console-warrior/commit/b7c68da))
+- test: update truncateString tests for consistency and clarity ([b44dc22](https://github.com/jonpena/vscode-console-warrior/commit/b44dc22))
+
 ## <small>1.3.9 (2025-07-27)</small>
 
 - fix: add hoverMessage to the decorator ([56588cc](https://github.com/jonpena/vscode-console-warrior/commit/56588cc))
