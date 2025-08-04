@@ -1,5 +1,5 @@
 export type ConsoleData = {
-  type?: 'client-message' | 'server-connect';
+  where?: 'client-message' | 'server-connect';
   id?: string;
   message: string;
   location: {
@@ -7,4 +7,5 @@ export type ConsoleData = {
     line: number;
     column: number;
   };
+  timestamp: string;
 };
