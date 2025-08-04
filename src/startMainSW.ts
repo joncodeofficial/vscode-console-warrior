@@ -19,7 +19,6 @@ export const startMainSW = async (
 
     console.log(`[Central WS] started on port ${WS_PORT}`);
 
-    // Listen for new connections
     wss.on('connection', (ws) => {
       consoleData.length = 0;
       sourceMapCache.clear();
@@ -33,7 +32,7 @@ export const startMainSW = async (
         const data: ConsoleData = JSON.parse(msg.toString());
 
         // if is a server identify it
-        if (data.type === 'server-connect' && data.id) {
+        if (data.where === 'server-connect' && data.id) {
           backendId = data.id;
           backendConnections.set(data.id, ws);
           isBackend = true;
@@ -42,7 +41,7 @@ export const startMainSW = async (
         }
 
         // if is a client frontend send message to a backend
-        if (data.type === 'client-message' && data.location.url) {
+        if (data.where === 'client-message' && data.location.url) {
           const getPort = getPortFromUrl(data.location.url);
           const target = backendConnections.get(getPort);
           if (data.message && target?.readyState === WebSocket.OPEN) {
