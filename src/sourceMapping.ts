@@ -5,7 +5,7 @@ import { getFilename } from './utils';
 export const sourceMapping = async (consoleData: ConsoleData[], sourceMapCache: SourceMapCache) => {
   const newConsoleData: ConsoleData[] = [];
 
-  for (const { location, message } of consoleData) {
+  for (const { location, message, timestamp } of consoleData) {
     // Skip if the location is a vite client
     if (location.url.includes('@vite/client')) continue;
 
@@ -40,6 +40,7 @@ export const sourceMapping = async (consoleData: ConsoleData[], sourceMapCache: 
           line: original.line ?? 0,
           column: original.column ?? 0,
         },
+        timestamp,
       });
     } catch {
       // If the source map is not found, add the original location to the console data
@@ -50,6 +51,7 @@ export const sourceMapping = async (consoleData: ConsoleData[], sourceMapCache: 
           line: location.line,
           column: location.column,
         },
+        timestamp,
       });
     }
   }

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import Denque from 'denque';
-import { ConsoleData, ConsoleDataMap } from './types';
+import { ConsoleData, ConsoleDataMap, ConsoleDataMapValue } from './types';
 import { MAX_DECORATIONS } from './constants';
 
 export const updateConsoleDataMap = (
@@ -10,7 +10,7 @@ export const updateConsoleDataMap = (
 ) => {
   if (!editor) return;
 
-  for (const { message, location } of consoleData) {
+  for (const { message, location, timestamp } of consoleData) {
     const url = location.url;
     const key = location.line.toString();
 
@@ -25,7 +25,7 @@ export const updateConsoleDataMap = (
     if (!fileMap.has(key)) {
       fileMap.set(key, {
         counter: 1,
-        consoleMessages: new Denque<string>([message]),
+        consoleMessages: new Denque<ConsoleDataMapValue>([{ message, timestamp }]),
       });
       continue;
     }
@@ -35,7 +35,7 @@ export const updateConsoleDataMap = (
     if (!messageDenque) continue;
     // Add the new message to the front of the denque
     messageDenque.counter++;
-    messageDenque.consoleMessages.unshift(message);
+    messageDenque.consoleMessages.unshift({ message, timestamp });
     // Limit the denque size to MAX_DECORATIONS
     if (messageDenque.consoleMessages.size() > MAX_DECORATIONS) {
       messageDenque.consoleMessages.pop();
