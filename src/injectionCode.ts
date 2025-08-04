@@ -109,19 +109,15 @@ export const injectionCode = `
 
   // Establishes a WebSocket connection
   function connectWebSocket() {
-    ws = new WebSocket("ws://localhost:9000");
+    ws = new WebSocket("ws://localhost:27020");
 
     ws.onopen = function() {
       flushQueue();
     };
 
-    ws.onerror = function(error) {
-      // Fail silently
-    };
-
     ws.onclose = function() {
-      originalConsoleLog("WebSocket closed, reconnecting in 3s...");
-      setTimeout(connectWebSocket, 3000);
+      // originalConsoleLog("WebSocket closed, reconnecting in 3s...");
+      // setTimeout(connectWebSocket, 3000);
     };
   }
 
@@ -134,7 +130,7 @@ export const injectionCode = `
     const location = getStackInfo();
 
     const logData = {
-      type: "client-message",
+      where: "client-message",
       message: args.map(serializeArg).join(" "),
       location: location,
       timestamp: new Date().toISOString()
