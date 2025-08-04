@@ -2,13 +2,14 @@ import { WebSocket } from 'ws';
 import { ConsoleData } from './types';
 import { WS_PORT } from './constants';
 
+// Connect to Main Server like a client
 export const connectToMainWS = (port: number, consoleData: ConsoleData[]) => {
   const socket = new WebSocket(`ws://localhost:${WS_PORT}`);
 
   // Handle WebSocket connection open event
   socket.on('open', () => {
     console.log('[Client WS] Connected to Central with port:', port);
-    socket.send(JSON.stringify({ type: 'server-connect', id: port.toString() }));
+    socket.send(JSON.stringify({ where: 'server-connect', id: port.toString() }));
   });
 
   // Handle incoming messages
