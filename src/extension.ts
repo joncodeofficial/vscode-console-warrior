@@ -18,7 +18,7 @@ const consoleDataMap: ConsoleDataMap = new Map();
 const serverConnections: ServerConnections = new Map();
 
 export function activate(context: vscode.ExtensionContext) {
-  let connectPort: number = context.workspaceState.get('port') ?? DEFAULT_PORT;
+  let connectPort: number = context.workspaceState.get('warrior-port') ?? DEFAULT_PORT;
 
   // Start Main Server
   startMainSW(consoleData, sourceMapCache, consoleDataMap, serverConnections);
