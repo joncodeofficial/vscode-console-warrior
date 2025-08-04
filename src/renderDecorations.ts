@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { truncateString, formatString, isConsoleCorrect } from './utils';
-import { ConsoleDataMap } from './types';
+import { ConsoleDataMap, ConsoleDataMapValue } from './types';
 
 // Create a decoration type for console log annotations
 export const decorationType = vscode.window.createTextEditorDecorationType({
@@ -24,16 +24,19 @@ const getCurrentThemeColor = () => {
 const formatCounterText = (count: number) => (count > 1 ? ` ✕${count} ➜ ` : ' ');
 
 // Create a markdown string for the hover message
-const createHoverMessage = (messages: string[]): vscode.MarkdownString => {
+const createHoverMessage = (messages: ConsoleDataMapValue[]): vscode.MarkdownString => {
   const formattedMessages = [...messages]
-    .map((msg, index) => {
-      return `${messages.length - index} → ${msg}`;
+    .map(({ message, timestamp }, index) => {
+      const time = timestamp.slice(11, 23); // Extract HH:mm:ss.SSS
+      return `${messages.length - index} → [${time}] ${message}`;
     })
     .join('\n\n');
 
   const markdown = new vscode.MarkdownString();
   const inputText = messages.length === 1 ? 'Input' : 'Inputs';
-  markdown.appendMarkdown(`**Console Warrior Messages • ${messages.length} ${inputText} ⚔️**\n\n`);
+  markdown.appendMarkdown(
+    `**⚔️ Console Warrior Messages • ${messages.length} ${inputText} (UTC)**\n\n`
+  );
   markdown.appendCodeblock(formattedMessages, 'javascript');
   markdown.appendMarkdown(`\n*🧠 Keep slicing logs, warrior.*`);
   markdown.isTrusted = true;
@@ -67,7 +70,10 @@ export const renderDecorations = (
       if (!isConsoleCorrect(lineText)) continue;
       const closingIndex = lineText.length + 2;
 
-      const markdown = createHoverMessage(consoleMessages.toArray());
+      // Get the console messages array for the current line
+      const consoleMessagesArray = consoleMessages.toArray();
+
+      const hoverMessage = createHoverMessage(consoleMessagesArray);
 
       decorations.push({
         range: new vscode.Range(line, closingIndex, line, closingIndex),
@@ -75,11 +81,13 @@ export const renderDecorations = (
           after: {
             contentText:
               formatCounterText(counter) +
-              truncateString(formatString(consoleMessages.toArray().join(' ➜ '))),
+              truncateString(
+                formatString(consoleMessagesArray.map((mgs) => mgs.message).join(' ➜ '))
+              ),
             color: themeColor,
           },
         },
-        hoverMessage: markdown,
+        hoverMessage,
       });
     }
   }
