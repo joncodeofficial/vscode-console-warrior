@@ -40,7 +40,7 @@
   "contributes": {
     "commands": [
       {
-        "command": "extension.addPort",
+        "command": "extension.connectToPort",
         "title": "Connect to Port",
         "category": "Console Warrior"
       }
@@ -61,7 +61,7 @@
     "@jridgewell/trace-mapping": "^0.3.25",
     "denque": "^2.1.0",
     "portscanner": "^2.2.0",
-    "ws": "^8.18.0"
+    "ws": "^8.18.3"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
