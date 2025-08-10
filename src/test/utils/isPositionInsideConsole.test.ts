@@ -3,21 +3,21 @@ import { isPositionInsideConsole } from '../../utils';
 
 suite('isPositionInsideConsole Tests', () => {
   test('should return false for a position outside of console.log', () => {
-    assert.equal(isPositionInsideConsole('console.log("hello");', 0), false);
+    assert.equal(isPositionInsideConsole('console.log("hello");', 0, 'log'), false);
   });
 
   test('should return true for a position inside of console.log', () => {
-    assert.equal(isPositionInsideConsole('console.log("hello")', 14), true);
+    assert.equal(isPositionInsideConsole('console.log("hello")', 14, 'log'), true);
   });
 
   test('should return true for a position inside of console.log in final console ', () => {
     assert.equal(
-      isPositionInsideConsole('console.log("user:", user, "age:", getAge());', 44),
+      isPositionInsideConsole('console.log("user:", user, "age:", getAge());', 44, 'log'),
       true
     );
   });
 
   test('should return true for a position inside of console.log with multiple parentheses', () => {
-    assert.equal(isPositionInsideConsole('console.log(((((value)))));', 23), true);
+    assert.equal(isPositionInsideConsole('console.log(((((value)))));', 23, 'log'), true);
   });
 });
