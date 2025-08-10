@@ -10,23 +10,22 @@ export const updateConsoleDataMap = (
 ) => {
   if (!editor) return;
 
-  for (const { message, location, timestamp } of consoleData) {
+  for (const { message, location, timestamp, type } of consoleData) {
     const url = location.url;
     const key = location.line.toString();
 
     // Ensure a map exists for the file URL
-    if (!consoleDataMap.has(url)) {
-      consoleDataMap.set(url, new Map());
-    }
+    if (!consoleDataMap.has(url)) consoleDataMap.set(url, new Map());
 
     const fileMap = consoleDataMap.get(url)!;
 
     // Ensure a denque exists for the line number
     if (!fileMap.has(key)) {
       fileMap.set(key, {
+        type,
         counter: 1,
-        consoleMessages: new Denque<ConsoleDataMapValue>([{ message, timestamp }]),
-      });
+        consoleMessages: new Denque([{ message, timestamp }]),
+      } satisfies ConsoleDataMapValue);
       continue;
     }
 

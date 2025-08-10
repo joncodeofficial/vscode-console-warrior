@@ -1,6 +1,7 @@
 export type ConsoleData = {
-  where?: 'client-message' | 'server-connect';
   id?: string;
+  type: 'log' | 'warn' | 'error' | 'table' | 'info'; // | 'trace' | 'timeEnd';
+  where?: 'client-message' | 'server-connect';
   message: string;
   location: {
     url: string;

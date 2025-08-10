@@ -12,7 +12,7 @@ export const removeDecorations = (
 
   for (const [file, positionsMap] of consoleDataMap) {
     if (filePath.endsWith(file)) {
-      for (const [position] of positionsMap) {
+      for (const [position, { type }] of positionsMap) {
         const line = parseInt(position) - 1;
         const lineText = editor.document.lineAt(line).text;
 
@@ -28,7 +28,7 @@ export const removeDecorations = (
 
         const start = change.range.start.character;
         // if change inside of the console.log, delete
-        if (isPositionInsideConsole(lineText, start)) positionsMap.delete(position);
+        if (isPositionInsideConsole(lineText, start, type)) positionsMap.delete(position);
       }
       if (positionsMap.size === 0) consoleDataMap.delete(file);
     }
