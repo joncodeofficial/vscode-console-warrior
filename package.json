@@ -16,15 +16,15 @@
     "inline logs",
     "console warrior"
   ],
-  "homepage": "https://github.com/jonpena/vscode-console-warrior#readme",
+  "homepage": "https://github.com/joncodeofficial/vscode-console-warrior#readme",
   "bugs": {
-    "url": "https://github.com/jonpena/vscode-console-warrior/issues"
+    "url": "https://github.com/joncodeofficial/vscode-console-warrior/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jonpena/vscode-console-warrior.git"
+    "url": "https://github.com/joncodeofficial/vscode-console-warrior.git"
   },
-  "publisher": "Jonpena",
+  "publisher": "Joncode",
   "main": "./dist/extension.js",
   "scripts": {
     "compile": "tsc -p ./",
