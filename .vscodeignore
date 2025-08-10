@@ -9,11 +9,4 @@ vsc-extension-quickstart.md
 **/*.map
 **/*.ts
 **/.vscode-test.*
-
-# Ignorar tests de TypeScript
-# src/test/**
-
-# Ignorar tests compilados
-# dist/test/**
-**/images/presentation.gif
-# **/.prettierignore
+src/scripts/
