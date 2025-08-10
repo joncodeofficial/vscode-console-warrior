@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.3.13 (2025-08-10)</small>
+
+- fix: publisher name is jonpena ([00706ca](https://github.com/joncodeofficial/vscode-console-warrior/commit/00706ca))
+- chore: ignore files and folder. perfomance ([f645102](https://github.com/joncodeofficial/vscode-console-warrior/commit/f645102))
+
 ## <small>1.3.12 (2025-08-10)</small>
 
 - fix: deberia de funcionar ([9cd4d5d](https://github.com/joncodeofficial/vscode-console-warrior/commit/9cd4d5d))
