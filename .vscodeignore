@@ -9,4 +9,19 @@ vsc-extension-quickstart.md
 **/*.map
 **/*.ts
 **/.vscode-test.*
-src/scripts/
+
+# Ignorar tests de TypeScript
+src/test/**
+
+# Ignorar tests compilados
+dist/test/**
+**/images/presentation.gif
+**/commitlint.config.js
+**/.releaserc.json
+**/.prettierignore
+**/semantic.log
+
+# Ignorar configs y carpetas que no van al paquete
+.github/**
+.vscodeignore
+*.log
