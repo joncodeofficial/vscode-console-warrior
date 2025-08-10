@@ -12,9 +12,11 @@ vsc-extension-quickstart.md
 
 # Ignorar tests de TypeScript
 src/test/**
+src/types/**
 
 # Ignorar tests compilados
 dist/test/**
+dist/types/**
 **/images/presentation.gif
 **/commitlint.config.js
 **/.releaserc.json
