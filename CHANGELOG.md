@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.3.12 (2025-08-10)</small>
+
+- fix: deberia de funcionar ([9cd4d5d](https://github.com/joncodeofficial/vscode-console-warrior/commit/9cd4d5d))
+- fix: fixing github actions ([a4d87bb](https://github.com/joncodeofficial/vscode-console-warrior/commit/a4d87bb))
+- fix: fixing github actions ([c84654b](https://github.com/joncodeofficial/vscode-console-warrior/commit/c84654b))
+- fix: ignore files and folder innecesary ([c442495](https://github.com/joncodeofficial/vscode-console-warrior/commit/c442495))
+- fix: syntax error in injectionCode ([92f954e](https://github.com/joncodeofficial/vscode-console-warrior/commit/92f954e))
+- fix: testing ([5c48c79](https://github.com/joncodeofficial/vscode-console-warrior/commit/5c48c79))
+- refactor: updating README.md ([052e378](https://github.com/joncodeofficial/vscode-console-warrior/commit/052e378))
+- chore: failed ([88230fd](https://github.com/joncodeofficial/vscode-console-warrior/commit/88230fd))
+- chore: fix github action ([50847d1](https://github.com/joncodeofficial/vscode-console-warrior/commit/50847d1))
+- chore: github actions failed ([efadea0](https://github.com/joncodeofficial/vscode-console-warrior/commit/efadea0))
+- chore: injectionCode ([a26dbd6](https://github.com/joncodeofficial/vscode-console-warrior/commit/a26dbd6))
+
 ## <small>1.3.11 (2025-08-10)</small>
 
 - refactor: adding const DECORATOR_COLORS object ([875c753](https://github.com/jonpena/vscode-console-warrior/commit/875c753))
