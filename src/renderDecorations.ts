@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { truncateString, formatString, isConsoleCorrect } from './utils';
-import { ConsoleDataMap, ConsoleDataMapValue } from './types';
+import { ConsoleDataMap, ConsoleMessagesType, ConsoleDataMapValue } from './types';
+import { DECORATOR_COLORS } from './constants';
 
 // Create a decoration type for console log annotations
 export const decorationType = vscode.window.createTextEditorDecorationType({
@@ -9,14 +10,12 @@ export const decorationType = vscode.window.createTextEditorDecorationType({
 });
 
 // Get the current theme color
-const getCurrentThemeColor = () => {
+const getCurrentThemeColor = (type: ConsoleDataMapValue['type']) => {
   switch (vscode.window.activeColorTheme.kind) {
     case vscode.ColorThemeKind.Light:
-      return '#005f5f';
+      return DECORATOR_COLORS.light[type];
     case vscode.ColorThemeKind.Dark:
-      return '#73daca';
-    default:
-      return '#73daca'; // fallback
+      return DECORATOR_COLORS.dark[type];
   }
 };
 
@@ -24,36 +23,35 @@ const getCurrentThemeColor = () => {
 const formatCounterText = (count: number) => (count > 1 ? ` ✕${count} ➜ ` : ' ');
 
 // Create a markdown string for the hover message
-const createHoverMessage = (messages: ConsoleDataMapValue[]): vscode.MarkdownString => {
-  const formattedMessages = [...messages]
-    .map(({ message, timestamp }, index) => {
-      const time = timestamp.slice(11, 23); // Extract HH:mm:ss.SSS
-      return `${messages.length - index} → [${time}] ${message}`;
-    })
-    .join('\n\n');
-
+const createHoverMessage = (
+  messages: ConsoleMessagesType[],
+  type: ConsoleDataMapValue['type']
+): vscode.MarkdownString => {
   const markdown = new vscode.MarkdownString();
-  const inputText = messages.length === 1 ? 'Input' : 'Inputs';
-  markdown.appendMarkdown(
-    `**⚔️ Console Warrior Messages • ${messages.length} ${inputText} (UTC)**\n\n`
+  const label = `**⚔️ Console Warrior ${type.toUpperCase()} • ${messages.length} ${messages.length === 1 ? 'Input' : 'Inputs'} UTC**
+`;
+
+  markdown.appendMarkdown(label);
+  markdown.appendCodeblock(
+    messages
+      .map(
+        ({ message, timestamp }, i) =>
+          `${messages.length - i} → [${timestamp.slice(11, 23)}] \n ${message}`
+      )
+      .join('\n\n'),
+    'javascript'
   );
-  markdown.appendCodeblock(formattedMessages, 'javascript');
   markdown.appendMarkdown(`\n*🧠 Keep slicing logs, warrior.*`);
   markdown.isTrusted = true;
+
   return markdown;
 };
 
 // Render decorations for the current file
-export const renderDecorations = (
-  editor: vscode.TextEditor | undefined,
-  consoleDataMap: ConsoleDataMap
-) => {
-  if (!editor) return;
-
+export const renderDecorations = (editor: vscode.TextEditor, consoleDataMap: ConsoleDataMap) => {
   const document = editor.document;
   const currentFilePath = document.uri.fsPath;
   const decorations: vscode.DecorationOptions[] = [];
-  const themeColor = getCurrentThemeColor();
 
   // Loop through the console data map and render decorations for each line
   for (const [filePath, positionsMap] of consoleDataMap) {
@@ -61,19 +59,22 @@ export const renderDecorations = (
     if (!currentFilePath.endsWith(filePath)) continue;
 
     // Loop through the positions map and render decorations for each line
-    for (const [position, { consoleMessages, counter }] of positionsMap) {
+    for (const [position, { consoleMessages, counter, type }] of positionsMap) {
       const line = parseInt(position) - 1;
       // Check if the line number is within the document's line count
       if (line < 0 || line >= document.lineCount) continue;
 
       const lineText = document.lineAt(line).text;
+
       if (!isConsoleCorrect(lineText)) continue;
       const closingIndex = lineText.length + 2;
 
       // Get the console messages array for the current line
       const consoleMessagesArray = consoleMessages.toArray();
 
-      const hoverMessage = createHoverMessage(consoleMessagesArray);
+      const hoverMessage = createHoverMessage(consoleMessagesArray, type);
+
+      const themeColor = getCurrentThemeColor(type);
 
       decorations.push({
         range: new vscode.Range(line, closingIndex, line, closingIndex),
