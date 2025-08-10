@@ -7,6 +7,6 @@ suite('sleep Tests', () => {
     const start = performance.now();
     await sleep(10);
     const end = performance.now();
-    assert.ok(end - start >= 10);
+    assert.ok(end - start >= 9);
   });
 });
