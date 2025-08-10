@@ -27,12 +27,12 @@ export function activate(context: vscode.ExtensionContext) {
 
   const stopMonitoring = monitoringChanges(consoleData, async () => {
     const newConsoleData = await sourceMapping(consoleData, sourceMapCache);
+    consoleData.length = 0;
     // Early return if no new data
     if (!newConsoleData?.length) return;
     const editor = vscode.window.activeTextEditor;
     updateConsoleDataMap(editor, newConsoleData, consoleDataMap);
-    renderDecorations(editor, consoleDataMap);
-    consoleData.length = 0;
+    if (editor) renderDecorations(editor, consoleDataMap);
   });
 
   const onTextChangeDisposable = vscode.workspace.onDidChangeTextDocument((textEditor) => {
@@ -42,7 +42,7 @@ export function activate(context: vscode.ExtensionContext) {
     // If the active editor is the same as the current editor
     if (activeEditor && textEditor.document === activeEditor.document) {
       removeDecorations(textEditor, consoleDataMap);
-      renderDecorations(vscode.window.activeTextEditor, consoleDataMap);
+      renderDecorations(activeEditor, consoleDataMap);
     }
   });
 
