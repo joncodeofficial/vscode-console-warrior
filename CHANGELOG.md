@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.3.11 (2025-08-10)</small>
+
+- refactor: adding const DECORATOR_COLORS object ([875c753](https://github.com/jonpena/vscode-console-warrior/commit/875c753))
+- refactor: adding new field type ([28abdd8](https://github.com/jonpena/vscode-console-warrior/commit/28abdd8))
+- refactor: adding types to barren file ([4333c28](https://github.com/jonpena/vscode-console-warrior/commit/4333c28))
+- refactor: check differents console methods like warn, error, table and info ([09e0e5b](https://github.com/jonpena/vscode-console-warrior/commit/09e0e5b))
+- refactor: structure code ([1509478](https://github.com/jonpena/vscode-console-warrior/commit/1509478))
+- refactor: updating types ConsoleDataMap ([6ee407f](https://github.com/jonpena/vscode-console-warrior/commit/6ee407f))
+- fix: improving legilibity and adding support to warn, table, info and error ([40142be](https://github.com/jonpena/vscode-console-warrior/commit/40142be))
+- fix: improving messageHover and adding new decorator for methods warn, error, info and table ([6f40c28](https://github.com/jonpena/vscode-console-warrior/commit/6f40c28))
+- test: updating test ([85a3e87](https://github.com/jonpena/vscode-console-warrior/commit/85a3e87))
+- test: updating test ([b523a2b](https://github.com/jonpena/vscode-console-warrior/commit/b523a2b))
+
 ## <small>1.3.10 (2025-08-04)</small>
 
 - fix: add timestamp to extension ([288c45b](https://github.com/jonpena/vscode-console-warrior/commit/288c45b))
