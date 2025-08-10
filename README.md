@@ -2,7 +2,7 @@
 
 ## 🚀 Visualize `console.log` messages directly inside your VSCode editor.
 
-![Presentation](https://raw.githubusercontent.com/jonpena/vscode-console-warrior-logs/main/images/presentation.gif)
+![Presentation](https://raw.githubusercontent.com/joncodeofficial/vscode-console-warrior/main/images/presentation.gif)
 
 ---
 
@@ -55,7 +55,7 @@ We're especially looking forward to contributions in:
 - ⚙️ Configuration options (log filtering, formatting, etc.)
 - 🧪 Tests and developer experience improvements
 
-If you're ready to help, check out the [Issues](https://github.com/jonpena/vscode-console-warrior-logs/issues) to get started.
+If you're ready to help, check out the [Issues](https://github.com/joncodeofficial/vscode-console-warrior/issues) to get started.
 
 ---
 
