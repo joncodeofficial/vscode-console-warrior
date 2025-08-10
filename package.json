@@ -24,7 +24,7 @@
     "type": "git",
     "url": "https://github.com/joncodeofficial/vscode-console-warrior.git"
   },
-  "publisher": "Joncode",
+  "publisher": "Jonpena",
   "main": "./dist/extension.js",
   "scripts": {
     "compile": "tsc -p ./",
