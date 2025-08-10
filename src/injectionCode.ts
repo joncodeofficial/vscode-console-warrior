@@ -2,6 +2,12 @@ export const injectionCode = `
 <script>
 (function() {
   var originalConsoleLog = console.log;
+  var originalConsoleWarn = console.warn;
+  var originalConsoleInfo = console.info;
+  var originalConsoleError = console.error;
+  var originalConsoleTable = console.table;
+  // var originalConsoleTimeEnd = console.timeEnd;
+  
   var messageQueue = [];
   var ws = null;
   const extensions = ['.js', '.ts', '.jsx', '.tsx', '.vue', '.svelte'];
@@ -147,13 +153,7 @@ export const injectionCode = `
   }
 
   // Store original console methods
-  var originalConsoleWarn = console.warn;
-  var originalConsoleError = console.error;
-  var originalConsoleInfo = console.info;
-  var originalConsoleDebug = console.table;
-  var originalConsoleDir = console.dir;
-  var originalConsoleTrace = console.trace;
-  // var originalConsoleTimeEnd = console.timeEnd;
+
 
   /**
    * Creates a console method interceptor for a specific log type
@@ -192,7 +192,7 @@ export const injectionCode = `
   console.warn = createConsoleInterceptor(originalConsoleWarn, 'warn');
   console.error = createConsoleInterceptor(originalConsoleError, 'error');
   console.info = createConsoleInterceptor(originalConsoleInfo, 'info');
-  console.table = createConsoleInterceptor(originalConsoleDebug, 'table');
+  console.table = createConsoleInterceptor(originalConsoleTable, 'table');
   // console.timeEnd = createConsoleInterceptor(originalConsoleTimeEnd, 'timeEnd');
 
   // Start WebSocket connection
