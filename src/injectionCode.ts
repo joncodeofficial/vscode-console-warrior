@@ -150,9 +150,7 @@ export const injectionCode = `
   var originalConsoleWarn = console.warn;
   var originalConsoleError = console.error;
   var originalConsoleInfo = console.info;
-  var originalConsoleDebug = console.table;
-  var originalConsoleDir = console.dir;
-  var originalConsoleTrace = console.trace;
+  var originalConsoleTable = console.table;
   // var originalConsoleTimeEnd = console.timeEnd;
 
   /**
@@ -192,7 +190,7 @@ export const injectionCode = `
   console.warn = createConsoleInterceptor(originalConsoleWarn, 'warn');
   console.error = createConsoleInterceptor(originalConsoleError, 'error');
   console.info = createConsoleInterceptor(originalConsoleInfo, 'info');
-  console.table = createConsoleInterceptor(originalConsoleDebug, 'table');
+  console.table = createConsoleInterceptor(originalConsoleTable, 'table');
   // console.timeEnd = createConsoleInterceptor(originalConsoleTimeEnd, 'timeEnd');
 
   // Start WebSocket connection
