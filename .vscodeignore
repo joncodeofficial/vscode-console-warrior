@@ -17,9 +17,7 @@ src/test/**
 dist/test/**
 **/images/presentation.gif
 **/commitlint.config.js
-**/.releaserc.json
 **/.prettierignore
-**/semantic.log
 
 # Ignorar configs y carpetas que no van al paquete
 .github/**
