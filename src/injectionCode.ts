@@ -153,15 +153,6 @@ export const injectionCode = `
   }
 
   // Store original console methods
-<<<<<<< HEAD
-
-=======
-  var originalConsoleWarn = console.warn;
-  var originalConsoleError = console.error;
-  var originalConsoleInfo = console.info;
-  var originalConsoleTable = console.table;
-  // var originalConsoleTimeEnd = console.timeEnd;
->>>>>>> 5c48c798a54df62043a803634f098a55fcd78665
 
   /**
    * Creates a console method interceptor for a specific log type
