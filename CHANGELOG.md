@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.3.15 (2025-08-13)</small>
+
+- fix: improve Vite compatibility with older versions ([fbfa9e0](https://github.com/joncodeofficial/vscode-console-warrior/commit/fbfa9e0))
+
 ## <small>1.3.14 (2025-08-10)</small>
 
 - fix: ignore in package the types folder ([a5d69dc](https://github.com/joncodeofficial/vscode-console-warrior/commit/a5d69dc))
