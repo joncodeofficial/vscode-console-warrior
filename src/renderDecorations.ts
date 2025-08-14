@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { truncateString, formatString, isConsoleCorrect } from './utils';
-import { ConsoleDataMap, ConsoleMessagesType, ConsoleDataMapValue } from './types';
+import { ConsoleDataMap, ConsoleMessage, ConsoleDataMapValues } from './types';
 import { DECORATOR_COLORS } from './constants';
 
 // Create a decoration type for console log annotations
@@ -10,7 +10,7 @@ export const decorationType = vscode.window.createTextEditorDecorationType({
 });
 
 // Get the current theme color
-const getCurrentThemeColor = (type: ConsoleDataMapValue['type']) => {
+const getCurrentThemeColor = (type: ConsoleDataMapValues['type']) => {
   switch (vscode.window.activeColorTheme.kind) {
     case vscode.ColorThemeKind.Light:
       return DECORATOR_COLORS.light[type];
@@ -22,22 +22,35 @@ const getCurrentThemeColor = (type: ConsoleDataMapValue['type']) => {
 // Format the counter text
 const formatCounterText = (count: number) => (count > 1 ? ` ✕${count} ➜ ` : ' ');
 
+// Format the local timestamp
+const formatLocalTimestamp = (timestamp: string) => {
+  const date = new Date(timestamp);
+  if (isNaN(date.getTime())) return '00:00:00.000';
+  // Usa el locale del navegador/sistema automáticamente
+  return date.toLocaleTimeString(undefined, {
+    hour12: false,
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    fractionalSecondDigits: 3,
+  });
+};
+
 // Create a markdown string for the hover message
 const createHoverMessage = (
-  messages: ConsoleMessagesType[],
-  type: ConsoleDataMapValue['type']
+  messages: ConsoleMessage[],
+  type: ConsoleDataMapValues['type']
 ): vscode.MarkdownString => {
   const markdown = new vscode.MarkdownString();
-  const label = `**⚔️ Console Warrior ${type.toUpperCase()} • ${messages.length} ${messages.length === 1 ? 'Input' : 'Inputs'} UTC**
-`;
+  const label = `**⚔️ Console Warrior ${type.toUpperCase()} • ${messages.length} ${messages.length === 1 ? 'Input' : 'Inputs'}**${'&nbsp;'.repeat(44)}`;
 
   markdown.appendMarkdown(label);
   markdown.appendCodeblock(
     messages
-      .map(
-        ({ message, timestamp }, i) =>
-          `${messages.length - i} → [${timestamp.slice(11, 23)}] \n ${message}`
-      )
+      .map(({ message, timestamp }, i) => {
+        const localTime = formatLocalTimestamp(timestamp); // hora local de cada usuario
+        return `${messages.length - i} → [${localTime}] \n ${message}`;
+      })
       .join('\n\n'),
     'javascript'
   );
