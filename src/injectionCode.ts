@@ -82,10 +82,6 @@ export const injectionCode = `
     }
   }
 
-  /**
-   * Sends all queued messages once WebSocket connection is ready
-   * Processes messages in FIFO order
-   */
   function flushQueue() {
     if (ws && ws.readyState === WebSocket.OPEN) {
       while (messageQueue.length > 0) {
@@ -94,41 +90,36 @@ export const injectionCode = `
     }
   }
 
-  /**
-   * Recursively formats objects and arrays for display
-   * Creates a pretty-printed representation with proper indentation
-   * @param {any} value - The value to format
-   * @param {number} indent - Current indentation level (default: 2)
-   */
-  function prettyPrint(value, indent = 2) {
-    const spacing = " ".repeat(indent);
+  function prettyPrint(value, indent = 0) {
+  const spacing = " ".repeat(indent);
+  const nextSpacing = " ".repeat(indent + 2);
+  
+  if (Array.isArray(value)) {
+    if (value.length === 0) return "[]";
     
-    // Handle arrays
-    if (Array.isArray(value)) {
-      if (value.length === 0) return "[]";
-      
-      const items = value.map(item => spacing + prettyPrint(item, indent + 2));
-      return "[\\n" + items.join(",\\n") + " ]";
-    } 
-    // Handle functions
-    else if (typeof value === "function") {
-      return "function";
-    } 
-    // Handle objects
-    else if (typeof value === "object" && value !== null) {
-      const entries = Object.entries(value).map(([key, val]) => {
-        // Format key: use quotes only if key contains special characters
-        const formattedKey = /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(key) ? key : \`"\${key}"\`;
-        const formattedValue = prettyPrint(val, indent + 2);
-        return \`\${spacing}\${formattedKey}: \${formattedValue}\`;
-      });
-      return "{\\n" + entries.join(",\\n") + " }";
-    } 
-    // Handle primitives (string, number, boolean, null, undefined)
-    else {
-      return JSON.stringify(value);
-    }
+    const items = value.map(item => nextSpacing + prettyPrint(item, indent + 2));
+    return "[\\n" + items.join(",\\n") + "\\n" + spacing + "]";
+  } 
+  else if (typeof value === "function") {
+    return "function";
+  } 
+  else if (typeof value === "object" && value !== null) {
+    const entries = Object.entries(value);
+    if (entries.length === 0) return "{}";
+    
+    const formattedEntries = entries.map(([key, val]) => {
+      // Format key: use quotes only if key contains special characters
+      const formattedKey = /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(key) ? key : \`"\${key}"\`;
+      const formattedValue = prettyPrint(val, indent + 2);
+      return \`\${nextSpacing}\${formattedKey}: \${formattedValue}\`;
+    });
+    return "{\\n" + formattedEntries.join(",\\n") + "\\n" + spacing + "}";
+  } 
+  // (string, number, boolean, null, undefined)
+  else {
+    return JSON.stringify(value);
   }
+}
 
   /**
    * Handles serialization of console arguments with error handling
@@ -152,13 +143,6 @@ export const injectionCode = `
     };
   }
 
-  // Store original console methods
-
-  /**
-   * Creates a console method interceptor for a specific log type
-   * @param {Function} originalMethod - The original console method
-   * @returns {Function} The intercepted method
-   */
   function createConsoleInterceptor(originalMethod, type) {
     return function() {
       originalMethod.apply(console, arguments);
