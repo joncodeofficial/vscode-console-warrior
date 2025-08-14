@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.3.16 (2025-08-14)</small>
+
+- fix: delete comments and improving code format in prettyPrint function ([702f67c](https://github.com/joncodeofficial/vscode-console-warrior/commit/702f67c))
+- fix: hoverMessage width is now larger and local time format is added ([87b02f1](https://github.com/joncodeofficial/vscode-console-warrior/commit/87b02f1))
+- refactor: structure code types ([2c35a23](https://github.com/joncodeofficial/vscode-console-warrior/commit/2c35a23))
+
 ## <small>1.3.15 (2025-08-13)</small>
 
 - fix: improve Vite compatibility with older versions ([fbfa9e0](https://github.com/joncodeofficial/vscode-console-warrior/commit/fbfa9e0))
