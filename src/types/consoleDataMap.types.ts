@@ -1,13 +1,12 @@
 import Denque from 'denque';
 import { ConsoleData } from './consoleData.types';
 
-export type ConsoleDataMapValue = {
+export type ConsoleMessage = Pick<ConsoleData, 'message' | 'timestamp'>;
+
+export type ConsoleDataMapValues = {
   type: ConsoleData['type'];
   counter: number;
-  consoleMessages: Denque<Pick<ConsoleData, 'message' | 'timestamp'>>;
+  consoleMessages: Denque<ConsoleMessage>;
 };
 
-export type ConsoleMessagesType =
-  ConsoleDataMapValue['consoleMessages'] extends Denque<infer T> ? T : never;
-
-export type ConsoleDataMap = Map<string, Map<string, ConsoleDataMapValue>>;
+export type ConsoleDataMap = Map<string, Map<string, ConsoleDataMapValues>>;

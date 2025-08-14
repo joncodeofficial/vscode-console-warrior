@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import Denque from 'denque';
-import { ConsoleData, ConsoleDataMap, ConsoleDataMapValue } from './types';
+import { ConsoleData, ConsoleDataMap, ConsoleDataMapValues } from './types';
 import { MAX_DECORATIONS } from './constants';
 
 export const updateConsoleDataMap = (
@@ -25,7 +25,7 @@ export const updateConsoleDataMap = (
         type,
         counter: 1,
         consoleMessages: new Denque([{ message, timestamp }]),
-      } satisfies ConsoleDataMapValue);
+      } satisfies ConsoleDataMapValues);
       continue;
     }
 
