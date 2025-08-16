@@ -5,8 +5,7 @@ import { updateConsoleDataMap } from './updateConsoleDataMap';
 import { watcherNodeModules } from './watcherNodeModules';
 import { decorationType, renderDecorations } from './renderDecorations';
 import { removeDecorations } from './removeDecorations';
-import { connectToMainWS } from './connectToMainWS';
-import { startMainSW } from './startMainSW';
+import { startWebSocketServer, connectWebSocketServer } from './webSocketServer';
 import { ServerConnections, ConsoleData, ConsoleDataMap, SourceMapCache } from './types';
 import { commandConnectPort } from './commands/commandConnectPort';
 import { DEFAULT_PORT } from './constants';
@@ -21,9 +20,9 @@ export function activate(context: vscode.ExtensionContext) {
   let connectPort: number = context.workspaceState.get('warrior-port') ?? DEFAULT_PORT;
 
   // Start Main Server
-  startMainSW(consoleData, sourceMapCache, consoleDataMap, serverConnections);
+  startWebSocketServer(consoleData, sourceMapCache, consoleDataMap, serverConnections);
   // Connect to Main Server like a client
-  const socket = connectToMainWS(connectPort, consoleData);
+  const socket = connectWebSocketServer(connectPort, consoleData);
 
   const stopMonitoring = monitoringChanges(consoleData, async () => {
     const newConsoleData = await sourceMapping(consoleData, sourceMapCache);
