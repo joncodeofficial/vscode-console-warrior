@@ -24,14 +24,14 @@ const formatCounterText = (count: number) => (count > 1 ? ` ✕${count} ➜ ` : 
 
 // Format the local timestamp
 const formatLocalTimestamp = (timestamp: string) => {
+  const digits = '2-digit';
   const date = new Date(timestamp);
   if (isNaN(date.getTime())) return '00:00:00.000';
-  // Usa el locale del navegador/sistema automáticamente
   return date.toLocaleTimeString(undefined, {
     hour12: false,
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
+    hour: digits,
+    minute: digits,
+    second: digits,
     fractionalSecondDigits: 3,
   });
 };
