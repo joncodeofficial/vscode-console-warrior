@@ -1,6 +1,6 @@
-# Console Warrior
+# ⚔️ Console Warrior
 
-## 🚀 Visualize `console.log` messages directly inside your VSCode editor.
+Visualize your `console` messages **directly inside VSCode** — logs, warnings, errors, info, and tables, all in real-time! 🚀
 
 ![Presentation](https://raw.githubusercontent.com/joncodeofficial/vscode-console-warrior/main/images/presentation.gif)
 
@@ -8,66 +8,52 @@
 
 ## ✨ Features
 
-- 🚀 Inline display of `console.log` output from the browser.
-- 🌐 Real-time WebSocket-based communication.
-- ⚡ One-click command to connect to your log stream.
-- 🧩 Currently supports **Vite-based** projects.
-- 💡 Open source & built for the community.
+- 📝 Inline display of `log`, `warn`, `error`, `info`, and `table`
+- 🌐 Real-time WebSocket communication
+- 💻 Supports **Vite-based** projects
+- 🖱 Hover over messages to see detailed info (`hoverMessage`)
+- 🔧 Open source & community-driven
 
-## ⚙️ How to Use
+---
 
-1. Start your Vite dev server (only Vite is supported for now, with some limitations).
-2. By default, the extension connects to port `5173`.
-3. To use a different port (e.g. if you have multiple Vite apps), open the command palette and run:
-   Then enter the new port your app is using.
-4. Open any file with `console.log` statements.
-5. 🎉 Logs will appear directly under the lines where they’re called.
+## ⚙️ Quick Start
 
-> [!IMPORTANT]
-> Currently supports **only Vite** apps running in the browser, and support is limited. Compatibility with other tools and environments is planned for future versions.
+1. Start your **Vite dev server** (only Vite supported for now)
+2. Default port: `5173` (change via command palette if needed)
+3. Open a file with `console` statements
+4. 🎉 Messages appear **right under your code**, with hover support for details
+
+> ⚠️ Currently **Vite-only**, browser-based. Other frameworks coming soon!
 
 ---
 
 ## 🧠 Why Console Warrior?
 
-Modern debugging deserves modern tools — but until now, there wasn’t a truly **open source**, **community-driven**, and **non-profit** extension that brings real-time `console.log` output directly into VSCode.
+Modern debugging deserves **modern tools**:
 
-**Console Warrior** was created to change that.
-
-Built from the ground up and released under the **Apache 2.0 license**, this project is designed to help developers:
-
-- ⚡ Improve feedback loops during development
-- 🧼 Keep their workflow clean and efficient
-- 🤝 Collaborate on a tool made by and for the dev community
-
-Whether you're contributing code or simply using it day-to-day, you're part of the mission to make debugging in VSCode a smoother experience — without relying on closed or commercial solutions.
-
-## 🤝 Contributing
-
-We **welcome contributions** of all kinds! Whether you're improving documentation, optimizing performance, adding support for new environments or frameworks, or working on testing — you're invited to collaborate.
-
-Please make sure to follow the contribution guidelines outlined in [`CONTRIBUTING.md`](./CONTRIBUTING.md).
-
-We're especially looking forward to contributions in:
-
-- 🔧 Framework support (e.g., Next.js, Astro, etc.)
-- 📚 Plugin system for extensibility
-- ⚙️ Configuration options (log filtering, formatting, etc.)
-- 🧪 Tests and developer experience improvements
-
-If you're ready to help, check out the [Issues](https://github.com/joncodeofficial/vscode-console-warrior/issues) to get started.
+- ⚡ Instant feedback while coding
+- 🧼 Cleaner, more efficient workflow
+- 🤝 Built for **and by the developer community**
+- 🆓 100% open source, Apache 2.0 licensed
 
 ---
 
-## ⚖️ Legal Notice
+## 🤝 Contribute
 
-This project was **developed entirely from scratch**, without access to or use of any proprietary source code.  
-While it may be **inspired by the publicly observable behavior** of similar tools, all code, logic, architecture, and design decisions are **100% original** and implemented independently by the author.
+We welcome contributions:
 
-Console Warrior is a **non-profit, open source** initiative created to serve the web development community.  
-All usage and contributions are governed by the project's open source license.
+- 🔧 Add framework support (Next.js, Astro…)
+- 📚 Extend the plugin system
+- ⚙️ Improve log formatting & filtering
+- 🧪 Enhance testing & dev experience
 
-> [!WARNING]
-> This extension is not affiliated with, endorsed by, or related to **Console Ninja** or any similar **Commercial Tool**.
+Check [Issues](https://github.com/joncodeofficial/vscode-console-warrior/issues) to get started!
 
-If you're a rights holder and have questions or concerns, please open an issue or contact the project maintainer directly.
+---
+
+## ⚖️ Legal
+
+- Developed **from scratch**, fully original
+- Inspired by behavior of other tools, but **100% independent**
+- Not affiliated with **Console Ninja** or any commercial tool
+- Non-profit, open source, for the community ❤️
