@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { connectToMainWS } from '../connectToMainWS';
+import { connectWebSocketServer } from '../webSocketServer';
 import { WebSocket } from 'ws';
 import { ConsoleData } from '../types';
 
@@ -23,7 +23,7 @@ export const commandConnectPort = (
     if (input) {
       if (socket) socket.close();
       const port = Number(input);
-      socket = connectToMainWS(port, consoleData);
+      socket = connectWebSocketServer(port, consoleData);
       context.workspaceState.update('warrior-port', port);
       vscode.window.showInformationMessage(`Console Warrior listening on port ${port}`);
     }
