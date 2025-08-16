@@ -5,8 +5,8 @@ import { DECORATOR_COLORS } from './constants';
 
 // Create a decoration type for console log annotations
 export const decorationType = vscode.window.createTextEditorDecorationType({
-  textDecoration: 'pointer-events: none;', // Prevent interaction with decoration
-  rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed, // Decoration stays with text range
+  textDecoration: 'pointer-events: none;',
+  rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
 });
 
 // Get the current theme color
