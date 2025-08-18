@@ -42,14 +42,14 @@ const createHoverMessage = (
   type: ConsoleDataMapValues['type']
 ): vscode.MarkdownString => {
   const markdown = new vscode.MarkdownString();
-  const label = `**⚔️ Console Warrior ${type.toUpperCase()} • ${messages.length} ${messages.length === 1 ? 'Input' : 'Inputs'}**${'&nbsp;'.repeat(44)}`;
+  const label = `**⚔️ Console Warrior ${type.toUpperCase()} • ${messages.length} ${messages.length === 1 ? 'Input' : 'Inputs'}**${'&nbsp;'.repeat(50)}`;
 
   markdown.appendMarkdown(label);
   markdown.appendCodeblock(
     messages
       .map(({ message, timestamp }, i) => {
-        const localTime = formatLocalTimestamp(timestamp); // hora local de cada usuario
-        return `${messages.length - i} → [${localTime}] \n ${message}`;
+        const localTime = formatLocalTimestamp(timestamp);
+        return `${messages.length - i} → [${localTime}] \n${message}`;
       })
       .join('\n\n'),
     'javascript'
