@@ -3,7 +3,7 @@ import { formatString } from '../../utils';
 
 suite('formatString Tests', () => {
   test('should remove literal newlines', () => {
-    assert.equal(formatString('Hello\nWorld'), 'Hello\nWorld');
+    assert.equal(formatString('Hello\nWorld'), 'Hello World');
   });
 
   test('should trim spaces at start and end', () => {
