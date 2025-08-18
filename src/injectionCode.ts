@@ -96,12 +96,11 @@ export const injectionCode = `
   
   if (Array.isArray(value)) {
     if (value.length === 0) return "[]";
-    
-    const items = value.map(item => nextSpacing + prettyPrint(item, indent + 2));
-    return "[\\n" + items.join(",\\n") + "\\n" + spacing + "]";
+    const items = value.map((item, i) => (i === 0 ? nextSpacing : '') + prettyPrint(item, indent + 2));
+    return "[\\n" + items.join(", ") + "\\n" + spacing + "]";
   } 
   else if (typeof value === "function") {
-    return "function";
+    return "function()";
   } 
   else if (typeof value === "object" && value !== null) {
     const entries = Object.entries(value);
@@ -121,16 +120,11 @@ export const injectionCode = `
   }
 }
 
-  /**
-   * Handles serialization of console arguments with error handling
-   * @param {any} arg - Argument to serialize
-   * @returns {string} Serialized representation of the argument
-   */
   function serializeArg(arg) {
     try {
       return prettyPrint(arg);
     } catch (e) {
-      return "[Unserializable]";
+      return [unserializable];
     }
   }
 
