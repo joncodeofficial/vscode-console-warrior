@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.3.17 (2025-08-18)</small>
+
+- test: update test ([490e68b](https://github.com/joncodeofficial/vscode-console-warrior/commit/490e68b))
+- fix: format arrays is horizontal in hoverMessage ([84b2da9](https://github.com/joncodeofficial/vscode-console-warrior/commit/84b2da9))
+- fix: remove all line breaks in string ([64703a1](https://github.com/joncodeofficial/vscode-console-warrior/commit/64703a1))
+- refactor: code structure ([2802a32](https://github.com/joncodeofficial/vscode-console-warrior/commit/2802a32))
+- refactor: code structure only ([6bf5eba](https://github.com/joncodeofficial/vscode-console-warrior/commit/6bf5eba))
+- refactor: delete file connectToMainWS ([e4ec350](https://github.com/joncodeofficial/vscode-console-warrior/commit/e4ec350))
+- refactor: fix import function ([bd6b55a](https://github.com/joncodeofficial/vscode-console-warrior/commit/bd6b55a))
+- refactor: hoverMesage width is 50 now ([4817d46](https://github.com/joncodeofficial/vscode-console-warrior/commit/4817d46))
+- refactor: rename file and functions ([dbdf217](https://github.com/joncodeofficial/vscode-console-warrior/commit/dbdf217))
+- chore: remove comments ([b25f5a1](https://github.com/joncodeofficial/vscode-console-warrior/commit/b25f5a1))
+- chore: update README ([dfe63fa](https://github.com/joncodeofficial/vscode-console-warrior/commit/dfe63fa))
+
 ## <small>1.3.16 (2025-08-14)</small>
 
 - fix: delete comments and improving code format in prettyPrint function ([702f67c](https://github.com/joncodeofficial/vscode-console-warrior/commit/702f67c))
