@@ -1,20 +1,21 @@
+import { CONSOLE_AND_COMMENTS_REGEX } from '../constants';
+
+// Checks if the line contains a console method call
 export const hasValidConsoleUsage = (line: string): boolean => {
-  const consoleMethods = '(log|warn|error|table|info|trace|timeEnd)';
-  const consoleRegex = new RegExp(`console\\.${consoleMethods}\\(`);
+  const match = CONSOLE_AND_COMMENTS_REGEX.exec(line);
+  if (!match) return false;
 
-  // If it doesn't contain console.<method>(, it's invalid
-  if (!consoleRegex.test(line)) {
-    return false;
+  const matchedText = match[0];
+
+  // if it contains console.<method>( and is not commented out
+  if (matchedText.includes('console.') && matchedText.includes('(')) {
+    // Verify that the console method is not commented out
+    return !(
+      matchedText.startsWith('//') ||
+      matchedText.startsWith('/*') ||
+      matchedText.startsWith('*') ||
+      matchedText.includes('*/')
+    );
   }
-
-  // If it's inside any type of comment, it's invalid
-  const commentPatterns = [
-    /^\s*\/\/.*console\./, // Line comment: // ... console.
-    /^\s*\/\*.*console\..*\*\//, // Single-line block comment: /* ... console. ... */
-    /^\s*\/\*.*console\./, // Multi-line comment start: /* ... console.
-    /^\s*\*.*console\./, // Inside multi-line comment: * ... console.
-    /.*console\..*\*\//, // Multi-line comment end: ... console. ... */
-  ];
-
-  return !commentPatterns.some((pattern) => pattern.test(line));
+  return false;
 };
