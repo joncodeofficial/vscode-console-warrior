@@ -6,6 +6,7 @@ export const injectionCode = `
   var originalConsoleInfo = console.info;
   var originalConsoleError = console.error;
   var originalConsoleTable = console.table;
+  var originalConsoleDebug = console.debug;
   // var originalConsoleTimeEnd = console.timeEnd;
   
   var messageQueue = [];
@@ -147,8 +148,10 @@ export const injectionCode = `
       // Extract source location from stack trace
       const location = getStackInfo();
 
+      if (!location) return;
+
       // Create log data object with type field
-      const logData = {
+      const consoleData = {
         where: "client-message",
         type: type,
         message: args.map(serializeArg).join(" "),
@@ -158,9 +161,9 @@ export const injectionCode = `
 
       // Send immediately if WebSocket is connected, otherwise queue for later
       if (ws && ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify(logData));
+        ws.send(JSON.stringify(consoleData));
       } else {
-        messageQueue.push(logData);
+        messageQueue.push(consoleData);
       }
     };
   }
@@ -170,6 +173,7 @@ export const injectionCode = `
   console.error = createConsoleInterceptor(originalConsoleError, 'error');
   console.info = createConsoleInterceptor(originalConsoleInfo, 'info');
   console.table = createConsoleInterceptor(originalConsoleTable, 'table');
+  console.debug = createConsoleInterceptor(originalConsoleDebug, 'debug'); 
   // console.timeEnd = createConsoleInterceptor(originalConsoleTimeEnd, 'timeEnd');
 
   // Start WebSocket connection
