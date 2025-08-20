@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.3.18 (2025-08-20)</small>
+
+- refactor: add debug color console ([9322660](https://github.com/joncodeofficial/vscode-console-warrior/commit/9322660))
+- refactor: add new name function hasValidConsoleUsage ([3a91d75](https://github.com/joncodeofficial/vscode-console-warrior/commit/3a91d75))
+- refactor: optimize performance function ([392cc68](https://github.com/joncodeofficial/vscode-console-warrior/commit/392cc68))
+- refactor: rename file and restructure code ([765b994](https://github.com/joncodeofficial/vscode-console-warrior/commit/765b994))
+- refactor: update barrel file ([31f0eec](https://github.com/joncodeofficial/vscode-console-warrior/commit/31f0eec))
+- fix: add support to console.debug ([7958479](https://github.com/joncodeofficial/vscode-console-warrior/commit/7958479))
+- test: rename test file ([582a4ea](https://github.com/joncodeofficial/vscode-console-warrior/commit/582a4ea))
+
 ## <small>1.3.17 (2025-08-18)</small>
 
 - test: update test ([490e68b](https://github.com/joncodeofficial/vscode-console-warrior/commit/490e68b))
