@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.3.19 (2025-08-25)</small>
+
+- chore: code structure ([7718b58](https://github.com/joncodeofficial/vscode-console-warrior/commit/7718b58))
+- fix: handle case undefined ([361db0a](https://github.com/joncodeofficial/vscode-console-warrior/commit/361db0a))
+
 ## <small>1.3.18 (2025-08-20)</small>
 
 - refactor: add debug color console ([9322660](https://github.com/joncodeofficial/vscode-console-warrior/commit/9322660))
