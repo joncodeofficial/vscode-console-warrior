@@ -8,6 +8,7 @@ export const updateConsoleDataMap = (
   consoleData: ConsoleData[],
   consoleDataMap: ConsoleDataMap
 ) => {
+  // If no editor is active, do nothing
   if (!editor) return;
 
   for (const { message, location, timestamp, type } of consoleData) {
