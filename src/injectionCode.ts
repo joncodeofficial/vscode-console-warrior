@@ -94,7 +94,9 @@ export const injectionCode = `
   function prettyPrint(value, indent = 0) {
   const spacing = " ".repeat(indent);
   const nextSpacing = " ".repeat(indent + 2);
-  
+ 
+  if(value === undefined) return "undefined";
+
   if (Array.isArray(value)) {
     if (value.length === 0) return "[]";
     const items = value.map((item, i) => (i === 0 ? nextSpacing : '') + prettyPrint(item, indent + 2));
