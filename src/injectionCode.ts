@@ -1,187 +1,223 @@
 export const injectionCode = `
-<script>
-(function() {
-  var originalConsoleLog = console.log;
-  var originalConsoleWarn = console.warn;
-  var originalConsoleInfo = console.info;
-  var originalConsoleError = console.error;
-  var originalConsoleTable = console.table;
-  var originalConsoleDebug = console.debug;
-  // var originalConsoleTimeEnd = console.timeEnd;
-  
-  var messageQueue = [];
-  var ws = null;
-  const extensions = ['.js', '.ts', '.jsx', '.tsx', '.vue', '.svelte'];
-
-  /**
-   * Parses the stack trace to extract file, line, and column information
-   * Supports both Firefox and Chrome/Safari stack trace formats
-   */
-  function getStackInfo() {
-    try {
-      const stack = Error().stack;
-      const stackLines = stack.split("\\n");
-
-      // Detect Firefox stack trace format vs Chrome/Safari
-      // Firefox format: "function@file:line:column" or "@file:line:column"
-      // Chrome/Safari format: "at function (file:line:column)"
-      const isFirefox = stackLines.some(line => line.includes('@') && !line.includes('at '));
-
-      if (isFirefox) {
-        // Process Firefox stack trace format
-        for (let i = 1; i < stackLines.length; i++) {
-          const line = stackLines[i].trim();
-
-          // Skip lines that don't contain our target file extensions
-          if (!extensions.some(ext => line.includes(ext))) continue;
-
-          // Match pattern: anything@file.extension:line:column
-          const match = line.match(/^.*@(.*\\.(js|ts|jsx|tsx|vue|svelte)(?:\\?[^:]*)??):(\\d+):(\\d+)$/);
-          if (match) {
-            return {
-              url: match[1],
-              line: parseInt(match[3]),
-              column: parseInt(match[4])
-            };
-          }
-        }
-      } else {
-        // Process Chrome/Safari stack trace format
-        for (let i = 1; i < stackLines.length; i++) {
-          const line = stackLines[i];
-
-          // Skip lines that don't contain our target file extensions
-          if (!extensions.some(ext => line.includes(ext))) continue;
-
-          // Try pattern with parentheses: "at function (file:line:column)"
-          let match = line.match(/\\s+at\\s+[^(]*\\(([^)]+\\.(js|ts|jsx|tsx|vue|svelte)(?:\\?[^:)]+)?):(\\d+):(\\d+)\\)/);
-          if (match) {
-            return {
-              url: match[1],
-              line: parseInt(match[3]),
-              column: parseInt(match[4])
-            };
-          }
-
-          // Try pattern without parentheses: "at file:line:column"
-          match = line.match(/\\s+at\\s+([^\\s]+\\.(js|ts|jsx|tsx|vue|svelte)(?:\\?[^:]+)?):(\\d+):(\\d+)/);
-          if (match) {
-            return {
-              url: match[1],
-              line: parseInt(match[3]),
-              column: parseInt(match[4])
-            };
-          }
-        }
-      }
-
-      // Return null if no matching stack frame found
-      return null;
-    } catch (e) {
-      originalConsoleLog('Error parsing stack:', e);
-      return null;
-    }
-  }
-
-  function flushQueue() {
-    if (ws && ws.readyState === WebSocket.OPEN) {
-      while (messageQueue.length > 0) {
-        ws.send(JSON.stringify(messageQueue.shift()));
-      }
-    }
-  }
-
-  function prettyPrint(value, indent = 0) {
-  const spacing = " ".repeat(indent);
-  const nextSpacing = " ".repeat(indent + 2);
- 
-  if(value === undefined) return "undefined";
-
-  if (Array.isArray(value)) {
-    if (value.length === 0) return "[]";
-    const items = value.map((item, i) => (i === 0 ? nextSpacing : '') + prettyPrint(item, indent + 2));
-    return "[\\n" + items.join(", ") + "\\n" + spacing + "]";
-  } 
-  else if (typeof value === "function") {
-    return "function()";
-  } 
-  else if (typeof value === "object" && value !== null) {
-    const entries = Object.entries(value);
-    if (entries.length === 0) return "{}";
+if (typeof window !== "undefined" && !window.__consoleWsPatched) {
+  (function() {
+    var originalConsoleLog = console.log;
+    var originalConsoleWarn = console.warn;
+    var originalConsoleInfo = console.info;
+    var originalConsoleError = console.error;
+    var originalConsoleTable = console.table;
+    var originalConsoleDebug = console.debug;
     
-    const formattedEntries = entries.map(([key, val]) => {
-      // Format key: use quotes only if key contains special characters
-      const formattedKey = /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(key) ? key : \`"\${key}"\`;
-      const formattedValue = prettyPrint(val, indent + 2);
-      return \`\${nextSpacing}\${formattedKey}: \${formattedValue}\`;
-    });
-    return "{\\n" + formattedEntries.join(",\\n") + "\\n" + spacing + "}";
-  } 
-  // (string, number, boolean, null, undefined)
-  else {
-    return JSON.stringify(value);
-  }
-}
+    var messageQueue = [];
+    var ws = null;
+    var extensions = [".js", ".ts", ".jsx", ".tsx", ".vue", ".svelte"];
 
-  function serializeArg(arg) {
-    try {
-      return prettyPrint(arg);
-    } catch (e) {
-      return [unserializable];
-    }
-  }
+    function getStackInfo() {
+      try {
+        var stack = Error().stack;
+        var stackLines = stack.split("\\n");
 
-  function connectWebSocket() {
-    ws = new WebSocket("ws://localhost:27020");
+        // Detect Firefox stack trace format vs Chrome/Safari
+        // Firefox format: "function@file:line:column" or "@file:line:column"
+        // Chrome/Safari format: "at function (file:line:column)"
+        var isFirefox = false;
+        for (var k = 0; k < stackLines.length; k++) {
+          if (stackLines[k].includes('@') && !stackLines[k].includes('at ')) {
+            isFirefox = true;
+            break;
+          }
+        }
 
-    ws.onopen = function() {
-      // Connection established, send any queued messages
-      flushQueue();
-    };
-  }
+        if (isFirefox) {
+          // Process Firefox stack trace format
+          for (var i = 1; i < stackLines.length; i++) {
+            var line = stackLines[i].trim();
+            
+            if (line.includes("createConsoleInterceptor") || 
+                line.includes("getStackInfo") ||
+                line.includes("console.")) continue;
 
-  function createConsoleInterceptor(originalMethod, type) {
-    return function() {
-      originalMethod.apply(console, arguments);
+            // Skip lines that don't contain our target file extensions
+            var hasExtension = false;
+            for (var j = 0; j < extensions.length; j++) {
+              if (line.includes(extensions[j])) {
+                hasExtension = true;
+                break;
+              }
+            }
+            if (!hasExtension) continue;
 
-      // Convert arguments to array for processing
-      const args = Array.prototype.slice.call(arguments);
-      
-      // Extract source location from stack trace
-      const location = getStackInfo();
+            // Match pattern: anything@file.extension:line:column
+            var match = line.match(/^.*@(.*\\.(js|ts|jsx|tsx|vue|svelte)(?:\\?[^:]*)??):(\\d+):(\\d+)$/);
+            if (match) {
+              var url = match[1];
+              var filename = url.split("/").pop() || url;
+              return {
+                url,
+                line: parseInt(match[3]),
+                column: parseInt(match[4])
+              };
+            }
+          }
+        } else {
+          // Process Chrome/Safari stack trace format
+          for (var i = 1; i < stackLines.length; i++) {
+            var line = stackLines[i];
+            
+            if (line.includes("createConsoleInterceptor") || 
+                line.includes("getStackInfo") ||
+                line.includes("console.") ||
+                line.includes("Object.") ||
+                line.includes("Function.")) continue;
 
-      if (!location) return;
+            // Skip lines that don't contain our target file extensions
+            var hasExtension = false;
+            for (var j = 0; j < extensions.length; j++) {
+              if (line.includes(extensions[j])) {
+                hasExtension = true;
+                break;
+              }
+            }
+            if (!hasExtension) continue;
 
-      // Create log data object with type field
-      const consoleData = {
-        where: "client-message",
-        type: type,
-        message: args.map(serializeArg).join(" "),
-        location: location,
-        timestamp: new Date().toISOString()
-      };
+            // Try pattern with parentheses: "at function (file:line:column)"
+            var match = line.match(/\\s+at\\s+[^(]*\\(([^)]+\\.(js|ts|jsx|tsx|vue|svelte)(?:\\?[^:)]+)?):(\\d+):(\\d+)\\)/);
+            if (match) {
+              var url = match[1];
+              var filename = url.split("/").pop() || url;
+              return {
+                url,
+                line: parseInt(match[3]),
+                column: parseInt(match[4])
+              };
+            }
+            // Try pattern without parentheses: "at file:line:column"
+            match = line.match(/\\s+at\\s+([^\\s]+\\.(js|ts|jsx|tsx|vue|svelte)(?:\\?[^:]+)?):(\\d+):(\\d+)/);
+            if (match) {
+              var url = match[1];
+              var filename = url.split("/").pop() || url;
+              return {
+                url,
+                line: parseInt(match[3]),
+                column: parseInt(match[4])
+              };
+            }
+          }
+        }
 
-      // Send immediately if WebSocket is connected, otherwise queue for later
-      if (ws && ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify(consoleData));
-      } else {
-        messageQueue.push(consoleData);
+        return null;
+      } catch (e) {
+        return null;
       }
-    };
-  }
+    }
 
-  console.log = createConsoleInterceptor(originalConsoleLog, 'log');
-  console.warn = createConsoleInterceptor(originalConsoleWarn, 'warn');
-  console.error = createConsoleInterceptor(originalConsoleError, 'error');
-  console.info = createConsoleInterceptor(originalConsoleInfo, 'info');
-  console.table = createConsoleInterceptor(originalConsoleTable, 'table');
-  console.debug = createConsoleInterceptor(originalConsoleDebug, 'debug'); 
-  // console.timeEnd = createConsoleInterceptor(originalConsoleTimeEnd, 'timeEnd');
+    function flushQueue() {
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        while (messageQueue.length > 0) {
+          ws.send(JSON.stringify(messageQueue.shift()));
+        }
+      }
+    }
 
-  // Start WebSocket connection
-  connectWebSocket();
+    function prettyPrint(value, indent = 0) {
+      const spacing = " ".repeat(indent);
+      const nextSpacing = " ".repeat(indent + 2);
+ 
+      if(value === undefined) return "undefined";
 
-  // Debug confirmation that injection was successful
-  originalConsoleLog("Console Warrior initialized");
-})();
-</script>`;
+      if (Array.isArray(value)) {
+        if (value.length === 0) return "[]";
+        const items = value.map((item, i) => (i === 0 ? nextSpacing : '') + prettyPrint(item, indent + 2));
+        return "[\\n" + items.join(", ") + "\\n" + spacing + "]";
+      } 
+      else if (typeof value === "function") {
+        return "function()";
+      } 
+      else if (typeof value === "object" && value !== null) {
+        const entries = Object.entries(value);
+        if (entries.length === 0) return "{}";
+    
+        const formattedEntries = entries.map(([key, val]) => {
+        // Format key: use quotes only if key contains special characters
+        const formattedKey = /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(key) ? key : \`"\${key}"\`;
+        const formattedValue = prettyPrint(val, indent + 2);
+        return \`\${nextSpacing}\${formattedKey}: \${formattedValue}\`;
+      });
+        return "{\\n" + formattedEntries.join(",\\n") + "\\n" + spacing + "}";
+      } 
+      else {
+        return JSON.stringify(value);
+      }
+    }
+
+    function serializeArg(arg) {
+      try {
+        return prettyPrint(arg);
+      } catch (e) {
+        return "[unserializable]";
+      }
+    }
+
+    function connectWebSocket() {
+      try {
+        ws = new WebSocket("ws://localhost:27020");
+
+        ws.onopen = function() {
+          flushQueue();
+        };
+        
+        ws.onclose = function() {
+          setTimeout(connectWebSocket, 3000);
+        };
+        
+        ws.onerror = function() {
+          // Silent
+        };
+      } catch (e) {
+        // Silent
+      }
+    }
+
+    function createConsoleInterceptor(originalMethod, type) {
+      return function() {
+        originalMethod.apply(console, arguments);
+
+        var args = Array.prototype.slice.call(arguments);
+        var location = getStackInfo();
+
+        if (!location) return;
+
+        var message = "";
+        for (var i = 0; i < args.length; i++) {
+          if (i > 0) message += " ";
+          message += serializeArg(args[i]);
+        }
+
+        var consoleData = {
+          where: "client-message",
+          type,
+          message,
+          location,
+          timestamp: new Date().toISOString(),
+        };
+
+        if (ws && ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify(consoleData));
+        } else {
+          messageQueue.push(consoleData);
+        }
+      };
+    }
+
+    console.log = createConsoleInterceptor(originalConsoleLog, "log");
+    console.warn = createConsoleInterceptor(originalConsoleWarn, "warn");
+    console.error = createConsoleInterceptor(originalConsoleError, "error");
+    console.info = createConsoleInterceptor(originalConsoleInfo, "info");
+    console.table = createConsoleInterceptor(originalConsoleTable, "table");
+    console.debug = createConsoleInterceptor(originalConsoleDebug, "debug");
+
+    connectWebSocket();
+    window.__consoleWsPatched = true;
+  })();
+}
+`;

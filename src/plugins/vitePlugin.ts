@@ -35,19 +35,25 @@ export const vitePlugin = (vscode: typeof import('vscode'), relativePath: string
       // if not found, Add plugin in the file in the correct position
       const insertionPoint = 'const server = await createServer({';
 
-      // Insert the plugin code
       const pluginCode = `const server = await createServer({
       /* guide start */
       plugins: [{
           name: "console-warrior-plugin",
-          transformIndexHtml(html) {
-              return new Promise((resolve) => {
-                  import("${formatPath}")
-                      .then(function (n) { return n.injectionCode; })
-                      .then(injection => resolve(html.replace("</head>", injection + "</head>")));
-              });
-          },
-      }], /* guide end */`;
+          async transform(code, id) {
+            if (id.includes('node_modules')) return null;
+            if (!/\.(js|ts|jsx|tsx|vue|svelte)$/.test(id)) return null;
+            try {
+              const module = await import("${formatPath}");
+                return {
+                  code: code + '\\n' + module.injectionCode,
+                  map: null
+                };
+            } catch (error) {
+              console.error('Failed to import vite plugin:', error);
+              return null;
+            }
+          }
+       }], /* guide end */`;
 
       // Update the plugin if it already exists
       if (isExtensionCreated && !isExtensionCurrentVersion) {
