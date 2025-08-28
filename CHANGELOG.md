@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.3.20 (2025-08-28)</small>
+
+- fix: add console support for Vite SSR ([e7325fe](https://github.com/joncodeofficial/vscode-console-warrior/commit/e7325fe))
+
 ## <small>1.3.19 (2025-08-25)</small>
 
 - chore: code structure ([7718b58](https://github.com/joncodeofficial/vscode-console-warrior/commit/7718b58))
