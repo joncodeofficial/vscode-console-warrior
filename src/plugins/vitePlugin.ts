@@ -57,23 +57,23 @@ export const vitePlugin = (vscode: typeof import('vscode'), relativePath: string
 
       // Update the plugin if it already exists
       if (isExtensionCreated && !isExtensionCurrentVersion) {
-        // Usamos una RegExp para encontrar y eliminar el contenido entre los delimitadores
+        // We use a regular expression to match the insertion point and  remove the plugin code
         fileContent = fileContent.replace(
           /\r?\n?\/\* guide start \*\/[\s\S]*?\/\* guide end \*\/\r?\n?/g,
           ''
         );
-        fs.writeFileSync(targetFile, fileContent, 'utf-8');
       }
 
-      if (isExtensionCreated) return;
-
-      // Replace the insertion point with our plugin code
-      if (fileContent.includes(insertionPoint)) {
-        fileContent = fileContent.replace(insertionPoint, pluginCode);
-        // Write the modified file content back to the file
-        fs.writeFileSync(targetFile, fileContent, 'utf8');
-      } else {
-        console.log('No find the insertion point.');
+      // Add the plugin code if it doesn't exist or if it's outdated
+      if (!isExtensionCreated || !isExtensionCurrentVersion) {
+        // Replace the insertion point with our plugin code
+        if (fileContent.includes(insertionPoint)) {
+          fileContent = fileContent.replace(insertionPoint, pluginCode);
+          // Write the modified file content back to the file
+          fs.writeFileSync(targetFile, fileContent, 'utf8');
+        } else {
+          console.log('No find the insertion point.');
+        }
       }
     } catch (error) {
       vscode.window.showErrorMessage(`Error to insert plugin: ${error}`);
