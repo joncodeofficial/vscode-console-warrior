@@ -58,7 +58,7 @@
     "package.json": "sort-package-json"
   },
   "dependencies": {
-    "@jridgewell/trace-mapping": "^0.3.25",
+    "@jridgewell/trace-mapping": "^0.3.30",
     "denque": "^2.1.0",
     "portscanner": "^2.2.0",
     "ws": "^8.18.3"
