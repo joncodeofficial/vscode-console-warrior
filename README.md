@@ -8,9 +8,9 @@ Visualize your `console` messages **directly inside VSCode** — logs, warnings,
 
 ## ✨ Features
 
-- 📝 Inline display of `log`, `warn`, `error`, `info`, and `table`
+- 📝 Inline display of `log`, `warn`, `error`, `info`, `debug`, and `table` messages
 - 🌐 Real-time WebSocket communication
-- 💻 Supports **Vite-based** projects
+- 💻 Supports **Vite-based** projects CSR and SSR
 - 🖱 Hover over messages to see detailed info (`hoverMessage`)
 - 🔧 Open source & community-driven
 
