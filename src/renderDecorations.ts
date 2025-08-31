@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { truncateString, formatString, hasValidConsoleUsage } from './utils';
+import { truncateString, formatString, hasValidConsole } from './utils';
 import { ConsoleDataMap, ConsoleMessage, ConsoleDataMapValues } from './types';
 import { DECORATOR_COLORS } from './constants';
 
@@ -79,7 +79,7 @@ export const renderDecorations = (editor: vscode.TextEditor, consoleDataMap: Con
 
       const lineText = document.lineAt(line).text;
 
-      if (!hasValidConsoleUsage(lineText)) continue;
+      if (!hasValidConsole(lineText)) continue;
       const closingIndex = lineText.length + 2;
 
       // Get the console messages array for the current line
