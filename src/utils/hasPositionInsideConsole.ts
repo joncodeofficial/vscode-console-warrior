@@ -1,5 +1,5 @@
 // Checks if the position is within the console functions
-export const isPositionInsideConsole = (code: string, position: number, type: string) => {
+export const hasPositionInsideConsole = (code: string, position: number, type: string) => {
   const logIndex = code.indexOf(`console.${type}(`);
   // If there is no console() function, then the position is not within the console() function
   if (logIndex === -1) return false;
