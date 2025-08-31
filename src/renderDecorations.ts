@@ -1,40 +1,18 @@
 import * as vscode from 'vscode';
-import { truncateString, formatString, hasValidConsole } from './utils';
+import {
+  truncateString,
+  formatString,
+  hasValidConsole,
+  formatLocalTimestamp,
+  getCurrentThemeColor,
+} from './utils';
 import { ConsoleDataMap, ConsoleMessage, ConsoleDataMapValues } from './types';
-import { DECORATOR_COLORS } from './constants';
 
 // Create a decoration type for console log annotations
 export const decorationType = vscode.window.createTextEditorDecorationType({
   textDecoration: 'pointer-events: none;',
   rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
 });
-
-// Get the current theme color
-const getCurrentThemeColor = (type: ConsoleDataMapValues['type']) => {
-  switch (vscode.window.activeColorTheme.kind) {
-    case vscode.ColorThemeKind.Light:
-      return DECORATOR_COLORS.light[type];
-    case vscode.ColorThemeKind.Dark:
-      return DECORATOR_COLORS.dark[type];
-  }
-};
-
-// Format the counter text
-const formatCounterText = (count: number) => (count > 1 ? ` ✕${count} ➜ ` : ' ');
-
-// Format the local timestamp
-const formatLocalTimestamp = (timestamp: string) => {
-  const digits = '2-digit';
-  const date = new Date(timestamp);
-  if (isNaN(date.getTime())) return '00:00:00.000';
-  return date.toLocaleTimeString(undefined, {
-    hour12: false,
-    hour: digits,
-    minute: digits,
-    second: digits,
-    fractionalSecondDigits: 3,
-  });
-};
 
 // Create a markdown string for the hover message
 const createHoverMessage = (
@@ -59,6 +37,9 @@ const createHoverMessage = (
 
   return markdown;
 };
+
+// Format the counter text
+const formatCounterText = (count: number) => (count > 1 ? ` ✕${count} ➜ ` : ' ');
 
 // Render decorations for the current file
 export const renderDecorations = (editor: vscode.TextEditor, consoleDataMap: ConsoleDataMap) => {

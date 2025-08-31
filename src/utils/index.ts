@@ -7,3 +7,5 @@ export { hasValidConsole } from './hasValidConsole';
 export { sleep } from './sleep';
 export { truncateString } from './truncateString';
 export { hasPositionInsideConsole } from './hasPositionInsideConsole';
+export { formatLocalTimestamp } from './formatLocalTimestamp';
+export { getCurrentThemeColor } from './getCurrentThemeColor';

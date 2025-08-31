@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import { hasPositionInsideConsole } from '../../utils';
 
-suite('isPositionInsideConsole Tests', () => {
+suite('hasPositionInsideConsole Tests', () => {
   test('should return false for a position outside of console.log', () => {
     assert.equal(hasPositionInsideConsole('console.log("hello");', 0, 'log'), false);
   });
