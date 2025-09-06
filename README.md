@@ -1,8 +1,29 @@
 # ⚔️ Console Warrior
 
+![License](https://img.shields.io/badge/license-Apache%202.0-blue)
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
+![Built with VSCode API](https://img.shields.io/badge/VSCode-Extension-007ACC)
+
 Visualize your `console` messages **directly inside VSCode** — logs, warnings, errors, info, and tables, all in real-time! 🚀
 
 ![Presentation](https://raw.githubusercontent.com/joncodeofficial/vscode-console-warrior/main/images/presentation.gif)
+
+---
+
+## 📑 Table of Contents
+
+- [Captures](#-captures)
+- [Features](#-features)
+- [Quick Start](#-quick-start)
+- [Why Console Warrior?](#-why-console-warrior)
+- [Contribute](#-contribute)
+- [Legal](#-legal)
+
+---
+
+## 📸 Captures
+
+![Capture](https://raw.githubusercontent.com/joncodeofficial/vscode-console-warrior/main/images/capture1.png)
 
 ---
 
@@ -19,11 +40,17 @@ Visualize your `console` messages **directly inside VSCode** — logs, warnings,
 ## ⚙️ Quick Start
 
 1. Start your **Vite dev server** (only Vite supported for now)
-2. Default port: `5173` (change via command palette if needed)
+2. Default port: `5173`
 3. Open a file with `console` statements
 4. 🎉 Messages appear **right under your code**, with hover support for details
 
-> ⚠️ Currently **Vite-only**, browser-based. Other frameworks coming soon!
+> 💡 Use the command palette:  
+> `Console Warrior: Connect to Console Warrior Port`  
+> By default it connects to **5173**, but you can use this command to set a custom port.
+
+> ⚠️ **Currently Vite-only**  
+> Console Warrior works **exclusively with Vite projects** (CSR and SSR).  
+> Support for other frameworks (Next.js, Astro, etc.) is planned for the future.
 
 ---
 
@@ -51,9 +78,10 @@ Check [Issues](https://github.com/joncodeofficial/vscode-console-warrior/issues)
 
 ---
 
-## ⚖️ Legal
+## ⚠️ Legal
 
-- Developed **from scratch**, fully original
-- Inspired by behavior of other tools, but **100% independent**
-- Not affiliated with **Console Ninja** or any commercial tool
-- Non-profit, open source, for the community ❤️
+> 🛠️ Developed **from scratch**, fully original  
+> ✨ Inspired by behavior of other tools, but **100% independent**  
+> 🚫 Not affiliated with **Console Ninja** or any other commercial product  
+> ❤️ Non-profit, open source, for the community  
+> 📜 Licensed under **Apache 2.0**
