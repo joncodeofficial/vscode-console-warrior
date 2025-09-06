@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.3.21 (2025-09-06)</small>
+
+- fix: improve README.md ([b830cc0](https://github.com/joncodeofficial/vscode-console-warrior/commit/b830cc0))
+- chore: add image ([357f22b](https://github.com/joncodeofficial/vscode-console-warrior/commit/357f22b))
+- chore: update dependencies ([de1b519](https://github.com/joncodeofficial/vscode-console-warrior/commit/de1b519))
+- chore: update README.md ([b84ac24](https://github.com/joncodeofficial/vscode-console-warrior/commit/b84ac24))
+- refactor: code structure ([86dc05a](https://github.com/joncodeofficial/vscode-console-warrior/commit/86dc05a))
+- refactor: code structure ([b7d716e](https://github.com/joncodeofficial/vscode-console-warrior/commit/b7d716e))
+- refactor: create util function called formatLocallTimestamp ([c0b6f7e](https://github.com/joncodeofficial/vscode-console-warrior/commit/c0b6f7e))
+- refactor: create util function getCurrentThemeColor ([747a9f5](https://github.com/joncodeofficial/vscode-console-warrior/commit/747a9f5))
+- refactor: no update when install new version fixed ([07548df](https://github.com/joncodeofficial/vscode-console-warrior/commit/07548df))
+- refactor: rename file and test ([efc0b3c](https://github.com/joncodeofficial/vscode-console-warrior/commit/efc0b3c))
+- refactor: rename file and test ([59e29d0](https://github.com/joncodeofficial/vscode-console-warrior/commit/59e29d0))
+
 ## <small>1.3.20 (2025-08-28)</small>
 
 - fix: add console support for Vite SSR ([e7325fe](https://github.com/joncodeofficial/vscode-console-warrior/commit/e7325fe))
