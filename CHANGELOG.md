@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.3.23 (2025-09-17)</small>
+
+- fix: update README and deploy new version ([b665841](https://github.com/joncodeofficial/vscode-console-warrior/commit/b665841))
+
 ## <small>1.3.22 (2025-09-17)</small>
 
 - chore: add header-max-length rule to commitlint. 200 lines now ([66b386d](https://github.com/joncodeofficial/vscode-console-warrior/commit/66b386d))
