@@ -10,7 +10,7 @@ if (typeof window !== "undefined" && !window.__consoleWsPatched) {
     
     var messageQueue = [];
     var ws = null;
-    var extensions = [".js", ".ts", ".jsx", ".tsx", ".vue", ".svelte"];
+    var extensions = [".js", ".mjs", ".ts", ".mts", ".jsx", ".tsx", ".vue", ".svelte"];
 
     function getStackInfo() {
       try {
@@ -48,7 +48,7 @@ if (typeof window !== "undefined" && !window.__consoleWsPatched) {
             if (!hasExtension) continue;
 
             // Match pattern: anything@file.extension:line:column
-            var match = line.match(/^.*@(.*\\.(js|ts|jsx|tsx|vue|svelte)(?:\\?[^:]*)??):(\\d+):(\\d+)$/);
+            var match = line.match(/^.*@(.*\\.(js|mjs|ts|mts|jsx|tsx|vue|svelte)(?:\\?[^:]*)??):(\\d+):(\\d+)$/);
             if (match) {
               var url = match[1];
               var filename = url.split("/").pop() || url;
@@ -81,7 +81,7 @@ if (typeof window !== "undefined" && !window.__consoleWsPatched) {
             if (!hasExtension) continue;
 
             // Try pattern with parentheses: "at function (file:line:column)"
-            var match = line.match(/\\s+at\\s+[^(]*\\(([^)]+\\.(js|ts|jsx|tsx|vue|svelte)(?:\\?[^:)]+)?):(\\d+):(\\d+)\\)/);
+            var match = line.match(/\\s+at\\s+[^(]*\\(([^)]+\\.(js|mjs|ts|mts|jsx|tsx|vue|svelte)(?:\\?[^:)]+)?):(\\d+):(\\d+)\\)/);
             if (match) {
               var url = match[1];
               var filename = url.split("/").pop() || url;
@@ -92,7 +92,7 @@ if (typeof window !== "undefined" && !window.__consoleWsPatched) {
               };
             }
             // Try pattern without parentheses: "at file:line:column"
-            match = line.match(/\\s+at\\s+([^\\s]+\\.(js|ts|jsx|tsx|vue|svelte)(?:\\?[^:]+)?):(\\d+):(\\d+)/);
+            match = line.match(/\\s+at\\s+([^\\s]+\\.(js|mjs|ts|mts|jsx|tsx|vue|svelte)(?:\\?[^:]+)?):(\\d+):(\\d+)/);
             if (match) {
               var url = match[1];
               var filename = url.split("/").pop() || url;

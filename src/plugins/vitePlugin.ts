@@ -41,7 +41,7 @@ export const vitePlugin = (vscode: typeof import('vscode'), relativePath: string
           name: "console-warrior-plugin",
           async transform(code, id) {
             if (id.includes('node_modules')) return null;
-            if (!/\.(js|ts|jsx|tsx|vue|svelte)$/.test(id)) return null;
+            if (!/\.(js|mjs|ts|mts|jsx|tsx|vue|svelte)$/.test(id)) return null;
             try {
               const module = await import("${formatPath}");
                 return {
