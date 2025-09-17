@@ -4,7 +4,7 @@
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
 ![Built with VSCode API](https://img.shields.io/badge/VSCode-Extension-007ACC)
 
-Visualize your `console` messages **directly inside VSCode** — logs, warnings, errors, info, and tables, all in real-time! 🚀
+Visualize your `console` messages **directly inside VSCode** — logs, warnings, errors, info and etc.., all in real-time! 🚀
 
 ![Presentation](https://raw.githubusercontent.com/joncodeofficial/vscode-console-warrior/main/images/presentation.gif)
 
