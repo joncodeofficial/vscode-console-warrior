@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.3.22 (2025-09-17)</small>
+
+- chore: add header-max-length rule to commitlint. 200 lines now ([66b386d](https://github.com/joncodeofficial/vscode-console-warrior/commit/66b386d))
+- chore: add installation and publishing steps for Open VSX Registry ([a8316a2](https://github.com/joncodeofficial/vscode-console-warrior/commit/a8316a2))
+- fix: update file extensions for better compatibility with mjs and mts ([45e8bbe](https://github.com/joncodeofficial/vscode-console-warrior/commit/45e8bbe))
+
 ## <small>1.3.21 (2025-09-06)</small>
 
 - fix: improve README.md ([b830cc0](https://github.com/joncodeofficial/vscode-console-warrior/commit/b830cc0))
