@@ -20,21 +20,21 @@ const createHoverMessage = (
   type: ConsoleDataMapValues['type']
 ): vscode.MarkdownString => {
   const markdown = new vscode.MarkdownString();
-  const label = `**⚔️ Console Warrior ${type.toUpperCase()} • ${messages.length} ${messages.length === 1 ? 'Input' : 'Inputs'}**${'&nbsp;'.repeat(50)}`;
 
-  markdown.appendMarkdown(label);
-  markdown.appendCodeblock(
-    messages
-      .map(({ message, timestamp }, i) => {
-        const localTime = formatLocalTimestamp(timestamp);
-        return `${messages.length - i} → [${localTime}] \n${message}`;
-      })
-      .join('\n\n'),
-    'javascript'
-  );
-  markdown.appendMarkdown(`\n*🧠 Keep slicing logs, warrior.*`);
   markdown.isTrusted = true;
+  markdown.supportHtml = true;
+  markdown.supportThemeIcons = true;
 
+  // Build all the content in a single string (faster)
+  let content = '';
+  messages.forEach(({ message, timestamp }, i) => {
+    const localTime = formatLocalTimestamp(timestamp);
+    content += `<small><span style="color:#f4b35a;">#${messages.length - i} → ${localTime} • ${type}</span></small>\n\n`;
+    content += '```javascript\n' + message + '\n```\n\n';
+  });
+
+  markdown.appendMarkdown(content);
+  markdown.appendMarkdown(`*🧠 Keep slicing logs, warrior.*`);
   return markdown;
 };
 
