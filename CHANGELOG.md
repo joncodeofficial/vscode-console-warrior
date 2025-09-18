@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.3.24 (2025-09-18)</small>
+
+- fix: improve hover message formatting in renderDecorations ([b8d8ecd](https://github.com/joncodeofficial/vscode-console-warrior/commit/b8d8ecd))
+
 ## <small>1.3.23 (2025-09-17)</small>
 
 - fix: update README and deploy new version ([b665841](https://github.com/joncodeofficial/vscode-console-warrior/commit/b665841))
