@@ -35,6 +35,7 @@ const createHoverMessage = (
 
   markdown.appendMarkdown(content);
   markdown.appendMarkdown(`*🧠 Keep slicing logs, warrior.*`);
+  markdown.appendMarkdown(`${'&nbsp;'.repeat(85)}\n`);
   return markdown;
 };
 
