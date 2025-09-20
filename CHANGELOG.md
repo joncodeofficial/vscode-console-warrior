@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.3.25 (2025-09-20)</small>
+
+- fix: :zap: implement hover provider for console messages. fixing problems with performance ([8f3ed1c](https://github.com/joncodeofficial/vscode-console-warrior/commit/8f3ed1c))
+- refactor: correct import and usage of CONSOLE_COMMENTS_REGEX in hasValidConsole function ([68c3e65](https://github.com/joncodeofficial/vscode-console-warrior/commit/68c3e65))
+- refactor: remove commented out timeEnd color from decorator colors ([79578f2](https://github.com/joncodeofficial/vscode-console-warrior/commit/79578f2))
+- style: fix width hover message ([100a474](https://github.com/joncodeofficial/vscode-console-warrior/commit/100a474))
+
 ## <small>1.3.24 (2025-09-18)</small>
 
 - fix: improve hover message formatting in renderDecorations ([b8d8ecd](https://github.com/joncodeofficial/vscode-console-warrior/commit/b8d8ecd))
