@@ -13,7 +13,6 @@ export const DECORATOR_COLORS = {
     table: '#005f5f',
     info: '#1e6bb8',
     debug: '#7b2d8e',
-    // timeEnd: '#005f5f',
   },
   dark: {
     log: '#73daca',
@@ -22,9 +21,8 @@ export const DECORATOR_COLORS = {
     table: '#73daca',
     info: '#4da6ff',
     debug: '#c179e6',
-    // timeEnd: '#73daca',
   },
 };
 
-export const CONSOLE_AND_COMMENTS_REGEX =
+export const CONSOLE_COMMENTS_REGEX =
   /(?:^\s*(?:\/\/|\/\*|\*).*console\.|.*console\..*\*\/|console\.(?:log|warn|error|table|info|debug)\()/;
