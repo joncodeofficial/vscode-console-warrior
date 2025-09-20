@@ -1,8 +1,8 @@
-import { CONSOLE_AND_COMMENTS_REGEX } from '../constants';
+import { CONSOLE_COMMENTS_REGEX } from '../constants';
 
 // Checks if the line contains a console method call
 export const hasValidConsole = (line: string): boolean => {
-  const match = CONSOLE_AND_COMMENTS_REGEX.exec(line);
+  const match = CONSOLE_COMMENTS_REGEX.exec(line);
   if (!match) return false;
 
   const matchedText = match[0];
