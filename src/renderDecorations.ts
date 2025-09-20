@@ -17,10 +17,10 @@ export const decorationType = vscode.window.createTextEditorDecorationType({
 // Create a markdown string for the hover message
 const createHoverMessage = (
   messages: ConsoleMessage[],
-  type: ConsoleDataMapValues['type']
+  type: ConsoleDataMapValues['type'],
+  counter: number
 ): vscode.MarkdownString => {
   const markdown = new vscode.MarkdownString();
-
   markdown.isTrusted = true;
   markdown.supportHtml = true;
   markdown.supportThemeIcons = true;
@@ -29,18 +29,45 @@ const createHoverMessage = (
   let content = '';
   messages.forEach(({ message, timestamp }, i) => {
     const localTime = formatLocalTimestamp(timestamp);
-    content += `<small><span style="color:#f4b35a;">#${messages.length - i} → ${localTime} • ${type}</span></small>\n\n`;
+    content += `<small><span style="color:#f4b35a;">#${counter - i} → ${localTime} • ${type}</span></small>\n\n`;
     content += '```javascript\n' + message + '\n```\n\n';
   });
 
   markdown.appendMarkdown(content);
   markdown.appendMarkdown(`*🧠 Keep slicing logs, warrior.*`);
-  markdown.appendMarkdown(`${'&nbsp;'.repeat(85)}\n`);
+  markdown.appendMarkdown(`${'&nbsp;'.repeat(100)}\n`);
+
   return markdown;
 };
 
 // Format the counter text
 const formatCounterText = (count: number) => (count > 1 ? ` ✕${count} ➜ ` : ' ');
+
+// Hover provider function for on-demand hover creation
+export const createHoverProvider = (getConsoleDataMap: () => ConsoleDataMap) => ({
+  provideHover(
+    document: vscode.TextDocument,
+    position: vscode.Position
+  ): vscode.ProviderResult<vscode.Hover> {
+    const currentFilePath = document.uri.fsPath;
+    const consoleDataMap = getConsoleDataMap();
+
+    for (const [filePath, positionsMap] of consoleDataMap) {
+      if (!currentFilePath.endsWith(filePath)) continue;
+
+      const lineKey = String(position.line + 1);
+      const data = positionsMap.get(lineKey);
+
+      if (data) {
+        const { consoleMessages, type, counter } = data;
+        const messages = consoleMessages.toArray();
+        const hoverMessage = createHoverMessage(messages, type, counter);
+        return new vscode.Hover(hoverMessage);
+      }
+    }
+    return null;
+  },
+});
 
 // Render decorations for the current file
 export const renderDecorations = (editor: vscode.TextEditor, consoleDataMap: ConsoleDataMap) => {
@@ -56,19 +83,17 @@ export const renderDecorations = (editor: vscode.TextEditor, consoleDataMap: Con
     // Loop through the positions map and render decorations for each line
     for (const [position, { consoleMessages, counter, type }] of positionsMap) {
       const line = parseInt(position) - 1;
+
       // Check if the line number is within the document's line count
       if (line < 0 || line >= document.lineCount) continue;
 
       const lineText = document.lineAt(line).text;
-
       if (!hasValidConsole(lineText)) continue;
+
       const closingIndex = lineText.length + 2;
 
       // Get the console messages array for the current line
       const consoleMessagesArray = consoleMessages.toArray();
-
-      const hoverMessage = createHoverMessage(consoleMessagesArray, type);
-
       const themeColor = getCurrentThemeColor(type);
 
       decorations.push({
@@ -78,15 +103,13 @@ export const renderDecorations = (editor: vscode.TextEditor, consoleDataMap: Con
             contentText:
               formatCounterText(counter) +
               truncateString(
-                formatString(consoleMessagesArray.map((mgs) => mgs.message).join(' ➜ '))
+                formatString(consoleMessagesArray.map((msg) => msg.message).join(' ➜ '))
               ),
             color: themeColor,
           },
         },
-        hoverMessage,
       });
     }
   }
-
   editor.setDecorations(decorationType, decorations);
 };

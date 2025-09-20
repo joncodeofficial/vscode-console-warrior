@@ -3,7 +3,7 @@ import { monitoringChanges } from './monitoringChanges';
 import { sourceMapping } from './sourceMapping';
 import { updateConsoleDataMap } from './updateConsoleDataMap';
 import { watcherNodeModules } from './watcherNodeModules';
-import { decorationType, renderDecorations } from './renderDecorations';
+import { decorationType, renderDecorations, createHoverProvider } from './renderDecorations';
 import { removeDecorations } from './removeDecorations';
 import { startWebSocketServer, connectWebSocketServer } from './webSocketServer';
 import { ServerConnections, ConsoleData, ConsoleDataMap, SourceMapCache } from './types';
@@ -23,6 +23,12 @@ export function activate(context: vscode.ExtensionContext) {
   startWebSocketServer(consoleData, sourceMapCache, consoleDataMap, serverConnections);
   // Connect to Main Server like a client
   const socket = connectWebSocketServer(connectPort, consoleData);
+
+  // Register hover provider once
+  const hoverProvider = vscode.languages.registerHoverProvider(
+    { scheme: 'file', pattern: '**/*.{js,mjs,ts,mts,jsx,tsx,vue,svelte}' },
+    createHoverProvider(() => consoleDataMap)
+  );
 
   const stopMonitoring = monitoringChanges(consoleData, async () => {
     const newConsoleData = await sourceMapping(consoleData, sourceMapCache);
@@ -51,6 +57,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(disposable(() => decorationType.dispose()));
   context.subscriptions.push(commandConnectPort(context, socket, consoleData));
   context.subscriptions.push(onTextChangeDisposable);
+  context.subscriptions.push(hoverProvider);
 }
 
 export function deactivate() {}
