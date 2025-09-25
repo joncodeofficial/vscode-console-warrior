@@ -1,4 +1,6 @@
-import { CONSOLE_COMMENTS_REGEX } from '../constants';
+// Regular expression to match console statements, ignoring commented lines
+const CONSOLE_COMMENTS_REGEX =
+  /(?:^\s*(?:\/\/|\/\*|\*).*console\.|.*console\..*\*\/|console\.(?:log|warn|error|table|info|debug)\()/;
 
 // Checks if the line contains a console method call
 export const hasValidConsole = (line: string): boolean => {

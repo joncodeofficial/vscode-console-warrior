@@ -23,6 +23,3 @@ export const DECORATOR_COLORS = {
     debug: '#c179e6',
   },
 };
-
-export const CONSOLE_COMMENTS_REGEX =
-  /(?:^\s*(?:\/\/|\/\*|\*).*console\.|.*console\..*\*\/|console\.(?:log|warn|error|table|info|debug)\()/;
