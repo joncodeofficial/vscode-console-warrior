@@ -4,13 +4,10 @@ import { ConsoleData, ConsoleDataMap, ConsoleDataMapValues } from './types';
 import { MAX_DECORATIONS } from './constants';
 
 export const updateConsoleDataMap = (
-  editor: vscode.TextEditor | undefined,
+  editor: vscode.TextEditor,
   consoleData: ConsoleData[],
   consoleDataMap: ConsoleDataMap
 ) => {
-  // If no editor is active, do nothing
-  if (!editor) return;
-
   for (const { message, location, timestamp, type } of consoleData) {
     const url = location.url;
     const key = location.line.toString();
