@@ -36,8 +36,10 @@ export function activate(context: vscode.ExtensionContext) {
     // Early return if no new data
     if (!newConsoleData?.length) return;
     const editor = vscode.window.activeTextEditor;
+    // Early return if no active editor
+    if (!editor) return;
     updateConsoleDataMap(editor, newConsoleData, consoleDataMap);
-    if (editor) renderDecorations(editor, consoleDataMap);
+    renderDecorations(editor, consoleDataMap);
   });
 
   const onTextChangeDisposable = vscode.workspace.onDidChangeTextDocument((textEditor) => {
