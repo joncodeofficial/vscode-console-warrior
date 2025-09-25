@@ -1,6 +1,6 @@
 import { ConsoleDataMap } from './types';
 import * as vscode from 'vscode';
-import { hasValidConsole, hasPositionInsideConsole } from './utils';
+import { hasValidConsole, hasPositionInsideConsole, getModifiedLine } from './utils';
 
 // Remove commented consoles
 export const removeDecorations = (
@@ -9,12 +9,19 @@ export const removeDecorations = (
 ) => {
   // Get the file path of the current editor
   const filePath = editor.document.uri.fsPath;
+  const modifiedLine = getModifiedLine(editor);
 
   for (const [file, positionsMap] of consoleDataMap) {
     if (filePath.endsWith(file)) {
       for (const [position, { type }] of positionsMap) {
         const line = parseInt(position) - 1;
         const lineText = editor.document.lineAt(line).text;
+
+        // if line changed (deleted or created) and is after the changed line, delete
+        if (modifiedLine !== -1 && line >= modifiedLine) {
+          positionsMap.delete(position);
+          continue;
+        }
 
         // if console.log is commented, delete
         if (!hasValidConsole(lineText) && positionsMap.has(position)) {
