@@ -37,25 +37,27 @@ const isNodeModulesStable = (dir: string) => {
   return Date.now() - latestMtime > STABLE_THRESHOLD_MS;
 };
 
-// Check if node_modules has at least a few installed dependencies (ignore symlinks)
-const hasEnoughDependencies = (dir: string) => {
+// Check if node_modules has the critical dependencies for the project
+const hasDependencies = (dir: string, criticalDeps: string[] = ['vite']) => {
   try {
     const entries = fs.readdirSync(dir, { withFileTypes: true });
+    const availableDeps = new Set(
+      entries
+        .filter((e) => {
+          if (e.name.startsWith('.') || ['.bin', '.cache'].includes(e.name)) return false;
+          const fullPath = path.join(dir, e.name);
+          try {
+            const stats = fs.statSync(fullPath);
+            return stats.isDirectory();
+          } catch {
+            return false;
+          }
+        })
+        .map((e) => e.name)
+    );
 
-    const folders = entries.filter((e) => {
-      if (e.name.startsWith('.') || ['.bin', '.cache'].includes(e.name)) return false;
-
-      const fullPath = path.join(dir, e.name);
-      try {
-        // Count like valid folder if it's a real directory or a symlink that points to a directory
-        const stats = fs.statSync(fullPath);
-        return stats.isDirectory();
-      } catch {
-        return false;
-      }
-    });
-
-    return folders.length >= 3;
+    // Check if all critical dependencies are present
+    return criticalDeps.every((dep) => availableDeps.has(dep));
   } catch {
     return false;
   }
@@ -64,7 +66,7 @@ const hasEnoughDependencies = (dir: string) => {
 // Wait until node_modules exists, is stable, and has enough packages
 export const checkIfNodeModulesReady = async (dir: string): Promise<boolean> => {
   for (let i = 0; i < MAX_TRIES; i++) {
-    if (fs.existsSync(dir) && isNodeModulesStable(dir) && hasEnoughDependencies(dir)) {
+    if (fs.existsSync(dir) && isNodeModulesStable(dir) && hasDependencies(dir)) {
       return true;
     }
     await sleep(DELAY);
