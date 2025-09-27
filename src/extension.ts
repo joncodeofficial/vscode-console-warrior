@@ -3,13 +3,14 @@ import { monitoringChanges } from './monitoringChanges';
 import { sourceMapping } from './sourceMapping';
 import { updateConsoleDataMap } from './updateConsoleDataMap';
 import { watcherNodeModules } from './watcherNodeModules';
-import { decorationType, renderDecorations, createHoverProvider } from './renderDecorations';
+import { decorationType, renderDecorations } from './renderDecorations';
 import { removeDecorations } from './removeDecorations';
 import { startWebSocketServer, connectWebSocketServer } from './webSocketServer';
 import { ServerConnections, ConsoleData, ConsoleDataMap, SourceMapCache } from './types';
 import { commandConnectPort } from './commands/commandConnectPort';
 import { DEFAULT_PORT } from './constants';
 import { disposable } from './utils';
+import { hoverMessageProvider } from './hoverMessageProvider';
 
 const consoleData: ConsoleData[] = [];
 const sourceMapCache: SourceMapCache = new Map();
@@ -27,7 +28,7 @@ export function activate(context: vscode.ExtensionContext) {
   // Register hover provider once
   const hoverProvider = vscode.languages.registerHoverProvider(
     { scheme: 'file', pattern: '**/*.{js,mjs,ts,mts,jsx,tsx,vue,svelte}' },
-    createHoverProvider(() => consoleDataMap)
+    hoverMessageProvider(() => consoleDataMap)
   );
 
   const stopMonitoring = monitoringChanges(consoleData, async () => {
