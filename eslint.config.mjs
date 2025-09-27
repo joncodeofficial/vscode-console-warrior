@@ -21,16 +21,16 @@ export default [
 
     rules: {
       '@typescript-eslint/naming-convention': [
-        'warn',
+        'error',
         {
           selector: 'import',
           format: ['camelCase', 'PascalCase'],
         },
       ],
 
-      eqeqeq: 'warn',
-      'no-throw-literal': 'warn',
-      semi: 'warn',
+      eqeqeq: 'error',
+      'no-throw-literal': 'error',
+      semi: 'error',
 
       'unused-imports/no-unused-imports': 'error',
       'unused-imports/no-unused-vars': [
