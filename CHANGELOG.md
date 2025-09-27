@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.3.26 (2025-09-27)</small>
+
+- chore: add eslint-plugin-unused-imports dependency ([15e75c5](https://github.com/joncodeofficial/vscode-console-warrior/commit/15e75c5))
+- chore: add subject-case rule to commitlint configuration ([29a2424](https://github.com/joncodeofficial/vscode-console-warrior/commit/29a2424))
+- chore: move ESLint step to run before building the extension ([6125a17](https://github.com/joncodeofficial/vscode-console-warrior/commit/6125a17))
+- chore: update ESLint configuration for improved readability and consistency ([b9a4800](https://github.com/joncodeofficial/vscode-console-warrior/commit/b9a4800))
+- chore: update ESLint rules to enforce stricter error handling ([7b0788b](https://github.com/joncodeofficial/vscode-console-warrior/commit/7b0788b))
+- refactor: add function to barrel file ([a519c82](https://github.com/joncodeofficial/vscode-console-warrior/commit/a519c82))
+- refactor: code structure ([ff76929](https://github.com/joncodeofficial/vscode-console-warrior/commit/ff76929))
+- refactor: code structure ([9436467](https://github.com/joncodeofficial/vscode-console-warrior/commit/9436467))
+- refactor: implement hoverMessageProvider for enhanced hover functionality ([c4428c3](https://github.com/joncodeofficial/vscode-console-warrior/commit/c4428c3))
+- refactor: move CONSOLE_COMMENTS_REGEX into the function hasValidConsole ([e4ab008](https://github.com/joncodeofficial/vscode-console-warrior/commit/e4ab008))
+- refactor: replace createHoverProvider with hoverMessageProvider for improved hover functionality ([f03bd54](https://github.com/joncodeofficial/vscode-console-warrior/commit/f03bd54))
+- refactor: simplify error handling in WebSocket message parsing ([23cf77c](https://github.com/joncodeofficial/vscode-console-warrior/commit/23cf77c))
+- fix: bug in hasDependencies function when it has few dependencies ([0514160](https://github.com/joncodeofficial/vscode-console-warrior/commit/0514160))
+- fix: improve Remove decorator behavior ([4b1839d](https://github.com/joncodeofficial/vscode-console-warrior/commit/4b1839d))
+- fix: MAX_DECORATIONS constant is now 500 ([bff9b47](https://github.com/joncodeofficial/vscode-console-warrior/commit/bff9b47))
+
 ## <small>1.3.25 (2025-09-20)</small>
 
 - fix: :zap: implement hover provider for console messages. fixing problems with performance ([8f3ed1c](https://github.com/joncodeofficial/vscode-console-warrior/commit/8f3ed1c))
