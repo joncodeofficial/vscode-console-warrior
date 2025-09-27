@@ -2,7 +2,7 @@
   "name": "console-warrior",
   "displayName": "Console Warrior",
   "version": "1.3.26",
-  "description": "Visualize console.log messages directly in VSCode editor inline, boosting debugging and productivity.",
+  "description": "Visualize console messages (log, warn, error) directly in VSCode editor inline, boosting debugging and productivity.",
   "categories": [
     "Visualization",
     "Debuggers",
