@@ -78,7 +78,7 @@ export const connectWebSocketServer = (port: number, consoleData: ConsoleData[])
     try {
       const data: ConsoleData = JSON.parse(message.toString());
       consoleData.push(data);
-    } catch (_) {
+    } catch {
       console.warn('Error parsing WebSocket message');
     }
   });
