@@ -36,6 +36,9 @@ jobs:
       - name: Install ovsx
         run: npm install -g ovsx
 
+      - name: Run ESLint
+        run: npm run lint:fix
+
       - name: Build extension
         run: npm run compile
 
