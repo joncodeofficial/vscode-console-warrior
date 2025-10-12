@@ -23,7 +23,13 @@ export function activate(context: vscode.ExtensionContext) {
   // Start Main Server
   startWebSocketServer(consoleData, sourceMapCache, consoleDataMap, serverConnections);
   // Connect to Main Server like a client
-  const socket = connectWebSocketServer(connectPort, consoleData);
+  const socket = connectWebSocketServer(
+    connectPort,
+    consoleData,
+    sourceMapCache,
+    consoleDataMap,
+    serverConnections
+  );
 
   // Register hover provider once
   const hoverProvider = vscode.languages.registerHoverProvider(

@@ -64,7 +64,13 @@ export const startWebSocketServer = async (
 };
 
 // Connect to Main WebSocket Server like a client
-export const connectWebSocketServer = (port: number, consoleData: ConsoleData[]) => {
+export const connectWebSocketServer = (
+  port: number,
+  consoleData: ConsoleData[],
+  sourceMapCache?: SourceMapCache,
+  consoleDataMap?: ConsoleDataMap,
+  backendConnections?: ServerConnections
+) => {
   const socket = new WebSocket(`ws://localhost:${WS_PORT}`);
 
   // Handle WebSocket connection open event
@@ -83,11 +89,22 @@ export const connectWebSocketServer = (port: number, consoleData: ConsoleData[])
     }
   });
 
-  // Handle close event
-  socket.on('close', () => console.log('[Server WS] Disconnected'));
+  // Handle close event with auto-recovery
+  socket.on('close', async () => {
+    if (!sourceMapCache || !consoleDataMap || !backendConnections) return;
+    console.log('[Server WS] Disconnected - attempting to restart Central server...');
+    // Try to restart the central server and reconnect
+    await startWebSocketServer(consoleData, sourceMapCache, consoleDataMap, backendConnections);
+
+    // Try to connect again after 2 seconds
+    setTimeout(() => {
+      connectWebSocketServer(port, consoleData, sourceMapCache, consoleDataMap, backendConnections);
+      console.log('[Server WS] Reconnected to Central server');
+    }, 2000);
+  });
 
   // Handle error event
-  socket.on('error', (_) => console.error('[Server WS] Error connecting to Central'));
+  socket.on('error', (_) => console.error('[Server WS] Error connecting to Main server'));
 
   return socket;
 };
