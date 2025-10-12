@@ -160,7 +160,7 @@ if (typeof window !== "undefined" && !window.__consoleWsPatched) {
 
     function connectWebSocket() {
       try {
-        ws = new WebSocket("ws://localhost:27020");
+        ws = new WebSocket("ws://localhost:47020");
 
         ws.onopen = function() {
           flushQueue();

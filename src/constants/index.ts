@@ -1,7 +1,7 @@
 export const MAX_MESSAGE_LENGTH = 150;
 export const UPDATE_RATE = 100;
 export const MAX_DECORATIONS = 500;
-export const WS_PORT = 27020;
+export const WS_PORT = 47020;
 export const PROXY_PORT = 3000;
 export const DEFAULT_PORT = 5173;
 
