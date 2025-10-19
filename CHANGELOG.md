@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.3.27 (2025-10-19)</small>
+
+- fix: enhance WebSocket connection handling with reconnect and auto-recovery ([d7e5dde](https://github.com/joncodeofficial/vscode-console-warrior/commit/d7e5dde))
+- fix: update WebSocket port to match new configuration ([bf61c59](https://github.com/joncodeofficial/vscode-console-warrior/commit/bf61c59))
+- chore: update description to include all console message types ([09f61aa](https://github.com/joncodeofficial/vscode-console-warrior/commit/09f61aa))
+
 ## <small>1.3.26 (2025-09-27)</small>
 
 - chore: add eslint-plugin-unused-imports dependency ([15e75c5](https://github.com/joncodeofficial/vscode-console-warrior/commit/15e75c5))
