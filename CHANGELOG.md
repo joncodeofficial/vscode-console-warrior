@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.3.28 (2025-12-06)</small>
+
+- fix: feat autodetect port in vite ([226ebb3](https://github.com/joncodeofficial/vscode-console-warrior/commit/226ebb3))
+- fix: implement workspace-scoped decorator isolation for multi-project support ([47c52fa](https://github.com/joncodeofficial/vscode-console-warrior/commit/47c52fa))
+- refactor: code structure ([31cf1fe](https://github.com/joncodeofficial/vscode-console-warrior/commit/31cf1fe))
+- refactor: new function to detect vite projects ([bba54d5](https://github.com/joncodeofficial/vscode-console-warrior/commit/bba54d5))
+- refactor: remove connectToPort Command because is innecesary now ([8b7f043](https://github.com/joncodeofficial/vscode-console-warrior/commit/8b7f043))
+- chore: fix package.json to include all package.json files in the workspace ([2704d4e](https://github.com/joncodeofficial/vscode-console-warrior/commit/2704d4e))
+- chore: remoce comments in prod ([99ed93f](https://github.com/joncodeofficial/vscode-console-warrior/commit/99ed93f))
+
 ## <small>1.3.27 (2025-10-19)</small>
 
 - fix: enhance WebSocket connection handling with reconnect and auto-recovery ([d7e5dde](https://github.com/joncodeofficial/vscode-console-warrior/commit/d7e5dde))
