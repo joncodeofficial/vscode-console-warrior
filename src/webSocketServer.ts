@@ -1,3 +1,4 @@
+import * as vscode from 'vscode';
 import portscanner from 'portscanner';
 import { WebSocket, WebSocketServer } from 'ws';
 import { WS_PORT } from './constants';
@@ -18,6 +19,9 @@ export const startWebSocketServer = async (
     const wss = new WebSocketServer({ port: WS_PORT });
     console.log(`[Central WS] started on port ${WS_PORT}`);
 
+    // Temporary map to store workspace -> WebSocket connections before port assignment
+    const pendingConnections = new Map<string, WebSocket>();
+
     wss.on('connection', (ws) => {
       consoleData.length = 0;
       sourceMapCache.clear();
@@ -28,14 +32,35 @@ export const startWebSocketServer = async (
 
       // Listen for messages from clients
       ws.on('message', (msg) => {
-        const data: ConsoleData = JSON.parse(msg.toString());
+        const data: any = JSON.parse(msg.toString());
 
-        // if is a server identify it
-        if (data.where === 'server-connect' && data.id) {
-          backendId = data.id;
-          backendConnections.set(data.id, ws);
+        // Handle server-info: backend sends port and workspace
+        if (data.where === 'server-info' && data.id && data.workspace) {
+          console.log(`[Server Info] Port ${data.id} -> Workspace ${data.workspace}`);
+
+          // Check if there's a pending connection for this workspace
+          const pendingWs = pendingConnections.get(data.workspace);
+          if (pendingWs && pendingWs.readyState === WebSocket.OPEN) {
+            // Move from pending to active connections using the port as key (ensure string)
+            const portKey = data.id.toString();
+            backendConnections.set(portKey, pendingWs);
+            pendingConnections.delete(data.workspace);
+            console.log(`[Server Info] Matched workspace ${data.workspace} with port ${portKey}`);
+            console.log(
+              `[Server Info] backendConnections keys:`,
+              Array.from(backendConnections.keys())
+            );
+          }
+          return;
+        }
+
+        // Handle server-connect: extension sends workspace path
+        if (data.where === 'server-connect' && data.workspace) {
+          console.log(`[Server Connect] Workspace ${data.workspace} connected`);
+          // Store temporarily until we get the port from server-info
+          pendingConnections.set(data.workspace, ws);
           isBackend = true;
-          console.log(`[Client WS] with id ${backendId} connected`);
+          console.log(`[Server Connect] Stored pending connection for workspace ${data.workspace}`);
           return;
         }
 
@@ -73,10 +98,16 @@ export const connectWebSocketServer = (
 ) => {
   const socket = new WebSocket(`ws://localhost:${WS_PORT}`);
 
-  // Handle WebSocket connection open event
+  // // Handle WebSocket connection open event
   socket.on('open', () => {
     console.log('[Client WS] Connected to Central with port:', port);
-    socket.send(JSON.stringify({ where: 'server-connect', id: port.toString() }));
+    const folders = vscode.workspace.workspaceFolders;
+
+    if (folders) {
+      folders.forEach((folder) => {
+        socket.send(JSON.stringify({ where: 'server-connect', workspace: folder.uri.fsPath }));
+      });
+    }
   });
 
   // Handle incoming messages
