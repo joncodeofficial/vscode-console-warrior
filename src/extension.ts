@@ -7,7 +7,6 @@ import { decorationType, renderDecorations } from './renderDecorations';
 import { removeDecorations } from './removeDecorations';
 import { startWebSocketServer, connectWebSocketServer } from './webSocketServer';
 import { ServerConnections, ConsoleData, ConsoleDataMap, SourceMapCache } from './types';
-import { commandConnectPort } from './commands/commandConnectPort';
 import { DEFAULT_PORT } from './constants';
 import { disposable } from './utils';
 import { hoverMessageProvider } from './hoverMessageProvider';
@@ -18,7 +17,7 @@ const consoleDataMap: ConsoleDataMap = new Map();
 const serverConnections: ServerConnections = new Map();
 
 export function activate(context: vscode.ExtensionContext) {
-  let connectPort: number = context.workspaceState.get('warrior-port') ?? DEFAULT_PORT;
+  const connectPort: number = DEFAULT_PORT;
 
   // Start Main Server
   startWebSocketServer(consoleData, sourceMapCache, consoleDataMap, serverConnections);
@@ -64,7 +63,6 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(disposable(() => stopMonitoring()));
   context.subscriptions.push(disposable(() => socket?.close()));
   context.subscriptions.push(disposable(() => decorationType.dispose()));
-  context.subscriptions.push(commandConnectPort(context, socket, consoleData));
   context.subscriptions.push(onTextChangeDisposable);
   context.subscriptions.push(hoverProvider);
 }

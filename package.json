@@ -37,15 +37,7 @@
     "test": "vscode-test",
     "watch": "tsc -watch -p ./"
   },
-  "contributes": {
-    "commands": [
-      {
-        "command": "extension.connectToPort",
-        "title": "Connect to Port",
-        "category": "Console Warrior"
-      }
-    ]
-  },
+  "contributes": {},
   "activationEvents": [
     "workspaceContains:**/package.json"
   ],
