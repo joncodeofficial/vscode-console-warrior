@@ -47,7 +47,7 @@
     ]
   },
   "activationEvents": [
-    "workspaceContains:package.json"
+    "workspaceContains:**/package.json"
   ],
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged",
