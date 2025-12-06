@@ -11,7 +11,10 @@ export const removeDecorations = (
   const filePath = editor.document.uri.fsPath;
   const modifiedLine = getModifiedLine(editor);
 
-  for (const [file, positionsMap] of consoleDataMap) {
+  for (const [fileKey, positionsMap] of consoleDataMap) {
+    // Extract the actual file path from the key (format: "workspace::filename" or just "filename")
+    const file = fileKey.includes('::') ? fileKey.split('::')[1] : fileKey;
+
     if (filePath.endsWith(file)) {
       for (const [position, { type }] of positionsMap) {
         const line = parseInt(position) - 1;
@@ -37,7 +40,7 @@ export const removeDecorations = (
         // if change inside of the console.log, delete
         if (hasPositionInsideConsole(lineText, start, type)) positionsMap.delete(position);
       }
-      if (positionsMap.size === 0) consoleDataMap.delete(file);
+      if (positionsMap.size === 0) consoleDataMap.delete(fileKey);
     }
   }
 };

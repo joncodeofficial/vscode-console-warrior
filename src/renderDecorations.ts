@@ -18,9 +18,21 @@ export const renderDecorations = (editor: vscode.TextEditor, consoleDataMap: Con
   const decorations: vscode.DecorationOptions[] = [];
 
   // Loop through the console data map and render decorations for each line
-  for (const [filePath, positionsMap] of consoleDataMap) {
+  for (const [fileKey, positionsMap] of consoleDataMap) {
+    // Extract the workspace and file path from the key (format: "workspace::filename" or just "filename")
+    const [workspacePath, filePath] = fileKey.includes('::')
+      ? fileKey.split('::')
+      : [null, fileKey];
+
     // Check if the current file path matches the file path in the map
-    if (!currentFilePath.endsWith(filePath)) continue;
+    if (!currentFilePath.endsWith(filePath)) {
+      continue;
+    }
+
+    // If we have workspace info, verify the file is in that workspace
+    if (workspacePath && !currentFilePath.startsWith(workspacePath)) {
+      continue;
+    }
 
     // Loop through the positions map and render decorations for each line
     for (const [position, { consoleMessages, counter, type }] of positionsMap) {

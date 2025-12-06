@@ -3,7 +3,7 @@ import portscanner from 'portscanner';
 import { WebSocket, WebSocketServer } from 'ws';
 import { WS_PORT } from './constants';
 import { ConsoleData, ConsoleDataMap, ServerConnections, SourceMapCache } from './types';
-import { getPortFromUrl } from './utils';
+import { getPortFromUrl, detectViteProjects } from './utils';
 
 // Start Main WebSocket Server
 export const startWebSocketServer = async (
@@ -21,6 +21,8 @@ export const startWebSocketServer = async (
 
     // Temporary map to store workspace -> WebSocket connections before port assignment
     const pendingConnections = new Map<string, WebSocket>();
+    // Map to track which workspace is using which port (workspace -> port)
+    const workspaceToPorts = new Map<string, string>();
 
     wss.on('connection', (ws) => {
       consoleData.length = 0;
@@ -36,31 +38,39 @@ export const startWebSocketServer = async (
 
         // Handle server-info: backend sends port and workspace
         if (data.where === 'server-info' && data.id && data.workspace) {
-          console.log(`[Server Info] Port ${data.id} -> Workspace ${data.workspace}`);
-
           // Check if there's a pending connection for this workspace
           const pendingWs = pendingConnections.get(data.workspace);
           if (pendingWs && pendingWs.readyState === WebSocket.OPEN) {
-            // Move from pending to active connections using the port as key (ensure string)
             const portKey = data.id.toString();
+
+            // 1. Clean up old port for THIS specific workspace (if it had a different port before)
+            const oldPort = workspaceToPorts.get(data.workspace);
+            if (oldPort && oldPort !== portKey) {
+              backendConnections.delete(oldPort);
+            }
+
+            // 2. Check if another workspace was using this port and clean it up
+            for (const [ws, port] of workspaceToPorts.entries()) {
+              if (port === portKey && ws !== data.workspace) {
+                workspaceToPorts.delete(ws);
+              }
+            }
+
+            // 3. Add to active connections using the new port as key
             backendConnections.set(portKey, pendingWs);
-            pendingConnections.delete(data.workspace);
-            console.log(`[Server Info] Matched workspace ${data.workspace} with port ${portKey}`);
-            console.log(
-              `[Server Info] backendConnections keys:`,
-              Array.from(backendConnections.keys())
-            );
+            // Track which port this workspace is using
+            workspaceToPorts.set(data.workspace, portKey);
           }
           return;
         }
 
         // Handle server-connect: extension sends workspace path
         if (data.where === 'server-connect' && data.workspace) {
-          console.log(`[Server Connect] Workspace ${data.workspace} connected`);
-          // Store temporarily until we get the port from server-info
-          pendingConnections.set(data.workspace, ws);
-          isBackend = true;
-          console.log(`[Server Connect] Stored pending connection for workspace ${data.workspace}`);
+          // Store workspace connection (persistent for reconnections)
+          if (!pendingConnections.has(data.workspace)) {
+            pendingConnections.set(data.workspace, ws);
+            isBackend = true;
+          }
           return;
         }
 
@@ -68,10 +78,26 @@ export const startWebSocketServer = async (
         if (data.where === 'client-message' && data.location.url) {
           const getPort = getPortFromUrl(data.location.url);
           const target = backendConnections.get(getPort);
+
           if (data.message && target?.readyState === WebSocket.OPEN) {
-            target.send(msg);
+            // Find the workspace for this port
+            let workspacePath: string | undefined;
+            for (const [workspace, port] of workspaceToPorts.entries()) {
+              if (port === getPort) {
+                workspacePath = workspace;
+                break;
+              }
+            }
+
+            // Enrich the message with workspace information
+            const enrichedData = {
+              ...data,
+              workspacePath,
+            };
+
+            target.send(JSON.stringify(enrichedData));
           } else {
-            console.warn('No server found for client message');
+            console.warn(`[Client Message] No server found for port ${getPort}`);
           }
           return;
         }
@@ -99,14 +125,23 @@ export const connectWebSocketServer = (
   const socket = new WebSocket(`ws://localhost:${WS_PORT}`);
 
   // // Handle WebSocket connection open event
-  socket.on('open', () => {
-    console.log('[Client WS] Connected to Central with port:', port);
-    const folders = vscode.workspace.workspaceFolders;
+  socket.on('open', async () => {
+    // Detect all Vite projects in the workspace
+    const viteProjectPaths = await detectViteProjects();
 
-    if (folders) {
-      folders.forEach((folder) => {
-        socket.send(JSON.stringify({ where: 'server-connect', workspace: folder.uri.fsPath }));
+    if (viteProjectPaths.length > 0) {
+      // Send server-connect for each Vite project path
+      viteProjectPaths.forEach((projectPath) => {
+        socket.send(JSON.stringify({ where: 'server-connect', workspace: projectPath }));
       });
+    } else {
+      // Fallback: if no Vite projects detected, use workspace folders
+      const folders = vscode.workspace.workspaceFolders;
+      if (folders) {
+        folders.forEach((folder) => {
+          socket.send(JSON.stringify({ where: 'server-connect', workspace: folder.uri.fsPath }));
+        });
+      }
     }
   });
 

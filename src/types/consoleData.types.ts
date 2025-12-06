@@ -9,4 +9,5 @@ export type ConsoleData = {
     column: number;
   };
   timestamp: string;
+  workspacePath?: string;
 };

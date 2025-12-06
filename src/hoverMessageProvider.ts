@@ -35,7 +35,10 @@ export const hoverMessageProvider = (getConsoleDataMap: () => ConsoleDataMap) =>
     const currentFilePath = document.uri.fsPath;
     const consoleDataMap = getConsoleDataMap();
 
-    for (const [filePath, positionsMap] of consoleDataMap) {
+    for (const [fileKey, positionsMap] of consoleDataMap) {
+      // Extract the actual file path from the key (format: "workspace::filename" or just "filename")
+      const filePath = fileKey.includes('::') ? fileKey.split('::')[1] : fileKey;
+
       if (!currentFilePath.endsWith(filePath)) continue;
 
       const lineKey = String(position.line + 1);

@@ -8,8 +8,16 @@ export const updateConsoleDataMap = (
   consoleData: ConsoleData[],
   consoleDataMap: ConsoleDataMap
 ) => {
-  for (const { message, location, timestamp, type } of consoleData) {
-    const url = location.url;
+  const editorFilePath = editor.document.uri.fsPath;
+
+  for (const { message, location, timestamp, type, workspacePath } of consoleData) {
+    // Filter: only process messages from the same workspace as the editor file
+    if (workspacePath && !editorFilePath.startsWith(workspacePath)) {
+      continue;
+    }
+
+    // Create unique key: workspace + file URL to prevent collisions between projects
+    const url = workspacePath ? `${workspacePath}::${location.url}` : location.url;
     const key = location.line.toString();
 
     // Ensure a map exists for the file URL
