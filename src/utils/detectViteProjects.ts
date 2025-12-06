@@ -2,14 +2,7 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 
-/**
- * Detects all folders in the workspace that might have Vite projects
- * Checks for:
- * 1. vite.config.* files
- * 2. package.json with "vite" dependency
- * 3. package.json with "dev" script containing "vite"
- * Returns an array of absolute paths to folders
- */
+// detect all vite projects in the workspace
 export async function detectViteProjects(): Promise<string[]> {
   const workspaceFolders = vscode.workspace.workspaceFolders;
   if (!workspaceFolders) return [];
@@ -17,7 +10,15 @@ export async function detectViteProjects(): Promise<string[]> {
   const viteProjectPaths: string[] = [];
 
   for (const folder of workspaceFolders) {
-    const projects = await findViteProjectsInFolder(folder.uri.fsPath);
+    const folderPath = folder.uri.fsPath;
+
+    // First, check if the workspace root itself is a Vite project
+    if (isViteProject(folderPath)) {
+      viteProjectPaths.push(folderPath);
+    }
+
+    // Then search for Vite projects in subdirectories
+    const projects = await findViteProjectsInFolder(folderPath);
     viteProjectPaths.push(...projects);
   }
 
@@ -25,9 +26,6 @@ export async function detectViteProjects(): Promise<string[]> {
   return [...new Set(viteProjectPaths)];
 }
 
-/**
- * Recursively finds folders with Vite projects
- */
 async function findViteProjectsInFolder(folderPath: string): Promise<string[]> {
   const projectPaths: string[] = [];
 
@@ -63,9 +61,6 @@ async function findViteProjectsInFolder(folderPath: string): Promise<string[]> {
   return projectPaths;
 }
 
-/**
- * Checks if a folder is a Vite project by multiple criteria
- */
 function isViteProject(folderPath: string): boolean {
   // 1. Check for vite.config files
   const hasViteConfig =
@@ -99,6 +94,5 @@ function isViteProject(folderPath: string): boolean {
     // If package.json is malformed, skip
     return false;
   }
-
   return false;
 }
