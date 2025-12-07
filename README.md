@@ -40,16 +40,14 @@ Visualize your `console` messages **directly inside VSCode** — logs, warnings,
 ## ⚙️ Quick Start
 
 1. Start your **Vite dev server** (only Vite supported for now)
-2. Default port: `5173`
-3. Open a file with `console` statements
-4. 🎉 Messages appear **right under your code**, with hover support for details
+2. Open a file with `console` statements
+3. 🎉 Messages appear **right under your code**, with hover support for details
 
-> 💡 Use the command palette:  
-> `Console Warrior: Connect to Console Warrior Port`  
-> By default it connects to **5173**, but you can use this command to set a custom port.
+> 💡 **Automatic Port Detection**
+> Console Warrior automatically detects your Vite server port — no manual configuration needed!
 
-> ⚠️ **Currently Vite-only**  
-> Console Warrior works **exclusively with Vite projects** (CSR and SSR).  
+> ⚠️ **Currently Vite-only**
+> Console Warrior works **exclusively with Vite projects** (CSR and SSR).
 > Support for other frameworks (Next.js, Astro, etc.) is planned for the future.
 
 ---
