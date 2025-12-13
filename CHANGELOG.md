@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.3.29 (2025-12-13)</small>
+
+- fix: normalize paths to lowercase for case sensitivity on windows ([3d26905](https://github.com/joncodeofficial/vscode-console-warrior/commit/3d26905))
+- chore: update README ([21843f2](https://github.com/joncodeofficial/vscode-console-warrior/commit/21843f2))
+
 ## <small>1.3.28 (2025-12-06)</small>
 
 - fix: feat autodetect port in vite ([226ebb3](https://github.com/joncodeofficial/vscode-console-warrior/commit/226ebb3))
