@@ -8,16 +8,21 @@ export const updateConsoleDataMap = (
   consoleData: ConsoleData[],
   consoleDataMap: ConsoleDataMap
 ) => {
-  const editorFilePath = editor.document.uri.fsPath;
+  const editorFilePath = editor.document.uri.fsPath.toLowerCase();
 
   for (const { message, location, timestamp, type, workspacePath } of consoleData) {
+    // Normalize workspace path for case-insensitive comparison (Windows)
+    const normalizedWorkspacePath = workspacePath?.toLowerCase();
+
     // Filter: only process messages from the same workspace as the editor file
-    if (workspacePath && !editorFilePath.startsWith(workspacePath)) {
+    if (normalizedWorkspacePath && !editorFilePath.startsWith(normalizedWorkspacePath)) {
       continue;
     }
 
     // Create unique key: workspace + file URL to prevent collisions between projects
-    const url = workspacePath ? `${workspacePath}::${location.url}` : location.url;
+    const url = normalizedWorkspacePath
+      ? `${normalizedWorkspacePath}::${location.url}`
+      : location.url;
     const key = location.line.toString();
 
     // Ensure a map exists for the file URL

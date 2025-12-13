@@ -14,7 +14,7 @@ const formatCounterText = (count: number) => (count > 1 ? ` ✕${count} ➜ ` : 
 // Render decorations for the current file
 export const renderDecorations = (editor: vscode.TextEditor, consoleDataMap: ConsoleDataMap) => {
   const document = editor.document;
-  const currentFilePath = document.uri.fsPath;
+  const currentFilePath = document.uri.fsPath.toLowerCase();
   const decorations: vscode.DecorationOptions[] = [];
 
   // Loop through the console data map and render decorations for each line
@@ -24,12 +24,16 @@ export const renderDecorations = (editor: vscode.TextEditor, consoleDataMap: Con
       ? fileKey.split('::')
       : [null, fileKey];
 
+    // Normalize file path for case-insensitive comparison (Windows)
+    const normalizedFilePath = filePath.toLowerCase();
+
     // Check if the current file path matches the file path in the map
-    if (!currentFilePath.endsWith(filePath)) {
+    if (!currentFilePath.endsWith(normalizedFilePath)) {
       continue;
     }
 
     // If we have workspace info, verify the file is in that workspace
+    // workspacePath is already normalized (lowercase) from updateConsoleDataMap
     if (workspacePath && !currentFilePath.startsWith(workspacePath)) {
       continue;
     }

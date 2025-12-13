@@ -38,20 +38,24 @@ export const startWebSocketServer = async (
 
         // Handle server-info: backend sends port and workspace
         if (data.where === 'server-info' && data.id && data.workspace) {
+          // Normalize workspace path to lowercase for case-insensitive comparison (Windows)
+          const normalizedWorkspace = data.workspace.toLowerCase();
+
           // Check if there's a pending connection for this workspace
-          const pendingWs = pendingConnections.get(data.workspace);
+          const pendingWs = pendingConnections.get(normalizedWorkspace);
+
           if (pendingWs && pendingWs.readyState === WebSocket.OPEN) {
             const portKey = data.id.toString();
 
             // 1. Clean up old port for THIS specific workspace (if it had a different port before)
-            const oldPort = workspaceToPorts.get(data.workspace);
+            const oldPort = workspaceToPorts.get(normalizedWorkspace);
             if (oldPort && oldPort !== portKey) {
               backendConnections.delete(oldPort);
             }
 
             // 2. Check if another workspace was using this port and clean it up
             for (const [ws, port] of workspaceToPorts.entries()) {
-              if (port === portKey && ws !== data.workspace) {
+              if (port === portKey && ws !== normalizedWorkspace) {
                 workspaceToPorts.delete(ws);
               }
             }
@@ -59,16 +63,19 @@ export const startWebSocketServer = async (
             // 3. Add to active connections using the new port as key
             backendConnections.set(portKey, pendingWs);
             // Track which port this workspace is using
-            workspaceToPorts.set(data.workspace, portKey);
+            workspaceToPorts.set(normalizedWorkspace, portKey);
           }
           return;
         }
 
         // Handle server-connect: extension sends workspace path
         if (data.where === 'server-connect' && data.workspace) {
+          // Normalize workspace path to lowercase for case-insensitive comparison (Windows)
+          const normalizedWorkspace = data.workspace.toLowerCase();
+
           // Store workspace connection (persistent for reconnections)
-          if (!pendingConnections.has(data.workspace)) {
-            pendingConnections.set(data.workspace, ws);
+          if (!pendingConnections.has(normalizedWorkspace)) {
+            pendingConnections.set(normalizedWorkspace, ws);
             isBackend = true;
           }
           return;
