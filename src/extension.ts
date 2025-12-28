@@ -16,11 +16,16 @@ const sourceMapCache: SourceMapCache = new Map();
 const consoleDataMap: ConsoleDataMap = new Map();
 const serverConnections: ServerConnections = new Map();
 
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
   const connectPort: number = DEFAULT_PORT;
 
   // Start Main Server
-  startWebSocketServer(consoleData, sourceMapCache, consoleDataMap, serverConnections);
+  const wss = await startWebSocketServer(
+    consoleData,
+    sourceMapCache,
+    consoleDataMap,
+    serverConnections
+  );
   // Connect to Main Server like a client
   const socket = connectWebSocketServer(
     connectPort,
@@ -62,6 +67,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(watcherNodeModules(vscode)!);
   context.subscriptions.push(disposable(() => stopMonitoring()));
   context.subscriptions.push(disposable(() => socket?.close()));
+  context.subscriptions.push(disposable(() => wss?.close()));
   context.subscriptions.push(disposable(() => decorationType.dispose()));
   context.subscriptions.push(onTextChangeDisposable);
   context.subscriptions.push(hoverProvider);

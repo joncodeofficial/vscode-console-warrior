@@ -11,7 +11,7 @@ export const startWebSocketServer = async (
   sourceMapCache: SourceMapCache,
   consoleDataMap: ConsoleDataMap,
   backendConnections: ServerConnections
-) => {
+): Promise<WebSocketServer | null> => {
   const status = await portscanner.checkPortStatus(WS_PORT, '127.0.0.1');
 
   if (status === 'closed') {
@@ -118,7 +118,11 @@ export const startWebSocketServer = async (
         }
       });
     });
+
+    return wss;
   }
+
+  return null;
 };
 
 // Connect to Main WebSocket Server like a client
