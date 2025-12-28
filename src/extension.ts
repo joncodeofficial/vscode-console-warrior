@@ -20,12 +20,13 @@ export async function activate(context: vscode.ExtensionContext) {
   const connectPort: number = DEFAULT_PORT;
 
   // Start Main Server
-  const wss = await startWebSocketServer(
+  const main = await startWebSocketServer(
     consoleData,
     sourceMapCache,
     consoleDataMap,
     serverConnections
   );
+
   // Connect to Main Server like a client
   const socket = connectWebSocketServer(
     connectPort,
@@ -39,6 +40,12 @@ export async function activate(context: vscode.ExtensionContext) {
   const hoverProvider = vscode.languages.registerHoverProvider(
     { scheme: 'file', pattern: '**/*.{js,mjs,ts,mts,jsx,tsx,vue,svelte}' },
     hoverMessageProvider(() => consoleDataMap)
+  );
+
+  // Register command to copy console message
+  const copyMessageCommand = vscode.commands.registerCommand(
+    'consoleWarrior.copyMessage',
+    async (message: string) => await vscode.env.clipboard.writeText(message)
   );
 
   const stopMonitoring = monitoringChanges(consoleData, async () => {
@@ -66,11 +73,12 @@ export async function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(watcherNodeModules(vscode)!);
   context.subscriptions.push(disposable(() => stopMonitoring()));
+  context.subscriptions.push(disposable(() => main?.close()));
   context.subscriptions.push(disposable(() => socket?.close()));
-  context.subscriptions.push(disposable(() => wss?.close()));
   context.subscriptions.push(disposable(() => decorationType.dispose()));
   context.subscriptions.push(onTextChangeDisposable);
   context.subscriptions.push(hoverProvider);
+  context.subscriptions.push(copyMessageCommand);
 }
 
 export function deactivate() {}

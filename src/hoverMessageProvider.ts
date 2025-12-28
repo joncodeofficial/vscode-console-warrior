@@ -15,14 +15,20 @@ const createHoverMessage = (
 
   // Build all the content in a single string (faster)
   let content = '';
+
   messages.forEach(({ message, timestamp }, i) => {
     const localTime = formatLocalTimestamp(timestamp);
-    content += `<small><span style="color:#f4b35a;">#${counter - i} → ${localTime} • ${type}</span></small>\n\n`;
+    // Encode the message for URI using the official VS Code pattern
+    const args = [message];
+    const encodedArgs = encodeURIComponent(JSON.stringify(args));
+    // Create the copy link command
+    const copyLink = `[$(copy)](command:consoleWarrior.copyMessage?${encodedArgs} "Copy to clipboard")`;
+    // Append each message block
+    content += `<small><span style="color:#f4b35a;">#${counter - i} → ${localTime} • ${type}</span></small>   ${copyLink}\n\n`;
     content += '```javascript\n' + message + '\n```\n\n';
   });
-
   markdown.appendMarkdown(content);
-  markdown.appendMarkdown(`${'&nbsp;'.repeat(100)}\n`);
+  markdown.appendMarkdown(`${'&nbsp;'.repeat(150)}\n`);
   return markdown;
 };
 
