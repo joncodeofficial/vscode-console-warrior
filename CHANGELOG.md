@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.3.30 (2025-12-28)</small>
+
+- fix: add copy button to hover messages for console output ([37f4bd8](https://github.com/joncodeofficial/vscode-console-warrior/commit/37f4bd8))
+- fix: properly close WebSocket server on extension deactivation ([f9340b2](https://github.com/joncodeofficial/vscode-console-warrior/commit/f9340b2))
+- chore: add SECURITY.md ([ffcafa3](https://github.com/joncodeofficial/vscode-console-warrior/commit/ffcafa3))
+
 ## <small>1.3.29 (2025-12-13)</small>
 
 - fix: normalize paths to lowercase for case sensitivity on windows ([3d26905](https://github.com/joncodeofficial/vscode-console-warrior/commit/3d26905))
