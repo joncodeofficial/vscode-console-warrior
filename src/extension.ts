@@ -10,6 +10,7 @@ import { ServerConnections, ConsoleData, ConsoleDataMap, SourceMapCache } from '
 import { DEFAULT_PORT } from './constants';
 import { disposable } from './utils';
 import { hoverMessageProvider } from './hoverMessageProvider';
+import { getMessage } from './messageStore';
 
 const consoleData: ConsoleData[] = [];
 const sourceMapCache: SourceMapCache = new Map();
@@ -42,10 +43,13 @@ export async function activate(context: vscode.ExtensionContext) {
     hoverMessageProvider(() => consoleDataMap)
   );
 
-  // Register command to copy console message
+  // Register command to copy console message (looks up by ID from the store)
   const copyMessageCommand = vscode.commands.registerCommand(
     'consoleWarrior.copyMessage',
-    async (message: string) => await vscode.env.clipboard.writeText(message)
+    async (id: string) => {
+      const message = getMessage(id);
+      if (message) await vscode.env.clipboard.writeText(message);
+    }
   );
 
   const stopMonitoring = monitoringChanges(consoleData, async () => {

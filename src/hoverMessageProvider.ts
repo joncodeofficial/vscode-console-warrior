@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { ConsoleDataMap, ConsoleDataMapValues, ConsoleMessage } from './types';
 import { formatLocalTimestamp } from './utils';
+import { storeMessage, clearMessageStore } from './messageStore';
 
 // Create a markdown string for the hover message
 const createHoverMessage = (
@@ -13,14 +14,17 @@ const createHoverMessage = (
   markdown.supportHtml = true;
   markdown.supportThemeIcons = true;
 
+  // Clear previous hover's stored messages (only one hover visible at a time)
+  clearMessageStore();
+
   // Build all the content in a single string (faster)
   let content = '';
 
   messages.forEach(({ message, timestamp }, i) => {
     const localTime = formatLocalTimestamp(timestamp);
-    // Encode the message for URI using the official VS Code pattern
-    const args = [message];
-    const encodedArgs = encodeURIComponent(JSON.stringify(args));
+    // Store message and pass only the short ID in the URI
+    const id = storeMessage(message);
+    const encodedArgs = encodeURIComponent(JSON.stringify([id]));
     // Create the copy link command
     const copyLink = `[$(copy)](command:consoleWarrior.copyMessage?${encodedArgs} "Copy to clipboard")`;
     // Append each message block
