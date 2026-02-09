@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.3.31 (2026-02-09)</small>
+
+- fix: add webview panel to view console messages in a dedicated side panel ([a161ba6](https://github.com/joncodeofficial/vscode-console-warrior/commit/a161ba6))
+- fix: use ID-based message store for copy button to support large JSON outputs ([4efcc81](https://github.com/joncodeofficial/vscode-console-warrior/commit/4efcc81))
+
 ## <small>1.3.30 (2025-12-28)</small>
 
 - fix: add copy button to hover messages for console output ([37f4bd8](https://github.com/joncodeofficial/vscode-console-warrior/commit/37f4bd8))
