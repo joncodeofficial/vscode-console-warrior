@@ -37,7 +37,27 @@
     "test": "vscode-test",
     "watch": "tsc -watch -p ./"
   },
-  "contributes": {},
+  "contributes": {
+    "commands": [
+      {
+        "command": "consoleWarrior.showPanel",
+        "title": "Console Warrior: Show Panel",
+        "icon": {
+          "light": "images/icon.png",
+          "dark": "images/icon.png"
+        }
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "consoleWarrior.showPanel",
+          "group": "navigation",
+          "when": "resourceLangId =~ /javascript|typescript|javascriptreact|typescriptreact|vue|svelte/"
+        }
+      ]
+    }
+  },
   "activationEvents": [
     "workspaceContains:**/package.json"
   ],

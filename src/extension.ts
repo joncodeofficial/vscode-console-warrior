@@ -11,6 +11,7 @@ import { DEFAULT_PORT } from './constants';
 import { disposable } from './utils';
 import { hoverMessageProvider } from './hoverMessageProvider';
 import { getMessage } from './messageStore';
+import { showConsoleWarriorPanel, updateConsoleWarriorPanel } from './consoleWarriorPanel';
 
 const consoleData: ConsoleData[] = [];
 const sourceMapCache: SourceMapCache = new Map();
@@ -52,6 +53,10 @@ export async function activate(context: vscode.ExtensionContext) {
     }
   );
 
+  const showPanelCommand = vscode.commands.registerCommand('consoleWarrior.showPanel', () =>
+    showConsoleWarriorPanel(context, consoleDataMap)
+  );
+
   const stopMonitoring = monitoringChanges(consoleData, async () => {
     const newConsoleData = await sourceMapping(consoleData, sourceMapCache);
     consoleData.length = 0;
@@ -62,6 +67,7 @@ export async function activate(context: vscode.ExtensionContext) {
     if (!editor) return;
     updateConsoleDataMap(editor, newConsoleData, consoleDataMap);
     renderDecorations(editor, consoleDataMap);
+    updateConsoleWarriorPanel();
   });
 
   const onTextChangeDisposable = vscode.workspace.onDidChangeTextDocument((textEditor) => {
@@ -83,6 +89,7 @@ export async function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(onTextChangeDisposable);
   context.subscriptions.push(hoverProvider);
   context.subscriptions.push(copyMessageCommand);
+  context.subscriptions.push(showPanelCommand);
 }
 
 export function deactivate() {}
