@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## <small>1.3.32 (2026-09-18)</small>
+
+- fix: bind WebSocket server to loopback and drop portscanner dependency ([3dc0ee7](https://github.com/joncodeofficial/vscode-console-warrior/commit/3dc0ee7))
+- fix(ci): use default GITHUB_TOKEN and run on Node 24 ([95b94af](https://github.com/joncodeofficial/vscode-console-warrior/commit/95b94af))
+- docs: document architecture and data flow in SECURITY.md ([ba8b999](https://github.com/joncodeofficial/vscode-console-warrior/commit/ba8b999))
+- chore: update package-lock.json for portscanner removal ([781d125](https://github.com/joncodeofficial/vscode-console-warrior/commit/781d125))
+
 ## <small>1.3.31 (2026-02-09)</small>
 
 - fix: add webview panel to view console messages in a dedicated side panel ([a161ba6](https://github.com/joncodeofficial/vscode-console-warrior/commit/a161ba6))
