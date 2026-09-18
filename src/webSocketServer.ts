@@ -1,9 +1,8 @@
 import * as vscode from 'vscode';
-import portscanner from 'portscanner';
 import { WebSocket, WebSocketServer } from 'ws';
 import { WS_PORT } from './constants';
 import { ConsoleData, ConsoleDataMap, ServerConnections, SourceMapCache } from './types';
-import { getPortFromUrl, detectViteProjects } from './utils';
+import { getPortFromUrl, detectViteProjects, isPortAvailable } from './utils';
 
 // Start Main WebSocket Server
 export const startWebSocketServer = async (
@@ -12,11 +11,11 @@ export const startWebSocketServer = async (
   consoleDataMap: ConsoleDataMap,
   backendConnections: ServerConnections
 ): Promise<WebSocketServer | null> => {
-  const status = await portscanner.checkPortStatus(WS_PORT, '127.0.0.1');
+  const available = await isPortAvailable(WS_PORT, '127.0.0.1');
 
-  if (status === 'closed') {
-    // Create server WebSocket  Main
-    const wss = new WebSocketServer({ port: WS_PORT });
+  if (available) {
+    // Bind explicitly to loopback so the port isn't reachable from other machines on the LAN
+    const wss = new WebSocketServer({ port: WS_PORT, host: '127.0.0.1' });
     console.log(`[Central WS] started on port ${WS_PORT}`);
 
     // Temporary map to store workspace -> WebSocket connections before port assignment

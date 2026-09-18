@@ -72,8 +72,7 @@
   "dependencies": {
     "@jridgewell/trace-mapping": "^0.3.30",
     "denque": "^2.1.0",
-    "portscanner": "^2.2.0",
-    "ws": "^8.18.3"
+    "ws": "^8.21.3"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
@@ -86,7 +85,6 @@
     "@semantic-release/release-notes-generator": "^14.0.3",
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
-    "@types/portscanner": "^2.1.4",
     "@types/vscode": "^1.97.0",
     "@types/ws": "^8.5.14",
     "@typescript-eslint/eslint-plugin": "^8.34.0",

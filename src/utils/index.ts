@@ -11,3 +11,4 @@ export { formatLocalTimestamp } from './formatLocalTimestamp';
 export { getCurrentThemeColor } from './getCurrentThemeColor';
 export { getModifiedLine } from './getModifiedLine';
 export { detectViteProjects } from './detectViteProjects';
+export { isPortAvailable } from './isPortAvailable';
